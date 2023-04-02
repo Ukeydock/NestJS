@@ -1,0 +1,16 @@
+FROM node:latest AS development
+
+WORKDIR /app
+
+COPY package.json .
+
+RUN npm install
+
+RUN mkdir dist
+
+COPY dist dist
+
+COPY .dev.env .
+
+
+CMD [ "node", "dist/main" ]
