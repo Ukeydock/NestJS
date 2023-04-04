@@ -9,9 +9,11 @@ import {
 } from '@nestjs/swagger';
 import {
   RequestKeywordDto,
+  RequestUpdateUserDto,
   RequestUserListPageDto,
   RequestVideoListPageDto,
   ResponseKeywordDto,
+  ResponseUserListPageDto,
   ResponseVideoListPageDto,
 } from './dtos';
 
@@ -22,7 +24,8 @@ export class AppController {
 
   @ApiOperation({
     summary: '소셜로그인 구글',
-    description: 'redirect frontDomain + auth/google/login?accessToken=token',
+    description:
+      'redirect frontDomain + auth/google/callback?accessToken=token',
   })
   @ApiBody({})
   @Get('/auth/google/login')
@@ -30,7 +33,8 @@ export class AppController {
 
   @ApiOperation({
     summary: '소셜로그인 트위치',
-    description: 'redirect frontDomain + auth/twitch/login?accessToken=token',
+    description:
+      'redirect frontDomain + auth/twitch/callback?accessToken=token',
   })
   @ApiBody({})
   @Get('/auth/twitch/login')
@@ -38,9 +42,11 @@ export class AppController {
 
   @ApiOperation({
     summary: '유저정보 변경',
-    description: '유저의 정보 변경',
+    description: `유저의 정보 변경, 변경을 원하는 정보만 객체에 넣어 보내주시면 됩니다. 
+      <br> 예를 들어 age만 보내고 싶다면 body에 {age : 25} 만 보내주시면 됩니다.
+    `,
   })
-  @ApiBody({})
+  @ApiBody({ type: RequestUpdateUserDto })
   @Put('/user/:userId')
   유저정보변경() {}
 
@@ -57,6 +63,11 @@ export class AppController {
     description: '유저 리스팅페이지',
   })
   @ApiQuery({ type: RequestUserListPageDto })
+  @ApiResponse({
+    status: 200,
+    type: ResponseUserListPageDto,
+    description: '모든 데이터는 배열로 반환됩니다.',
+  })
   @Get('/user/:userId')
   유저리스팅페이지() {}
 
@@ -72,8 +83,8 @@ export class AppController {
 @ApiTags('Keyword')
 export class KeywordController {
   @ApiOperation({
-    summary: '키워드 입력',
-    description: '키워드 입력',
+    summary: '키워드 추가',
+    description: '키워드를 추가',
   })
   @ApiBody({ type: RequestKeywordDto })
   @Post('/keyword')
@@ -108,7 +119,7 @@ export class KeywordController {
     summary: '키워드의 count와 다른 알고리즘을 이용해 추천 키워드 ',
     description: '키워드의 count와 다른 알고리즘을 이용해 추천 키워드',
   })
-  @ApiBody({})
+  // @ApiBody({})
   @ApiResponse({ type: ResponseKeywordDto })
   @Get('/keyword/list/recommend')
   추천키워드조회() {}
@@ -129,7 +140,7 @@ export class VideoController {
     summary: '비디오 리스팅 페이지',
     description: '비디오 리스팅 페이지',
   })
-  @ApiBody({ type: RequestVideoListPageDto })
+  @ApiQuery({ type: RequestVideoListPageDto })
   @ApiResponse({ type: ResponseVideoListPageDto })
   @Get('/video/:keyword')
   비디오검색리스트출력() {}
