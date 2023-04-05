@@ -1,6 +1,26 @@
 import { Keyword } from './database/entities/keyword.entity';
 import { ApiProperty } from '@nestjs/swagger';
 
+export class RequestUpdateUserDto {
+  @ApiProperty({
+    example: 'man || women',
+    description: '성별',
+  })
+  gender?: string;
+
+  @ApiProperty({
+    example: '아직 정해야 함',
+    description: '직업',
+  })
+  job?: string;
+
+  @ApiProperty({
+    example: '25',
+    description: '나이',
+  })
+  age?: number;
+}
+
 export class RequestKeywordDto {
   @ApiProperty({
     example: 'keyword',
@@ -11,7 +31,7 @@ export class RequestKeywordDto {
 
 export class ResponseKeywordDto {
   @ApiProperty({
-    example: ['key1', 'key2', 'key3'],
+    example: ['key1', 'key2', 'key3', '...총 10개'],
     description: '키워드 배열',
   })
   keyword: string[];
@@ -21,51 +41,87 @@ export class RequestUserListPageDto {
   @ApiProperty({
     example: 'man || women',
     description: '성별',
+    required: false,
   })
-  gender: string;
+  gender?: string;
 
   @ApiProperty({
     example: '아직 정해야 함',
     description: '직업',
+    required: false,
   })
-  job: string;
+  job?: string;
 
   @ApiProperty({
     example: '25',
     description: '나이',
+    required: false,
   })
-  age: number;
+  age?: number;
+
+  @ApiProperty({
+    example: '1',
+    default: 1,
+    description: '페이지',
+    required: false,
+  })
+  page?: number;
+
+  @ApiProperty({
+    example: '10',
+    default: 10,
+    description: '한 페이지에 출력할 데이터 갯수',
+    required: false,
+  })
+  limit?: number;
 }
 
 export class ResponseUserListPageDto {
-  Keyword: string[];
+  @ApiProperty({ example: ['마라탕', '떡볶이', '아이스 아메리카노'] })
+  userKeyword: string[];
+
+  @ApiProperty({ example: 'nickname' })
   userNickname: string;
+
+  @ApiProperty({ example: '25' })
   userAge: string;
+
+  @ApiProperty({ example: '디자이너' })
   userJob: string;
+
+  @ApiProperty({ example: 1 })
   userId: number;
 }
 
 export class RequestVideoListPageDto {
   @ApiProperty({
     example: '3600',
-    description: '영상길이',
+    default: '7200',
+    description: '영상길이(초단위)',
+    required: false,
   })
-  duration;
+  duration?: string;
   @ApiProperty({
     example: '30',
-    description: '현재 날짜에서 최근 30일 영상만 출력',
+    default: 'none',
+    description: '현재 날짜에서 최근 createdAgo일 영상만 출력',
+    required: false,
   })
-  createDate;
+  createdAgo?: string;
   @ApiProperty({
     example: 'recent | view',
+    default: 'recent',
     description: '최신순 | 조회순',
+    required: false,
   })
-  order;
+  order?: string;
   @ApiProperty({
     example: 'youtube | twitch | africa | ted',
     description: '해당 플랫폼의 영상 출력',
+    default: 'youtube',
+    required: false,
   })
-  platform;
+  platform: string;
 }
 
 export class ResponseVideoListPageDto {
