@@ -9,6 +9,7 @@ import {
 } from '@nestjs/swagger';
 import {
   RequestKeywordDto,
+  RequestMovieListPageDto,
   RequestUpdateUserDto,
   RequestUserListPageDto,
   RequestVideoListPageDto,
@@ -133,6 +134,7 @@ export class KeywordController {
   @Get('/keyword/list/popular')
   인기키워드조회() {}
 }
+
 @Controller('video')
 @ApiTags('Video')
 export class VideoController {
@@ -144,6 +146,15 @@ export class VideoController {
   @ApiResponse({ type: ResponseVideoListPageDto })
   @Get('/video/:keyword')
   비디오검색리스트출력() {}
+
+  @ApiOperation({
+    summary: '영화 리스팅 페이지',
+    description: '영화 리스팅 페이지',
+  })
+  @ApiQuery({ type: RequestMovieListPageDto })
+  @ApiResponse({ type: ResponseVideoListPageDto })
+  @Get('/video/:keyword')
+  영화검색리스트() {}
 }
 
 @Controller('comment')
