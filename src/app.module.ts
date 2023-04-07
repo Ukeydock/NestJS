@@ -7,7 +7,7 @@ import {
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
-import { Common } from './database/entities/base.entity';
+import { Common } from './database/entities/common.entity';
 import { User } from './database/entities/user.entity';
 import { Auth } from './database/entities/auth.entity';
 import {

@@ -6,7 +6,7 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Common } from './base.entity';
+import { Common } from './common.entity';
 
 @Entity()
 export class User extends Common {

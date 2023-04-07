@@ -7,7 +7,7 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Common } from './base.entity';
+import { Common } from './common.entity';
 import { Video } from './video.entity';
 import { User } from './user.entity';
 
