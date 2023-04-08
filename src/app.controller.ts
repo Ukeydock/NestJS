@@ -16,6 +16,8 @@ import {
   ResponseKeywordDto,
   ResponseUserListPageDto,
   ResponseVideoListPageDto,
+  RequestVideoDetailPageDto,
+  ResponseVideoDetailPageDto,
 } from './dtos';
 
 @Controller('user')
@@ -146,6 +148,15 @@ export class VideoController {
   @ApiResponse({ type: ResponseVideoListPageDto })
   @Get('/video/:keyword')
   비디오검색리스트출력() {}
+
+  @ApiOperation({
+    summary: '비디오 상세 페이지',
+    description: '비디오 상세 페이지',
+  })
+  @ApiBody({ type: RequestVideoDetailPageDto })
+  @ApiResponse({ type: ResponseVideoDetailPageDto })
+  @Get('/video/:videoUniqueId')
+  비디오상세페이지조회() {}
 
   @ApiOperation({
     summary: '영화 리스팅 페이지',
