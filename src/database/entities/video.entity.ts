@@ -24,6 +24,12 @@ export class Video extends Common {
 
   @Column({ type: 'varchar', length: 32, nullable: false, default: '미정' })
   createdDate: string;
+
+  @Column({ type: 'varchar', length: 32, nullable: false, default: '미정' })
+  videoId: string;
+
+  @Column({ type: 'varchar', length: 32, nullable: false, default: 'youtube' })
+  platform: string;
 }
 
 @Entity({ name: 'Library' })
