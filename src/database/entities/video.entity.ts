@@ -7,7 +7,7 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Common } from './common.entity';
+import { Common, NotUpdateCommon } from './common.entity';
 import { Keyword } from './keyword.entity';
 import { User } from './user.entity';
 
@@ -30,10 +30,19 @@ export class Video extends Common {
 
   @Column({ type: 'varchar', length: 32, nullable: false, default: 'youtube' })
   platform: string;
+
+  @Column({ type: 'bigint', default: 0 })
+  viewCount: number;
+
+  @Column({ type: 'int', default: 0 })
+  commentCount: number;
+
+  @Column({ type: 'int', default: 0 })
+  libraryCount: number;
 }
 
 @Entity({ name: 'Library' })
-export class VideoUser extends Common {
+export class VideoUser extends NotUpdateCommon {
   @OneToOne(() => User, (user) => user.id, { cascade: true })
   @JoinColumn()
   user;
