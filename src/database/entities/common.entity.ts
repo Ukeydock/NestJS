@@ -8,7 +8,6 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity()
 export class Common {
   @PrimaryGeneratedColumn()
   id: number;
@@ -18,4 +17,12 @@ export class Common {
 
   @UpdateDateColumn()
   updatedAt: Date;
+}
+
+export class NotUpdateCommon {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @CreateDateColumn()
+  createdAt: Date;
 }
