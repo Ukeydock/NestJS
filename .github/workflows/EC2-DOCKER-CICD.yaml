@@ -78,7 +78,7 @@ jobs:
           script: |
             ${{secrets.AWS_DOCKER_LOGIN_CONSOLE}}
 
-            CONTAINER_ID=$(sudo docker ps -q -f "expose=3100")
+            CONTAINER_ID=$(sudo docker ps -q -f "expose=3000")
             if [ ! -z "$CONTAINER_ID" ]
             then
               sudo docker rm -f $CONTAINER_ID
@@ -89,7 +89,7 @@ jobs:
             then
               sudo docker rmi -f $IMAGE_ID
             fi
-            sudo docker pull ${{env.ECR_REGISTRY}}/hnn:dev
+            sudo docker pull ${{env.ECR_REGISTRY}}/ukeydock:dev
 
 
             sudo docker run -d --restart unless-stopped -p 3000:3000 ${{ secrets.ECR_REGISTRY }}/ukeydock:dev
