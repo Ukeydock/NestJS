@@ -1,0 +1,99 @@
+name: Deploy to Amazon ECS
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
+  AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+  AWS_REGION: ap-northeast-2
+  ECR_REGISTRY: ${{secrets.ECR_REGISTRY}}
+  ECR_REPOSITORY: hnn
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{env.AWS_ACCESS_KEY_ID}}
+          aws-secret-access-key: ${{env.AWS_SECRET_ACCESS_KEY}}
+          aws-region: ap-northeast-2
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: create env
+        run: |
+
+          echo "${{secrets.DEV_ENV}}" >> .dev.env
+
+      - name: Delete ECR images
+        run: |
+          for repo in $(aws ecr describe-repositories --query 'repositories[].repositoryName' --output text); do
+            for tag in $(aws ecr list-images --repository-name $repo --query 'imageIds[].imageTag' --output text); do
+              aws ecr batch-delete-image --repository-name $repo --image-ids imageTag=$tag;
+            done;
+          done;
+
+      - name: Build, tag, and push the image(node.js) to Amazon ECR
+        id: build-image-node
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+          IMAGE_TAG_NODE: hnn-nest
+
+        run: |
+          npm install
+          npm run build
+          ${{secrets.AWS_DOCKER_LOGIN_CONSOLE}}
+          docker-compose  -f docker-compose.dev.yml build
+          docker-compose  -f docker-compose.dev.yml push
+
+      - name: Get Github Actions IP
+        id: ip
+        uses: haythem/public-ip@v1.2
+
+      - name: Add Github Actions IP to Security group
+        run: |
+          aws ec2 authorize-security-group-ingress --group-id ${{ secrets.AWS_SG_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32
+
+      - name: Deploy
+        uses: appleboy/ssh-action@master
+
+        with:
+          host: ${{ secrets.REMOTE_IP }}
+          username: ${{ secrets.SSH_ID }}
+          key: ${{ secrets.SSH_KEY }}
+          port: 22
+
+          script: |
+            ${{secrets.AWS_DOCKER_LOGIN_CONSOLE}}
+
+            CONTAINER_ID=$(sudo docker ps -q -f "expose=3100")
+            if [ ! -z "$CONTAINER_ID" ]
+            then
+              sudo docker rm -f $CONTAINER_ID
+            fi
+
+            IMAGE_ID=$(docker images -q)
+            if [ ! -z "$IMAGE_ID" ]
+            then
+              sudo docker rmi -f $IMAGE_ID
+            fi
+            sudo docker pull ${{env.ECR_REGISTRY}}/hnn:dev
+
+
+            sudo docker run -d --restart unless-stopped -p 3100:3100 ${{ secrets.ECR_REGISTRY }}/hnn:dev
+
+      - name: Remove Github Actions IP From Security Group
+        run: |
+          aws ec2 revoke-security-group-ingress --group-id ${{ secrets.AWS_SG_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32

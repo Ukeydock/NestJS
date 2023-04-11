@@ -10,7 +10,7 @@ export class MovieController {
   @ApiOperation({
     summary: '영화 리스팅 페이지',
     description: `영화 리스팅 페이지 
-      <br> 이거 수정했어요`,
+     `,
   })
   @ApiQuery({ type: RequestMovieListPageDto })
   @ApiResponse({ type: ResponseVideoListPageDto })
