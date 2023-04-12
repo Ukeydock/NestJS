@@ -92,7 +92,7 @@ jobs:
             sudo docker pull ${{env.ECR_REGISTRY}}/ukeydock:dev
 
 
-            sudo docker run -d --restart unless-stopped -p 3000:3000 ${{ secrets.ECR_REGISTRY }}/ukeydock:dev
+            sudo docker run -d --restart unless-stopped -p 3000:3000 --name ukeydock-dev --network ukeydock ${{ secrets.ECR_REGISTRY }}/ukeydock:dev
 
       - name: Remove Github Actions IP From Security Group
         run: |
