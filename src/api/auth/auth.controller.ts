@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Render,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
@@ -40,4 +41,16 @@ export class AuthController {
   })
   @Delete('/user/:userId')
   유저탈퇴() {}
+
+  @Get('/')
+  @Render('index.ejs')
+  test() {
+    return { name: '권영' };
+  }
+
+  @Get('/signup')
+  @Render('signup.ejs')
+  signup() {
+    return { name: '권영' };
+  }
 }

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/header.css" />
+
+    <title>유저정보</title>
+    <style>
+      .inputBox {
+        margin-top: 30px;
+      }
+      .submitBotton {
+        background-color: aquamarine;
+        display: block;
+        margin: 50px auto 0 auto;
+      }
+    </style>
+  </head>
+  <body>
+    <header><%- include('./base/top.ejs') %></header>
+    <div class="keydockCharacter"></div>
+    <form>
+    <div>
+      닉네임 :
+      <input class="inputBox" type="text" name="nickname" /><br />
+      생년월일 :
+      <input class="inputBox" type="date" name="birthday" /><br />
+      직무 :
+      <input class="inputBox" type="checkbox" name="job" /><br />
+
+      <div class="inputBox">
+        성별 :
+          <label>
+            <input type="checkbox" name="fruits" value="apple" /> 남자
+          </label>
+
+          <label>
+            <input type="checkbox" name="fruits" value="banana" /> 여자
+          </label>
+
+          <label>
+            <input type="checkbox" name="fruits" value="orange" /> 선택 안함
+          </label>
+          </div>
+        <div>
+          <input class="submitBotton" type="submit" value="제출!" />
+        </div>
+      </form>
+    </div>
+  </body>
+</html>
