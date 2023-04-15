@@ -14,6 +14,7 @@ import {
   HttpExceptionFilter,
   TypeOrmExceptionFilter,
 } from './common/middlewares/error/error.middleware';
+import { join } from 'path';
 
 class App {
   private logger = new Logger(App.name);
@@ -42,6 +43,12 @@ class App {
         },
       }),
     );
+  }
+
+  private viewConfigure() {
+    this.server.useStaticAssets(join(__dirname, '..', 'src', 'public'));
+    this.server.setBaseViewsDir(join(__dirname, '..', 'src', 'views'));
+    this.server.setViewEngine('ejs');
   }
 
   private setUpOpenAPIMidleware() {
@@ -102,6 +109,7 @@ class App {
   }
 
   async bootstrap() {
+    this.viewConfigure();
     await this.setUpGlobalMiddleware();
     await this.server.listen(this.PORT);
   }
