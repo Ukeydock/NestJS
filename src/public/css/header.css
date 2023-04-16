@@ -7,9 +7,9 @@
 }
 
 .keydockCharacter {
-  background-color: aqua;
+  /* background-color: aqua; */
   display: block;
-  margin: 0 auto 30px auto;
+  margin: 0 auto 0 auto;
   width: 200px;
-  height: 200px;
+  height: 250px;
 }

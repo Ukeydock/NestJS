@@ -42,9 +42,10 @@ export class AuthController {
   @Delete('/user/:userId')
   유저탈퇴() {}
 
-  @Get('/')
+  @Post('/')
   @Render('index.ejs')
-  test() {
+  test(@Body() body) {
+    console.log(body);
     return { name: '권영' };
   }
 
