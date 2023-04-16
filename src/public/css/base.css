@@ -1,0 +1,12 @@
+@font-face {
+  font-family: 'Dongle-Regular'; /* 폰트 패밀리 이름 */
+  src: url('/font/Dongle-Regular.ttf'); /* 폰트 파일 경로 */
+  font-style: normal; /* 폰트 스타일 */
+  font-weight: 400; /* 폰트 두께 */
+  font-display: swap; /* 폰트 로드 방식 */
+}
+
+body {
+  font-family: 'Dongle-Regular';
+  /* font-size: 30px; */
+}
