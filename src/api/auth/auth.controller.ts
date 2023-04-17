@@ -21,9 +21,10 @@ export class AuthController {
     summary: '소셜로그인 구글',
     description: authApiOperationDescription.createGoolgeUser,
   })
-  @Get('/auth/google/login')
+  @Get('/google/login')
   구글소셜로그인() {}
 
+  @Get('/google/callback')
   구글콜백() {}
 
   @ApiOperation({
