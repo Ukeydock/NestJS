@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Render,
 } from '@nestjs/common';
 import { VideoService } from '../services/video.service';
 import {
@@ -36,7 +37,8 @@ export class VideoController {
   })
   @ApiQuery({ type: RequestVideoListPageDto })
   @ApiResponse({ type: ResponseVideoListPageDto })
-  @Get('/video/:keyword')
+  @Get('/:keyword')
+  @Render('main.ejs')
   비디오검색리스트출력() {}
 
   @ApiOperation({
