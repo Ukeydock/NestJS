@@ -43,7 +43,7 @@ export class AuthController {
   @Delete('/user/:userId')
   유저탈퇴() {}
 
-  @Post('/')
+  @Get('/')
   @Render('index.ejs')
   test(@Body() body) {
     console.log(body);
