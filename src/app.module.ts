@@ -14,6 +14,7 @@ import { UserModule } from './api/user/user.module';
 import { AuthModule } from './api/auth/auth.module';
 import { VideoController } from './api/video/controllers/video.controller';
 import { KeywordController } from './api/keyword/keyword.controller';
+import { CommonService } from './common/services/common.service';
 
 export class Config {
   static setENV = () => {
@@ -58,5 +59,6 @@ export class Config {
   ],
   controllers: [],
   providers: [],
+  exports: [],
 })
 export class AppModule {}

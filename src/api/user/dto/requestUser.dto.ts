@@ -1,6 +1,11 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, PickType } from '@nestjs/swagger';
+import { UserDto } from './user.dto';
 
-export class RequestUpdateUserDto {
+export class FindUserByUserIdDto extends PickType(UserDto, ['userId']) {}
+
+export class CreateUserDto extends PickType(UserDto, ['nickname']) {}
+
+export class UpdateUserDto {
   @ApiProperty({
     example: 'man || women',
     description: '성별',
@@ -20,7 +25,7 @@ export class RequestUpdateUserDto {
   age?: number;
 }
 
-export class RequestUserListPageDto {
+export class UserListPageDto {
   @ApiProperty({
     example: 'man || women',
     description: '성별',

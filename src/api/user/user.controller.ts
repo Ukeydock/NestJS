@@ -16,10 +16,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import {
-  RequestUpdateUserDto,
-  RequestUserListPageDto,
-} from './dto/requestUser.dto';
+import { UpdateUserDto, UserListPageDto } from './dto/requestUser.dto';
 import { ResponseUserListPageDto } from './dto/responseUser.dto';
 
 @ApiTags('User')
@@ -33,7 +30,7 @@ export class UserController {
       <br> 예를 들어 age만 보내고 싶다면 body에 {age : 25} 만 보내주시면 됩니다.
     `,
   })
-  @ApiBody({ type: RequestUpdateUserDto })
+  @ApiBody({ type: UpdateUserDto })
   @Put('/user/:userId')
   유저정보변경() {}
 
@@ -41,7 +38,7 @@ export class UserController {
     summary: '유저 리스팅페이지',
     description: '유저 리스팅페이지',
   })
-  @ApiQuery({ type: RequestUserListPageDto })
+  @ApiQuery({ type: UserListPageDto })
   @ApiResponse({
     status: 200,
     type: ResponseUserListPageDto,

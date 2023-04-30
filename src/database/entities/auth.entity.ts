@@ -18,8 +18,8 @@ export class Auth extends Common {
   email: string;
 
   @OneToOne(() => User, (user) => user.id, { cascade: true })
-  @JoinColumn()
-  user;
+  @JoinColumn([{ name: 'userId', referencedColumnName: 'id' }])
+  user: User;
 
   @Column({ type: 'varchar', length: 16, nullable: false, default: 'local' })
   platform: string;

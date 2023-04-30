@@ -7,25 +7,39 @@ import {
   Param,
   Delete,
   Render,
+  Res,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { authApiOperationDescription } from '@root/admin.api/document/auth.document';
+import { Response } from 'express';
+import { GoogleAuthGuard } from './google/google.guard';
 
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @UseGuards(GoogleAuthGuard)
   @ApiOperation({
     summary: '소셜로그인 구글',
     description: authApiOperationDescription.createGoolgeUser,
   })
   @Get('/google/login')
-  구글소셜로그인() {}
+  execGoogleSocialLogin() {
+    return;
+  }
 
+  @UseGuards(GoogleAuthGuard)
   @Get('/google/callback')
-  구글콜백() {}
+  execGoogleSocialLoginCallback(@Req() req, @Res() res: Response) {
+    console.log(req.user);
+    res.redirect(
+      `http://localhost:4000/auth/social/callback?accessToken=${req.user.appToken}`,
+    );
+  }
 
   @ApiOperation({
     summary: '소셜로그인 트위치',
