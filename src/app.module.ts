@@ -14,6 +14,10 @@ import { UserModule } from './api/user/user.module';
 import { AuthModule } from './api/auth/auth.module';
 import { VideoController } from './api/video/controllers/video.controller';
 import { KeywordController } from './api/keyword/keyword.controller';
+import { CommonService } from './common/services/common.service';
+import { CommonResponseDto } from './common/dto/response.dto';
+import { JwtStrategy } from './api/auth/jwt/jwt.strategy';
+import { UserRepositoyry } from './api/user/repositories/user.repository';
 
 export class Config {
   static setENV = () => {
@@ -48,6 +52,7 @@ export class Config {
 
 @Module({
   imports: [
+    CommonResponseDto,
     Config.setENV(),
     Config.setMySQL(process.env.NODE_ENV == 'prod' ? false : true),
     AuthModule,
@@ -58,5 +63,6 @@ export class Config {
   ],
   controllers: [],
   providers: [],
+  exports: [],
 })
 export class AppModule {}
