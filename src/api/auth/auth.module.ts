@@ -10,10 +10,17 @@ import { GoogleStrategy } from './google/google.strategy';
 import { UserModule } from '../user/user.module';
 import { AppModule } from '@root/app.module';
 import { CommonService } from '@root/common/services/common.service';
-import { JwtService } from '@nestjs/jwt';
+import { JwtModule, JwtService } from '@nestjs/jwt';
 
 @Module({
-  imports: [UserModule, PassportModule, TypeOrmModule.forFeature([Auth])],
+  imports: [
+    UserModule,
+    PassportModule,
+    TypeOrmModule.forFeature([Auth]),
+    JwtModule.register({
+      secret: process.env.JWT_SECRET_KEY,
+    }),
+  ],
 
   controllers: [AuthController],
   providers: [

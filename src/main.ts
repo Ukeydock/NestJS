@@ -78,7 +78,7 @@ class App {
               name: 'JWT',
               in: 'header',
             },
-            'access-token',
+            'appToken',
           )
           .build(),
       ),

@@ -2,6 +2,7 @@ import {
   FindAuthByAuthIdDto,
   CreateAuthDto,
   FindAuthByEmailDto,
+  DeleteAuthByAuthIdDto,
 } from './dto/requestAuth.dto';
 import { Injectable } from '@nestjs/common';
 import { AuthRepository } from './auth.repository';
@@ -20,8 +21,8 @@ export class AuthSocialLoginService {
     private commonService: CommonService,
   ) {}
 
-  private createJwtToken(authId: { authId }) {
-    const payload = { id: authId };
+  private createJwtToken(user: { userId }) {
+    const payload = { userId: user.userId };
     return {
       appToken: this.jwtService.sign(payload, {
         secret: process.env.JWT_SECRET_KEY,
@@ -31,12 +32,13 @@ export class AuthSocialLoginService {
 
   private async createNewAuthUser(createAuthDto: CreateAuthDto) {
     const newAuthData = await this.authRepository.create(createAuthDto);
-
-    return this.createJwtToken({ authId: newAuthData.raw.insertId });
+    const newAuthId = newAuthData.raw.insertId;
+    const authData = await this.authRepository.findOneById(newAuthId);
+    return this.createJwtToken({ userId: authData.user.id });
   }
 
   private async execLogin(authData: Auth) {
-    return this.createJwtToken({ authId: authData.id });
+    return this.createJwtToken({ userId: authData.user.id });
   }
 
   async execSocialLogin(userAuthData: {
@@ -56,7 +58,6 @@ export class AuthSocialLoginService {
         nickname: this.commonService.createRandomNickname(),
       });
       const newUserId = newUserData.raw.insertId;
-      console.log(newUserData.raw);
       await this.userService.updateById(newUserId, {
         profileImage: userAuthData.profileImage,
       });
@@ -85,5 +86,9 @@ export class AuthService {
 
   async create(createAuthDto: CreateAuthDto) {
     return await this.authRepository.create(createAuthDto);
+  }
+
+  async deleteAuthByAuthId(deleteAuthByAuthIdDto: DeleteAuthByAuthIdDto) {
+    await this.authRepository.deleteAuthByAuthId(deleteAuthByAuthIdDto);
   }
 }

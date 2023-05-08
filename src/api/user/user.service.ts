@@ -1,5 +1,9 @@
-import { FindUserByUserIdDto, CreateUserDto } from './dto/requestUser.dto';
-import { UserRepositoyry } from './user.repository';
+import {
+  FindUserByUserIdDto,
+  CreateUserDto,
+  FindUserListPageDto,
+} from './dto/requestUser.dto';
+import { UserRepositoyry } from './repositories/user.repository';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
@@ -8,6 +12,13 @@ export class UserService {
 
   async findByUserId(findUserByUserIdDto: FindUserByUserIdDto) {
     return await this.userRepositoyry.findById(findUserByUserIdDto);
+  }
+
+  async findUserList(findUserListPageDto: FindUserListPageDto) {
+    const userListData = await this.userRepositoyry.findUserList(
+      findUserListPageDto,
+    );
+    return userListData;
   }
 
   async create(createUserDto: CreateUserDto) {

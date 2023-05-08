@@ -1,7 +1,12 @@
-import { CreateUserDto, FindUserByUserIdDto } from './dto/requestUser.dto';
+import {
+  CreateUserDto,
+  FindUserByUserIdDto,
+  FindUserListPageDto,
+} from '../dto/requestUser.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '@root/database/entities/user.entity';
 import { Repository } from 'typeorm';
+import { FindUserListQuery } from './userListQueryBuilder';
 
 export class UserRepositoyry {
   constructor(
@@ -10,7 +15,18 @@ export class UserRepositoyry {
   ) {}
 
   async findById(findUserByUserIdDto: FindUserByUserIdDto) {
-    return await this.userRepository.findBy({ id: findUserByUserIdDto.userId });
+    return await this.userRepository.findOneBy({
+      id: findUserByUserIdDto.userId,
+    });
+  }
+
+  async findUserList(findUserListPageDto: FindUserListPageDto) {
+    const findUserQuery = new FindUserListQuery(
+      findUserListPageDto,
+      this.userRepository,
+    );
+
+    return await findUserQuery.getQuery.getRawMany();
   }
 
   async create(createUserDto: CreateUserDto) {

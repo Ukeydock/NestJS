@@ -1,10 +1,15 @@
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
-import { Common, NotUpdateCommon } from './common.entity';
+import {
+  Common,
+  CommonSoftDelete,
+  CommonSoftDeleteNotUpdated,
+  NotUpdateCommon,
+} from './common.entity';
 import { Video } from './video.entity';
 import { User } from './user.entity';
 
 @Entity()
-export class View extends NotUpdateCommon {
+export class View extends CommonSoftDeleteNotUpdated {
   @ManyToOne(() => Video, (video) => video.id, { cascade: true })
   @JoinColumn()
   video;

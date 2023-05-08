@@ -6,10 +6,10 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Common } from './common.entity';
+import { Common, CommonSoftDelete } from './common.entity';
 
 @Entity()
-export class User extends Common {
+export class User extends CommonSoftDelete {
   @Column({ type: 'varchar', length: 32, nullable: false, default: '미정' })
   nickname: string;
 

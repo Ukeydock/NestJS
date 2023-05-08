@@ -25,7 +25,7 @@ export class UpdateUserDto {
   age?: number;
 }
 
-export class UserListPageDto {
+export class FindUserListPageDto {
   @ApiProperty({
     example: 'man || women',
     description: '성별',
@@ -53,7 +53,7 @@ export class UserListPageDto {
     description: '페이지',
     required: false,
   })
-  page?: number;
+  page?: number = 1;
 
   @ApiProperty({
     example: '10',
@@ -61,5 +61,5 @@ export class UserListPageDto {
     description: '한 페이지에 출력할 데이터 갯수',
     required: false,
   })
-  limit?: number;
+  limit?: number = 20;
 }

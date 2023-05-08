@@ -8,13 +8,13 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Common } from './common.entity';
+import { Common, CommonSoftDelete } from './common.entity';
 import { Keyword } from './keyword.entity';
 import { Video } from './video.entity';
 import { User } from './user.entity';
 
 @Entity()
-export class Comment extends Common {
+export class Comment extends CommonSoftDelete {
   @Column({ type: 'varchar', length: 64, nullable: false, default: '미정' })
   comment: string;
 
