@@ -39,13 +39,14 @@ export class UserController {
   @ApiOperation({
     summary: '유저정보 변경(test)',
     description: `유저의 정보 변경, 변경을 원하는 정보만 객체에 넣어 보내주시면 됩니다. 
-      <br> 예를 들어 age만 보내고 싶다면 body에 {age : 25} 만 보내주시면 됩니다.
+      <br> 예를 들어 birthday만 보내고 싶다면 body에 {birthday : xxx} 만 보내주시면 됩니다.
     `,
   })
   @ApiBody({ type: UpdateUserDto })
-  @Put('/user/:userId')
+  @Put('/')
   async updateUserById(@Body() updateUserDto: UpdateUserDto, @Req() req) {
     const { userId } = req.user;
+
     await this.userService.updateById(userId, updateUserDto);
     return new CommonResponseDto('user status');
   }

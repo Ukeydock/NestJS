@@ -14,7 +14,7 @@ export class User extends CommonSoftDelete {
   nickname: string;
 
   @Column({ type: 'varchar', length: 32, nullable: true, default: '미정' })
-  age: Date;
+  birthday: Date;
 
   @Column({ type: 'varchar', length: 32, nullable: true, default: '미정' })
   job: string;

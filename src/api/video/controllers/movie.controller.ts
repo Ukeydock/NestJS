@@ -1,5 +1,5 @@
 import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { RequestMovieListPageDto } from '../dto/requestVideo.dto';
+import {} from '../dto/requestVideo.dto';
 import { ResponseVideoListPageDto } from '../dto/responseVideo.dto';
 import { Controller, Get } from '@nestjs/common';
 import { ResponseKeywordDto } from '@root/api/keyword/dto/responseKeword.dto';
@@ -12,7 +12,7 @@ export class MovieController {
     description: `영화 리스팅 페이지 
      `,
   })
-  @ApiQuery({ type: RequestMovieListPageDto })
+  @ApiQuery({})
   @ApiResponse({ type: ResponseVideoListPageDto })
   @Get('/video/:keyword')
   영화검색리스트() {}

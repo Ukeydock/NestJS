@@ -26,6 +26,7 @@ class App {
     this.server = server;
 
     this.PORT = process.env.SERVER_PORT || '5000';
+    console.log(process.env.CORS_ORIGIN_LIST);
     this.corsOriginList = process.env.CORS_ORIGIN_LIST
       ? process.env.CORS_ORIGIN_LIST.split(',').map((origin) => origin.trim())
       : ['*'];

@@ -10,7 +10,6 @@ class UserListQueryBuilder {
     private userRepository: Repository<User>,
   ) {
     const offset = (this.getPage - 1) * this.getLimit;
-    console.log(offset);
     this.query = this.userRepository
       .createQueryBuilder(`U01`)
       .select([`U01.*`])

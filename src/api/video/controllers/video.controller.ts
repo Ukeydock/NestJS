@@ -7,13 +7,10 @@ import {
   Param,
   Delete,
   Render,
+  Query,
 } from '@nestjs/common';
 import { VideoService } from '../services/video.service';
-import {
-  RequestMovieListPageDto,
-  RequestVideoDetailPageDto,
-  RequestVideoListPageDto,
-} from '../dto/requestVideo.dto';
+import { VideoPageDto } from '../dto/requestVideo.dto';
 import {
   ResponseVideoDetailPageDto,
   ResponseVideoListPageDto,
@@ -35,18 +32,26 @@ export class VideoController {
     summary: '비디오 리스팅 페이지',
     description: '비디오 리스팅 페이지',
   })
-  @ApiQuery({ type: RequestVideoListPageDto })
+  @ApiQuery({ type: VideoPageDto })
   @ApiResponse({ type: ResponseVideoListPageDto })
   @Get('/:keyword')
-  @Render('main.ejs')
-  비디오검색리스트출력() {}
+  async findVideoList(
+    @Param() param: { keyword: string },
+    @Query() videoPageDto: VideoPageDto,
+  ) {
+    const videoData = await this.videoService.findVideoListByPlatform(
+      param.keyword,
+      videoPageDto,
+    );
+    return { videoData };
+  }
 
-  @ApiOperation({
-    summary: '비디오 상세 페이지',
-    description: '비디오 상세 페이지',
-  })
-  @ApiBody({ type: RequestVideoDetailPageDto })
-  @ApiResponse({ type: ResponseVideoDetailPageDto })
-  @Get('/video/:videoUniqueId')
-  비디오상세페이지조회() {}
+  // @ApiOperation({
+  //   summary: '비디오 상세 페이지',
+  //   description: '비디오 상세 페이지',
+  // })
+  // @ApiBody({ type: RequestVideoDetailPageDto })
+  // @ApiResponse({ type: ResponseVideoDetailPageDto })
+  // @Get('/video/:videoUniqueId')
+  // 비디오상세페이지조회() {}
 }

@@ -5,25 +5,11 @@ export class FindUserByUserIdDto extends PickType(UserDto, ['userId']) {}
 
 export class CreateUserDto extends PickType(UserDto, ['nickname']) {}
 
-export class UpdateUserDto {
-  @ApiProperty({
-    example: 'man || women',
-    description: '성별',
-  })
-  gender?: string;
-
-  @ApiProperty({
-    example: '아직 정해야 함',
-    description: '직업',
-  })
-  job?: string;
-
-  @ApiProperty({
-    example: '25',
-    description: '나이',
-  })
-  age?: number;
-}
+export class UpdateUserDto extends PickType(UserDto, [
+  'gender',
+  'birthday',
+  'nickname',
+]) {}
 
 export class FindUserListPageDto {
   @ApiProperty({

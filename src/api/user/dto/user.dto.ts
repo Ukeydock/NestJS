@@ -1,9 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { User } from '@root/database/entities/user.entity';
+import { IsDate, IsDateString } from 'class-validator';
 
 export class UserDto extends User {
   @ApiProperty()
-  userId: number;
+  userId?: number;
 
   @ApiProperty({
     example: 'man || women',
@@ -17,9 +18,10 @@ export class UserDto extends User {
   })
   job: string;
 
+  @IsDateString()
   @ApiProperty({
-    example: '25',
+    example: '1998-01-21',
     description: '나이',
   })
-  age: Date;
+  birthday: Date;
 }

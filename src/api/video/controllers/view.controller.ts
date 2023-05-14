@@ -1,6 +1,5 @@
 import { Controller, Delete, Post, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { RequestVideoListPageDto } from '../dto/requestVideo.dto';
 import { ResponseVideoListPageDto } from '../dto/responseVideo.dto';
 
 @ApiTags('View')
@@ -13,9 +12,7 @@ export class ViewController {
     summary: '유저가 조회한 비디오 기록 조회',
     description: '페이지네이션',
   })
-  @ApiQuery({
-    type: RequestVideoListPageDto,
-  })
+  @ApiQuery({})
   @ApiResponse({ type: ResponseVideoListPageDto })
   @Post('/:videoUniqueId')
   조회기록조회() {}
