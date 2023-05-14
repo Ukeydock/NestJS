@@ -10,6 +10,7 @@ import {
   Res,
   UseGuards,
   Req,
+  Header,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
@@ -28,17 +29,18 @@ export class AuthController {
     summary: '소셜로그인 구글(완)',
     description: 'redirect frontDomain + auth/google/callback?appToken=token',
   })
+  @Header('Access-Control-Allow-Origin', '*') // CORS 허용
   @Get('/google/login')
   execGoogleSocialLogin() {
     return;
   }
 
+  @Header('Access-Control-Allow-Origin', '*') // CORS 허용
   @UseGuards(GoogleAuthGuard)
   @Get('/google/callback')
   execGoogleSocialLoginCallback(@Req() req, @Res() res: Response) {
-    res.redirect(
-      `http://localhost:4000/auth/social/callback?appToken=${req.user.appToken}`,
-    );
+    res.cookie('accessToken', req.user.appToken);
+    res.redirect(`http://localhost:4000/auth/google/callback`);
   }
 
   // @ApiOperation({
