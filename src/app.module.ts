@@ -14,10 +14,13 @@ import { UserModule } from './api/user/user.module';
 import { AuthModule } from './api/auth/auth.module';
 import { VideoController } from './api/video/controllers/video.controller';
 import { KeywordController } from './api/keyword/keyword.controller';
-import { CommonService } from './common/services/common.service';
-import { CommonResponseDto } from './common/dto/response.dto';
+import { CommonService } from './api/common/services/common.service';
+import { CommonResponseDto } from './api/common/dto/response.dto';
 import { JwtStrategy } from './api/auth/jwt/jwt.strategy';
 import { UserRepositoyry } from './api/user/repositories/user.repository';
+import { CommonModule } from './api/common/common.module';
+import { KeywordSubscriber } from '@root/database/subscriber/keyword.subscriber';
+import { KeywordUserSubscriber } from './database/subscriber/keywordUser.subscriber';
 
 export class Config {
   static setENV = () => {
@@ -45,24 +48,31 @@ export class Config {
       password: process.env.MYSQL_PASSWORD,
       database: process.env.MYSQL_DATABASE,
       entities: [__dirname + `/**/*.entity.{js,ts}`],
+      subscribers: [KeywordSubscriber, KeywordUserSubscriber],
       synchronize,
     });
+  }
+
+  static setModule() {
+    return [
+      AuthModule,
+      UserModule,
+      VideoModule,
+      CommentModule,
+      KeywordModule,
+      CommonModule,
+    ];
   }
 }
 
 @Module({
   imports: [
-    CommonResponseDto,
     Config.setENV(),
     Config.setMySQL(process.env.NODE_ENV == 'prod' ? false : true),
-    AuthModule,
-    UserModule,
-    VideoModule,
-    CommentModule,
-    KeywordModule,
+    ...Config.setModule(),
   ],
   controllers: [],
-  providers: [],
+  providers: [KeywordSubscriber],
   exports: [],
 })
 export class AppModule {}

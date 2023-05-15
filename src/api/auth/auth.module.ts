@@ -9,7 +9,7 @@ import { GoogleStrategy } from './google/google.strategy';
 
 import { UserModule } from '../user/user.module';
 import { AppModule } from '@root/app.module';
-import { CommonService } from '@root/common/services/common.service';
+import { CommonService } from '@root/api/common/services/common.service';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 
 @Module({
@@ -27,7 +27,6 @@ import { JwtModule, JwtService } from '@nestjs/jwt';
     AuthService,
     AuthSocialLoginService,
     CommonService,
-    JwtService,
 
     AuthRepository,
     GoogleStrategy,
