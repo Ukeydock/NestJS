@@ -13,7 +13,7 @@ import * as cookieParser from 'cookie-parser';
 import {
   HttpExceptionFilter,
   TypeOrmExceptionFilter,
-} from './common/middlewares/error/error.middleware';
+} from './api/common/middlewares/error/error.middleware';
 import { join } from 'path';
 
 class App {

@@ -8,6 +8,7 @@ import {
   Delete,
   Render,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { VideoService } from '../services/video.service';
 import { VideoPageDto } from '../dto/requestVideo.dto';
@@ -22,9 +23,12 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { JwtStrategy } from '@root/api/auth/jwt/jwt.strategy';
+import { JwtAuthGuard } from '@root/api/auth/jwt/jwt.guard';
 
 @ApiTags('Video')
 @Controller('video')
+@UseGuards(JwtAuthGuard)
 export class VideoController {
   constructor(private readonly videoService: VideoService) {}
 

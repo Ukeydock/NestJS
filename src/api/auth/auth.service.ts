@@ -7,7 +7,7 @@ import {
 import { Injectable } from '@nestjs/common';
 import { AuthRepository } from './auth.repository';
 import { Auth } from '@root/database/entities/auth.entity';
-import { CommonService } from '@root/common/services/common.service';
+import { CommonService } from '@root/api/common/services/common.service';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 
