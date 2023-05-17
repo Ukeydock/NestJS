@@ -18,10 +18,10 @@ export class KeywordRepository {
   async findAllByUserId(findUserByUserIdDto: FindUserByUserIdDto) {
     const query = this.userRepositoyry
       .createQueryBuilder('U01')
-      .select(``)
-      .innerJoin(`keywordUser`, `KU01`)
-      .innerJoin(`keyword`, `K01`);
-
+      .select([`K01.keyword AS keyword`, `K01.id AS keywordId`])
+      .innerJoin(`KeywordUser`, `KU01`, `U01.id = KU01.userId`)
+      .innerJoin(`keyword`, `K01`, `KU01.keywordId = K01.id`)
+      .where(`U01.id = :userId`, { userId: findUserByUserIdDto.userId });
     return await query.getRawMany();
   }
 

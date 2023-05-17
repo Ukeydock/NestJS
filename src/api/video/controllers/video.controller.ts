@@ -47,6 +47,8 @@ export class VideoController {
       param.keyword,
       videoPageDto,
     );
+    await this.videoService.createVideoData(videoData, videoPageDto.platform);
+
     return { videoData };
   }
 

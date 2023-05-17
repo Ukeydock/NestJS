@@ -3,7 +3,9 @@ import { google } from 'googleapis';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { VideoPageDto } from '../dto/requestVideo.dto';
 import { parseUrl } from 'url-lib';
-import { VideoListItemDto } from '../dto/video/video.dto';
+
+import { VideoRepository } from '../repositories/video.repository';
+import { VideoListItemDto } from '../dto/responseVideo.dto';
 
 class VideoCommon {
   static youtubeSeperateQuery(query) {
@@ -16,6 +18,17 @@ class VideoCommon {
       result[sep_element[0]] = sep_element[1];
     });
     return { v: result.v };
+  }
+
+  static convertDuration(timeTypePt: string) {
+    const timeRegex = /PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/;
+    const matches = timeTypePt.match(timeRegex);
+
+    const hours = matches[1] ? parseInt(matches[1]) : 0;
+    const minutes = matches[2] ? parseInt(matches[2]) : 0;
+    const seconds = matches[3] ? parseInt(matches[3]) : 0;
+
+    return { hours, minutes, seconds };
   }
 
   static findDomain(uri: string) {
@@ -32,14 +45,14 @@ class VideoCommon {
 class YoutubeService {
   private videoListData: VideoListItemDto[] = [];
 
-  get getVideoListData() {
-    return this.videoListData;
-  }
-
   private readonly youtube = google.youtube({
     version: 'v3',
     auth: process.env.YOUTUBE_API_KEY,
   });
+
+  get getVideoListData() {
+    return this.videoListData;
+  }
 
   private async findYoutubeChannelData(channelId: string) {
     const youtubeChannelData = await this.youtube.channels.list({
@@ -56,6 +69,25 @@ class YoutubeService {
     };
   }
 
+  private async findYoutubeVideoData(videoId: string) {
+    const youtubeVideoData = await this.youtube.videos.list({
+      part: ['snippet', 'contentDetails'],
+      id: [videoId],
+    });
+
+    const items = youtubeVideoData.data.items[0];
+
+    return {
+      videoCategoryId: items.snippet?.categoryId,
+      tags: items.snippet?.tags,
+      videoDeaultLanguage: items.snippet?.defaultLanguage,
+
+      videoDuration: VideoCommon.convertDuration(
+        items.contentDetails?.duration,
+      ),
+    };
+  }
+
   private async findYoutubeSearchData(
     keyword: string,
     videoPageDto: VideoPageDto,
@@ -64,19 +96,26 @@ class YoutubeService {
       part: ['snippet', 'id'],
       q: keyword,
       type: ['video'],
+      maxResults: 10,
     });
 
     for (const item of youtubeSearchData.data.items) {
+      await this.findYoutubeVideoData(item.id.videoId);
       this.videoListData.push({
         videoId: item.id.videoId,
         videoPublishedAt: item.snippet.publishedAt,
-        videoThumbnail: item.snippet.thumbnails.default.url,
+        videoThumbnail:
+          item.snippet.thumbnails?.high.url ??
+          item.snippet.thumbnails?.standard.url ??
+          item.snippet.thumbnails?.medium.url ??
+          item.snippet.thumbnails?.default.url,
         videoUri: `https://www.youtube.com/watch?v=` + item.id.videoId,
         videoTitle: item.snippet.title,
         videoDescription: item.snippet.description,
         videoChannelData: await this.findYoutubeChannelData(
           item.snippet.channelId,
         ),
+        videoDetailData: await this.findYoutubeVideoData(item.id.videoId),
       });
     }
   }
@@ -88,30 +127,12 @@ class YoutubeService {
       throw new BadRequestException('유튜브 URI만 등록가능합니다.');
     }
     await this.findYoutubeSearchData(keyword, videoPageDto);
-    // console.log(youtubeItems);
-    // const youtubeItemsSnippet = youtubeItems.snippet;
-
-    // const result: VideoListItemDto[] = [];
-
-    // const result: VideoListItemDto = {
-    //   videoId: youtubeItems.id,
-    //   videoThumbnail: youtubeItemsSnippet.thumbnails.standard.url,
-    //   videoUri: youtubeUri,
-    //   videoChannelId: youtubeItemsSnippet.channelId,
-    //   videoTitle: youtubeItemsSnippet.title,
-    //   videoDescription: youtubeItemsSnippet.description,
-    //   videoChannelTitle: youtubeItemsSnippet.channelTitle,
-    //   videoPublishedAt: youtubeItemsSnippet.publishedAt,
-    //   videoChannelThumbnail:
-    //     youtubeChannelData.data.items[0].snippet.thumbnails.default.url,
-    // };
-    // return { youtubeData: result, tags: youtubeItemsSnippet.tags };
   }
 }
 
 @Injectable()
 export class VideoService {
-  constructor() {}
+  constructor(private videoRepository: VideoRepository) {}
 
   async findVideoListByPlatform(keyword: string, videoPageDto: VideoPageDto) {
     switch (videoPageDto.platform) {
@@ -120,7 +141,30 @@ export class VideoService {
 
         await youtubeService.findYoutubeData(keyword, videoPageDto);
         return youtubeService.getVideoListData;
-        break;
+      }
+    }
+  }
+
+  async createVideoData(videoData: VideoListItemDto[], platform: string) {
+    for (const video of videoData) {
+      const videoDetailData = await this.videoRepository.createVideoDetail(
+        platform,
+        video.videoDetailData.videoDeaultLanguage,
+      );
+      const dupVideoData = await this.videoRepository.findOneByVideoId(
+        video.videoId,
+      );
+
+      let videoId;
+      if (dupVideoData) {
+        videoId = dupVideoData.id;
+      }
+      if (!dupVideoData) {
+        const newVideoData = await this.videoRepository.create(
+          video,
+          videoDetailData.id,
+        );
+        videoId = newVideoData.id;
       }
     }
   }

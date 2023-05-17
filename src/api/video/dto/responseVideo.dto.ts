@@ -1,5 +1,20 @@
 import { ApiProperty } from '@nestjs/swagger';
 
+interface videoChaanelData {
+  videoChannelTitle: string;
+  videoChannelDescription: string;
+  videoChannelThumbnail: string;
+  videoChannelCountry: string;
+}
+
+interface videoDetailData {
+  videoCategoryId: string;
+  tags: string[];
+  videoDeaultLanguage: string;
+
+  videoDuration: { hours?: number; minutes?: number; seconds: number };
+}
+
 export class ResponseVideoListPageDto {
   @ApiProperty({
     example: 'dvnhes23',
@@ -112,4 +127,18 @@ export class ResponseVideoDetailPageDto {
     description: '비디오 조회수',
   })
   videoViews: Number;
+}
+
+export class VideoListItemDto {
+  videoId: string;
+  videoThumbnail: string;
+  videoUri: string;
+  videoChannelData: videoChaanelData;
+  videoDetailData: videoDetailData;
+  // videoChannelId: string;
+  videoTitle: string;
+  videoDescription: string;
+  // videoChannelTitle: string;
+  videoPublishedAt: string;
+  // videoChannelThumbnail: string;
 }

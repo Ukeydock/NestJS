@@ -39,6 +39,7 @@ export class AuthController {
   @UseGuards(GoogleAuthGuard)
   @Get('/google/callback')
   execGoogleSocialLoginCallback(@Req() req, @Res() res: Response) {
+    res.cookie(`existNickname`, req.user.existNickname);
     res.cookie('accessToken', req.user.appToken);
     res.redirect(`http://localhost:4000/auth/google/callback`);
   }

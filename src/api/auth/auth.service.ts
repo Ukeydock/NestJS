@@ -23,11 +23,9 @@ export class AuthSocialLoginService {
 
   private createJwtToken(user: { userId }) {
     const payload = { userId: user.userId };
-    return {
-      appToken: this.jwtService.sign(payload, {
-        secret: process.env.JWT_SECRET_KEY,
-      }),
-    };
+    return this.jwtService.sign(payload, {
+      secret: process.env.JWT_SECRET_KEY,
+    });
   }
 
   private async createNewAuthUser(createAuthDto: CreateAuthDto) {
@@ -46,11 +44,21 @@ export class AuthSocialLoginService {
     snsId: string;
     profileImage: string;
     platform: string;
-  }) {
-    const authData = await this.authRepository.findOneByEmail(userAuthData);
+  }): Promise<{ appToken: string; existNickname: boolean }> {
+    const authData = await this.authRepository.findOneByEmail({
+      email: userAuthData.email,
+    });
 
     if (authData) {
-      return await this.execLogin(authData);
+      const userData = await this.userService.findByUserId({
+        userId: authData.user.id,
+      });
+      const appToken = await this.execLogin(authData);
+
+      return {
+        appToken,
+        existNickname: userData.nickname ? true : false,
+      };
     }
 
     if (!authData) {
@@ -62,12 +70,16 @@ export class AuthSocialLoginService {
         profileImage: userAuthData.profileImage,
       });
 
-      return await this.createNewAuthUser({
+      const appToken = await this.createNewAuthUser({
         email: userAuthData.email,
         snsId: userAuthData.snsId,
         platform: userAuthData.platform,
         userId: newUserId,
       });
+      return {
+        appToken,
+        existNickname: false,
+      };
     }
   }
 }

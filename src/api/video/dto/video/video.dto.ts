@@ -1,14 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Video } from '@root/database/entities/video.entity';
+import { VideoDetail } from '@root/database/entities/videoDetail.entity';
 
 export class VideoDto extends Video {
-  @ApiProperty({
-    example: '3600',
-    default: '7200',
-    description: '영상길이(초단위)',
-    required: false,
-  })
   duration: string;
+
   @ApiProperty({
     example: '30',
     default: 'none',
@@ -16,6 +12,7 @@ export class VideoDto extends Video {
     required: false,
   })
   createdAgo?: string;
+
   @ApiProperty({
     example: 'recent | view',
     default: 'recent',
@@ -23,6 +20,7 @@ export class VideoDto extends Video {
     required: false,
   })
   order?: string;
+
   @ApiProperty({
     example: 'youtube | twitch | africa | ted',
     description: '해당 플랫폼의 영상 출력',
@@ -32,22 +30,4 @@ export class VideoDto extends Video {
   platform: string;
 }
 
-interface youtubeChaanelData {
-  videoChannelTitle: string;
-  videoChannelDescription: string;
-  videoChannelThumbnail: string;
-  videoChannelCountry: string;
-}
-
-export class VideoListItemDto {
-  videoId: string;
-  videoThumbnail: string;
-  videoUri: string;
-  videoChannelData: youtubeChaanelData;
-  // videoChannelId: string;
-  videoTitle: string;
-  videoDescription: string;
-  // videoChannelTitle: string;
-  videoPublishedAt: string;
-  // videoChannelThumbnail: string;
-}
+export class VideoDetailDto extends VideoDetail {}
