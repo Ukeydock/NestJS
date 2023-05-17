@@ -8,7 +8,7 @@ export class VideoPageDto extends PickType(VideoDto, [
   'platform',
 ]) {}
 
-export class RequestVideoDetailPageDto {
+export class VideoDetailPageDto {
   @ApiProperty({
     example: 'youtube | twitch | africa | ted',
     description: '해당 플랫폼의 영상 출력',

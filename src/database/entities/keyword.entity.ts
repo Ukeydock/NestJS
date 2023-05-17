@@ -4,6 +4,8 @@ import {
   JoinColumn,
   JoinTable,
   ManyToMany,
+  ManyToOne,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -20,24 +22,26 @@ export class Keyword extends NotUpdateCommon {
   count: number;
 }
 
-@Entity({ name: 'KeywordUser' })
+@Entity({ name: 'keywordUser' })
 export class KeywordUser extends NotUpdateCommon {
-  @OneToOne(() => User, (user) => user.id, { cascade: true })
+  @ManyToOne(() => User, (user) => user.id, { cascade: true })
   @JoinColumn()
-  user;
+  user: User;
 
-  @OneToOne(() => Keyword, (keyword) => keyword.id, { cascade: true })
+  @ManyToOne(() => Keyword, (keyword) => keyword.id, {
+    cascade: true,
+  })
   @JoinColumn()
-  keyword;
+  keyword: Keyword;
 }
 
-@Entity({ name: 'KeywordVideo' })
+@Entity({ name: 'keywordVideo' })
 export class KeywordVideo extends NotUpdateCommon {
-  @OneToOne(() => Video, (video) => video.id, { cascade: true })
+  @ManyToOne(() => Video, (video) => video.id, { cascade: true })
   @JoinColumn()
-  video;
+  video: Video;
 
-  @OneToOne(() => Keyword, (keyword) => keyword.id, { cascade: true })
+  @ManyToOne(() => Keyword, (keyword) => keyword.id, { cascade: true })
   @JoinColumn()
-  keyword;
+  keyword: Keyword;
 }

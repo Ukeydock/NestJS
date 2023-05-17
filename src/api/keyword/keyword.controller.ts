@@ -66,7 +66,10 @@ export class KeywordController {
   @Get('')
   async findAllByUserId(@Req() req) {
     const userId = req.user.userId;
+
     const keywordData = await this.keywordService.findAllByUserId({ userId });
+    // console.log(keywordData);
+    return keywordData;
   }
 
   @ApiOperation({

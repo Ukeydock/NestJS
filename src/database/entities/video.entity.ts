@@ -4,21 +4,33 @@ import {
   JoinColumn,
   JoinTable,
   ManyToMany,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Common, NotUpdateCommon } from './common.entity';
 import { Keyword } from './keyword.entity';
 import { User } from './user.entity';
+import { VideoDetail } from './videoDetail.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity()
 export class Video extends Common {
   @Column({ type: 'varchar', length: 64, nullable: false, default: '미정' })
   title: string;
 
+  @Column({ type: 'text' })
+  description: string;
+
   @Column({ type: 'varchar', length: 255, nullable: false, default: '미정' })
   thumbnail: Date;
 
+  @ApiProperty({
+    example: '3600',
+    default: '7200',
+    description: '영상길이(초단위)',
+    required: false,
+  })
   @Column({ type: 'varchar', length: 32, nullable: false, default: '미정' })
   duration: string;
 
@@ -28,9 +40,6 @@ export class Video extends Common {
   @Column({ type: 'varchar', length: 32, nullable: false, default: '미정' })
   videoId: string;
 
-  @Column({ type: 'varchar', length: 32, nullable: false, default: 'youtube' })
-  platform: string;
-
   @Column({ type: 'bigint', default: 0 })
   viewCount: number;
 
@@ -39,6 +48,12 @@ export class Video extends Common {
 
   @Column({ type: 'int', default: 0 })
   libraryCount: number;
+
+  @OneToMany(() => VideoDetail, (videoDetail) => videoDetail.id, {
+    cascade: true,
+  })
+  @JoinColumn([{ name: 'videoDetailId', referencedColumnName: 'id' }])
+  videoDetail: VideoDetail;
 }
 
 @Entity({ name: 'Library' })
