@@ -21,5 +21,10 @@ import { VideoTagRepository } from './repositories/videoTag.repository';
   ],
   controllers: [VideoController, ViewController, MovieController],
   providers: [VideoService, VideoRepository, VideoTagRepository],
+  exports: [
+    VideoService,
+    VideoTagRepository,
+    TypeOrmModule.forFeature([Video, VideoDetail, VideoTag, VideoTagVideo]),
+  ],
 })
 export class VideoModule {}

@@ -21,6 +21,9 @@ class VideoCommon {
   }
 
   static convertDuration(timeTypePt: string) {
+    if (!timeTypePt) {
+      return;
+    }
     const timeRegex = /PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/;
     const matches = timeTypePt.match(timeRegex);
 
@@ -79,7 +82,7 @@ class YoutubeService {
 
     return {
       videoCategoryId: items.snippet?.categoryId,
-      tags: items.snippet?.tags,
+      tags: items.snippet?.tags ?? [],
       videoDeaultLanguage: items.snippet?.defaultLanguage,
 
       videoDuration: VideoCommon.convertDuration(
@@ -134,6 +137,7 @@ class YoutubeService {
 export class VideoService {
   constructor(private videoRepository: VideoRepository) {}
 
+  // 해당 플렛폼에서 비디오 데이터를 가져오기
   async findVideoListByPlatform(keyword: string, videoPageDto: VideoPageDto) {
     switch (videoPageDto.platform) {
       case 'youtube': {
@@ -145,27 +149,26 @@ export class VideoService {
     }
   }
 
-  async createVideoData(videoData: VideoListItemDto[], platform: string) {
-    for (const video of videoData) {
-      const videoDetailData = await this.videoRepository.createVideoDetail(
-        platform,
-        video.videoDetailData.videoDeaultLanguage,
-      );
-      const dupVideoData = await this.videoRepository.findOneByVideoId(
-        video.videoId,
-      );
+  async findOneByVideoId(findOneByVideoIdDto: { videoId: string }) {
+    const dupVideoData = await this.videoRepository.findOneByVideoId(
+      findOneByVideoIdDto.videoId,
+    );
+    return dupVideoData;
+  }
 
-      let videoId;
-      if (dupVideoData) {
-        videoId = dupVideoData.id;
-      }
-      if (!dupVideoData) {
-        const newVideoData = await this.videoRepository.create(
-          video,
-          videoDetailData.id,
-        );
-        videoId = newVideoData.id;
-      }
-    }
+  // 데이터베이스에 새로운 비디오 데이터 만들기
+  async createVideoData(
+    videoData: VideoListItemDto,
+    platform: string,
+  ): Promise<{ videoId: number }> {
+    const videoDetailData = await this.videoRepository.createVideoDetail(
+      platform,
+      videoData.videoDetailData.videoDeaultLanguage,
+    );
+    const newVideoData = await this.videoRepository.create(
+      videoData,
+      videoDetailData.id,
+    );
+    return { videoId: newVideoData.id };
   }
 }

@@ -1,7 +1,7 @@
 import { Column, Entity } from 'typeorm';
 import { NotUpdateCommon } from './common.entity';
 
-@Entity()
+@Entity({ name: `videoDetail` })
 export class VideoDetail extends NotUpdateCommon {
   @Column({ type: 'varchar', length: 32, nullable: false, default: '미정' })
   platform: string;
