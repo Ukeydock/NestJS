@@ -13,7 +13,7 @@ import { Common, NotUpdateCommon } from './common.entity';
 import { Video } from './video.entity';
 import { User } from './user.entity';
 
-@Entity()
+@Entity({ name: `keyword` })
 export class Keyword extends NotUpdateCommon {
   @Column({ type: 'varchar', length: 128, nullable: false, default: '미정' })
   keyword: string;

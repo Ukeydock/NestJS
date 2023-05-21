@@ -15,14 +15,20 @@ export class KeywordRepository {
     private userRepositoyry: Repository<User>,
   ) {}
 
-  async findAllByUserId(findUserByUserIdDto: FindUserByUserIdDto) {
+  async findAllByUserId(findKeywordByUserIdDto: { userId: number }) {
     const query = this.userRepositoyry
       .createQueryBuilder('U01')
       .select([`K01.keyword AS keyword`, `K01.id AS keywordId`])
       .innerJoin(`KeywordUser`, `KU01`, `U01.id = KU01.userId`)
       .innerJoin(`keyword`, `K01`, `KU01.keywordId = K01.id`)
-      .where(`U01.id = :userId`, { userId: findUserByUserIdDto.userId });
+      .where(`U01.id = :userId`, { userId: findKeywordByUserIdDto.userId });
     return await query.getRawMany();
+  }
+
+  async findByKeyword(findKeywordByKeywordDto: { keyword: string }) {
+    return await this.keywordRepository.findOne({
+      where: { keyword: findKeywordByKeywordDto.keyword },
+    });
   }
 
   async create(createKeywordDto: CreateKeywordDto) {

@@ -16,6 +16,7 @@ import { ResponseKeywordDto } from './dto/responseKeword.dto';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt/jwt.guard';
 import { KeywordUserService } from './services/keyword-user.service';
+import axios from 'axios';
 
 @ApiTags('Keyword')
 @Controller('keyword')
@@ -97,4 +98,7 @@ export class KeywordController {
   @ApiResponse({ type: ResponseKeywordDto })
   @Get('/keyword/list/popular')
   인기키워드조회() {}
+
+  @Get('/test')
+  async test() {}
 }

@@ -21,6 +21,13 @@ import { UserRepositoyry } from './api/user/repositories/user.repository';
 import { CommonModule } from './api/common/common.module';
 import { KeywordSubscriber } from '@root/database/subscriber/keyword.subscriber';
 import { KeywordUserSubscriber } from './database/subscriber/keywordUser.subscriber';
+import { ScheduleModule } from '@nestjs/schedule';
+import {
+  GoogleTrendService,
+  ScheduleServie,
+} from './api/common/services/schedule.service';
+import { VideoService } from './api/video/services/video.service';
+import { VideoRepository } from './api/video/repositories/video.repository';
 
 export class Config {
   static setENV = () => {
@@ -70,9 +77,14 @@ export class Config {
     Config.setENV(),
     Config.setMySQL(process.env.NODE_ENV == 'prod' ? false : true),
     ...Config.setModule(),
+    ScheduleModule.forRoot(),
   ],
   controllers: [],
-  providers: [KeywordSubscriber],
+  providers: [KeywordSubscriber, ScheduleServie, GoogleTrendService],
   exports: [],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(private readonly scheduleService: GoogleTrendService) {
+    // scheduleService.initEachDay();
+  }
+}

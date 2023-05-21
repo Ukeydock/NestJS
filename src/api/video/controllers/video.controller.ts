@@ -33,7 +33,7 @@ export class VideoController {
   constructor(private readonly videoService: VideoService) {}
 
   @ApiOperation({
-    summary: '비디오 리스팅 페이지',
+    summary: '',
     description: '비디오 리스팅 페이지',
   })
   @ApiQuery({ type: VideoPageDto })
@@ -47,7 +47,7 @@ export class VideoController {
       param.keyword,
       videoPageDto,
     );
-    await this.videoService.createVideoData(videoData, videoPageDto.platform);
+    // await this.videoService.createVideoData(videoData, videoPageDto.platform);
 
     return { videoData };
   }

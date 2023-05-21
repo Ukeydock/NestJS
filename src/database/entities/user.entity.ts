@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 import { Common, CommonSoftDelete } from './common.entity';
 
-@Entity()
+@Entity({ name: `user` })
 export class User extends CommonSoftDelete {
   @Column({ type: 'varchar', length: 32, nullable: false, default: '미정' })
   nickname: string;

@@ -11,6 +11,10 @@ export class KeywordService {
     return await this.keywordRepository.findAllByUserId(findKeywordByUserIdDto);
   }
 
+  async findByKeyword(findKeywordByKeywordDto: { keyword: string }) {
+    return await this.keywordRepository.findByKeyword(findKeywordByKeywordDto);
+  }
+
   async create(createKeywordDto: CreateKeywordDto) {
     return await this.keywordRepository.create(createKeywordDto);
   }

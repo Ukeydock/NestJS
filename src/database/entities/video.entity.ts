@@ -4,6 +4,7 @@ import {
   JoinColumn,
   JoinTable,
   ManyToMany,
+  ManyToOne,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -14,7 +15,7 @@ import { User } from './user.entity';
 import { VideoDetail } from './videoDetail.entity';
 import { ApiProperty } from '@nestjs/swagger';
 
-@Entity()
+@Entity({ name: `video` })
 export class Video extends Common {
   @Column({ type: 'varchar', length: 64, nullable: false, default: '미정' })
   title: string;
@@ -49,14 +50,14 @@ export class Video extends Common {
   @Column({ type: 'int', default: 0 })
   libraryCount: number;
 
-  @OneToMany(() => VideoDetail, (videoDetail) => videoDetail.id, {
+  @ManyToOne(() => VideoDetail, (videoDetail) => videoDetail.id, {
     cascade: true,
   })
   @JoinColumn([{ name: 'videoDetailId', referencedColumnName: 'id' }])
   videoDetail: VideoDetail;
 }
 
-@Entity({ name: 'Library' })
+@Entity({ name: 'library' })
 export class VideoUser extends NotUpdateCommon {
   @OneToOne(() => User, (user) => user.id, { cascade: true })
   @JoinColumn()
