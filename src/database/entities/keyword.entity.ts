@@ -18,7 +18,7 @@ export class Keyword extends NotUpdateCommon {
   @Column({ type: 'varchar', length: 128, nullable: false, default: '미정' })
   keyword: string;
 
-  @Column({ type: 'varchar', length: 128, nullable: false, default: 0 })
+  @Column({ type: 'int', nullable: false, default: 0 })
   count: number;
 }
 

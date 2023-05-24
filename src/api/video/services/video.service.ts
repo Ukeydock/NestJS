@@ -156,18 +156,34 @@ export class VideoService {
     return dupVideoData;
   }
 
+  async findByKeyword(findByKeywordDto: { keyword: string }) {
+    return await this.videoRepository.findBykeyword(findByKeywordDto);
+  }
+
   // 데이터베이스에 새로운 비디오 데이터 만들기
   async createVideoData(
     videoData: VideoListItemDto,
     platform: string,
   ): Promise<{ videoId: number }> {
-    const videoDetailData = await this.videoRepository.createVideoDetail(
-      platform,
-      videoData.videoDetailData.videoDeaultLanguage,
-    );
+    const dupVideoDetailData =
+      await this.videoRepository.findVideoDetailByPlatformAndDefaultLanguage({
+        platform,
+        defaultLanguage: videoData.videoDetailData.videoDeaultLanguage,
+      });
+    let videoDetailId: number;
+    if (dupVideoDetailData) {
+      videoDetailId = dupVideoDetailData.id;
+    }
+    if (!dupVideoDetailData) {
+      const videoDetailData = await this.videoRepository.createVideoDetail(
+        platform,
+        videoData.videoDetailData.videoDeaultLanguage,
+      );
+      videoDetailId = videoDetailData.id;
+    }
     const newVideoData = await this.videoRepository.create(
       videoData,
-      videoDetailData.id,
+      videoDetailId,
     );
     return { videoId: newVideoData.id };
   }

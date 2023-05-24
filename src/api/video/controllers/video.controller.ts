@@ -43,12 +43,7 @@ export class VideoController {
     @Param() param: { keyword: string },
     @Query() videoPageDto: VideoPageDto,
   ) {
-    const videoData = await this.videoService.findVideoListByPlatform(
-      param.keyword,
-      videoPageDto,
-    );
-    // await this.videoService.createVideoData(videoData, videoPageDto.platform);
-
+    const videoData = await this.videoService.findByKeyword(param);
     return { videoData };
   }
 

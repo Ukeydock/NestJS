@@ -1,4 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, PickType } from '@nestjs/swagger';
+import { KeywordDto } from './keyword.dto';
 
 export class CreateKeywordDto {
   @ApiProperty({
@@ -7,3 +8,5 @@ export class CreateKeywordDto {
   })
   keyword: string;
 }
+
+export class findAllKeywordDto extends PickType(KeywordDto, ['keyword']) {}
