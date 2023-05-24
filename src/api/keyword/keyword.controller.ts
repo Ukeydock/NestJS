@@ -9,9 +9,10 @@ import {
   Put,
   UseGuards,
   Req,
+  Query,
 } from '@nestjs/common';
 import { KeywordService } from './services/keyword.service';
-import { CreateKeywordDto } from './dto/requestKeword.dto';
+import { CreateKeywordDto, findAllKeywordDto } from './dto/requestKeword.dto';
 import { ResponseKeywordDto } from './dto/responseKeword.dto';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt/jwt.guard';
@@ -28,7 +29,31 @@ export class KeywordController {
   ) {}
 
   @ApiOperation({
-    summary: '키워드 추가',
+    summary: '키워드 조회. (검색, 필터 허용)',
+    description: '유저가 검색창에 키워드를 입력하면 ',
+  })
+  @ApiResponse({ type: ResponseKeywordDto })
+  @Get('/search')
+  async findAll(@Query() query: findAllKeywordDto) {
+    const keywordData = await this.keywordService.findAll(query);
+    return keywordData;
+  }
+
+  @ApiOperation({
+    summary: '해당 유저의 키워드 전체 조회',
+    description: '해당 유저의 키워드 전체 조회',
+  })
+  @ApiResponse({ type: ResponseKeywordDto })
+  @Get('')
+  async findAllByUserId(@Req() req) {
+    const userId = req.user.userId;
+    const keywordData = await this.keywordService.findAllByUserId({ userId });
+    // console.log(keywordData);
+    return keywordData;
+  }
+
+  @ApiOperation({
+    summary: '키워드 추가(0520완료)',
     description: '키워드를 추가',
   })
   @ApiBody({ type: CreateKeywordDto })
@@ -58,29 +83,6 @@ export class KeywordController {
   @ApiBody({ type: CreateKeywordDto })
   @Put('/keyword/:keywordId')
   키워드삭제() {}
-
-  @ApiOperation({
-    summary: '해당 유저의 키워드 전체 조회',
-    description: '해당 유저의 키워드 전체 조회',
-  })
-  @ApiResponse({ type: ResponseKeywordDto })
-  @Get('')
-  async findAllByUserId(@Req() req) {
-    const userId = req.user.userId;
-
-    const keywordData = await this.keywordService.findAllByUserId({ userId });
-    // console.log(keywordData);
-    return keywordData;
-  }
-
-  @ApiOperation({
-    summary: '해당 유저의 키워드 전체 조회',
-    description: '해당 유저의 키워드 전체 조회',
-  })
-  @ApiBody({})
-  @ApiResponse({ type: ResponseKeywordDto })
-  @Get('/keyword/list/:userId')
-  키워드조회() {}
 
   @ApiOperation({
     summary: '키워드의 count와 다른 알고리즘을 이용해 추천 키워드 ',

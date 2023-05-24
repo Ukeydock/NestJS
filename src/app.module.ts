@@ -24,10 +24,13 @@ import { KeywordUserSubscriber } from './database/subscriber/keywordUser.subscri
 import { ScheduleModule } from '@nestjs/schedule';
 import {
   GoogleTrendService,
+  MovieTrendService,
+  NaverDataLabKeyword,
   ScheduleServie,
 } from './api/common/services/schedule.service';
 import { VideoService } from './api/video/services/video.service';
 import { VideoRepository } from './api/video/repositories/video.repository';
+import { Movie } from './database/entities/netflixMovie.entity';
 
 export class Config {
   static setENV = () => {
@@ -78,13 +81,16 @@ export class Config {
     Config.setMySQL(process.env.NODE_ENV == 'prod' ? false : true),
     ...Config.setModule(),
     ScheduleModule.forRoot(),
+    TypeOrmModule.forFeature([Movie]),
   ],
   controllers: [],
-  providers: [KeywordSubscriber, ScheduleServie, GoogleTrendService],
+  providers: [
+    KeywordSubscriber,
+    ScheduleServie,
+    GoogleTrendService,
+    NaverDataLabKeyword,
+    MovieTrendService,
+  ],
   exports: [],
 })
-export class AppModule {
-  constructor(private readonly scheduleService: GoogleTrendService) {
-    // scheduleService.initEachDay();
-  }
-}
+export class AppModule {}

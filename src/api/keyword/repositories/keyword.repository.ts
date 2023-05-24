@@ -1,4 +1,7 @@
-import { CreateKeywordDto } from '@root/api/keyword/dto/requestKeword.dto';
+import {
+  CreateKeywordDto,
+  findAllKeywordDto,
+} from '@root/api/keyword/dto/requestKeword.dto';
 import { FindUserByUserIdDto } from '@root/api/user/dto/requestUser.dto';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -14,6 +17,19 @@ export class KeywordRepository {
     @InjectRepository(User)
     private userRepositoyry: Repository<User>,
   ) {}
+
+  async findAll(findAllKeywordDto: findAllKeywordDto) {
+    const query = this.keywordRepository
+      .createQueryBuilder(`K01`)
+      .select(`K01.*`);
+
+    if (findAllKeywordDto.keyword) {
+      query.orWhere(`K01.keyword LIKE :keyword`, {
+        keyword: `%${findAllKeywordDto.keyword}%`,
+      });
+    }
+    return await query.getRawMany();
+  }
 
   async findAllByUserId(findKeywordByUserIdDto: { userId: number }) {
     const query = this.userRepositoyry
