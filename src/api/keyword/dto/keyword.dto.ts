@@ -7,6 +7,12 @@ export class KeywordDto extends Keyword {
 
   @ApiProperty()
   keywordId: number;
+
+  @ApiProperty()
+  page?: number = 1;
+
+  @ApiProperty()
+  limit?: number = 10;
 }
 
 export class FindKeywordByUserIdDto extends PickType(KeywordDto, ['userId']) {}

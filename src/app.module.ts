@@ -13,7 +13,7 @@ import { VideoModule } from './api/video/video.module';
 import { UserModule } from './api/user/user.module';
 import { AuthModule } from './api/auth/auth.module';
 import { VideoController } from './api/video/controllers/video.controller';
-import { KeywordController } from './api/keyword/keyword.controller';
+import { KeywordController } from './api/keyword/controllers/keyword.controller';
 import { CommonService } from './api/common/services/common.service';
 import { CommonResponseDto } from './api/common/dto/response.dto';
 import { JwtStrategy } from './api/auth/jwt/jwt.strategy';
@@ -93,4 +93,8 @@ export class Config {
   ],
   exports: [],
 })
-export class AppModule {}
+export class AppModule {
+  // constructor(private movieTrendService: MovieTrendService) {
+  //   this.movieTrendService.getMovieTrend();
+  // }
+}

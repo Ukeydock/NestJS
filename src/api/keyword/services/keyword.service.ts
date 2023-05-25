@@ -1,14 +1,20 @@
 import { FindKeywordByUserIdDto } from '../dto/keyword.dto';
 import { Injectable } from '@nestjs/common';
-import { KeywordRepository } from '../repositories/keyword.repository';
-import { CreateKeywordDto, findAllKeywordDto } from '../dto/requestKeword.dto';
+import {
+  FindAllKeywordQueryBuilder,
+  KeywordRepository,
+} from '../repositories/keyword.repository';
+import { CreateKeywordDto, FindAllKeywordDto } from '../dto/requestKeword.dto';
 
 @Injectable()
 export class KeywordService {
-  constructor(private readonly keywordRepository: KeywordRepository) {}
+  constructor(
+    private readonly keywordRepository: KeywordRepository,
+    private readonly findAllKeywordQueryBuilder: FindAllKeywordQueryBuilder,
+  ) {}
 
-  async findAll(findAllKeywordDto: findAllKeywordDto) {
-    return await this.keywordRepository.findAll(findAllKeywordDto);
+  async findAll(findAllKeywordDto: FindAllKeywordDto) {
+    return await this.findAllKeywordQueryBuilder.findAll(findAllKeywordDto);
   }
 
   async findAllByUserId(findKeywordByUserIdDto: FindKeywordByUserIdDto) {

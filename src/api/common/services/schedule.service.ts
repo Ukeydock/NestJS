@@ -103,6 +103,8 @@ export class ScheduleServie {
           continue;
         }
       }
+
+      return newKeywordData.id;
     }
   }
 }
@@ -140,7 +142,7 @@ export class GoogleTrendService extends ScheduleServie {
     }
   }
 
-  @Cron(`0 * * * *`)
+  @Cron(`0 0 * * *`)
   public async initEachDay() {
     console.log('작업', Date.now());
     this.findGoogleTrendKeyword().catch((err) => {
@@ -156,7 +158,7 @@ export class MovieTrendService extends ScheduleServie {
     const instance = axios.create({
       baseURL: 'https://api.themoviedb.org/3',
       params: {
-        api_key: process.env.MOVIE_API_KEY,
+        api_key: 'df6127759055acd085098f81c258c47b',
         language: 'ko-KR',
       },
     });
@@ -195,6 +197,7 @@ export class MovieTrendService extends ScheduleServie {
         break;
       }
     }
+    console.log(movieCount);
   }
 
   @Cron(`0 * * * *`)
@@ -209,11 +212,14 @@ export class MovieTrendService extends ScheduleServie {
 
     for (const movie of movieData) {
       try {
-        await this.createNewVideoByKeyword(
+        const keywordId = await this.createNewVideoByKeyword(
           movie.name,
           `넷플릭스 ${movie.name} 몰아보기`,
         );
-        await this.movieRepository.update(movie.id, { isExistVideo: true });
+        await this.movieRepository.update(movie.id, {
+          keyword: { id: keywordId },
+          isExistVideo: true,
+        });
       } catch (err) {
         console.error(err.message);
         break;
