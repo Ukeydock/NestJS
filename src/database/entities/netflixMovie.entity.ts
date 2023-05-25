@@ -1,5 +1,6 @@
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
 import { NotUpdateCommon } from './common.entity';
+import { Keyword } from './keyword.entity';
 
 @Entity({ name: `movie` })
 export class Movie extends NotUpdateCommon {
@@ -17,4 +18,8 @@ export class Movie extends NotUpdateCommon {
 
   @Column({ type: 'tinyint', default: 0 })
   isExistVideo: boolean;
+
+  @OneToOne(() => Keyword, (keyword) => keyword.id, { cascade: true })
+  @JoinColumn()
+  keyword: Keyword;
 }

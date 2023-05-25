@@ -18,6 +18,16 @@ export class KeywordUserRepository {
     private keywordUserRepositoyry: Repository<KeywordUser>,
   ) {}
 
+  async findByUserIdAndKeywordId(userId: number, keywordId: number) {
+    return await this.userRepositoyry
+      .createQueryBuilder(`U01`)
+
+      .leftJoin(`keywordUser`, `KU01`, `KU01.userId = U01.id`)
+      .where(`U01.id = :userId`, { userId })
+      .andWhere(`KU01.keywordId = :keywordId`, { keywordId })
+      .getOne();
+  }
+
   async create(createUserKeywordDto: CreateUserKeywordDto) {
     const keyword = this.keywordUserRepositoyry.create({
       user: { id: createUserKeywordDto.userId },

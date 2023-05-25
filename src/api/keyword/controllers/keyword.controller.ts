@@ -11,12 +11,12 @@ import {
   Req,
   Query,
 } from '@nestjs/common';
-import { KeywordService } from './services/keyword.service';
-import { CreateKeywordDto, findAllKeywordDto } from './dto/requestKeword.dto';
-import { ResponseKeywordDto } from './dto/responseKeword.dto';
+import { KeywordService } from '../services/keyword.service';
+import { CreateKeywordDto, FindAllKeywordDto } from '../dto/requestKeword.dto';
+import { ResponseKeywordDto } from '../dto/responseKeword.dto';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../auth/jwt/jwt.guard';
-import { KeywordUserService } from './services/keyword-user.service';
+import { JwtAuthGuard } from '../../auth/jwt/jwt.guard';
+import { KeywordUserService } from '../services/keywordUser.service';
 import axios from 'axios';
 
 @ApiTags('Keyword')
@@ -34,7 +34,7 @@ export class KeywordController {
   })
   @ApiResponse({ type: ResponseKeywordDto })
   @Get('/search')
-  async findAll(@Query() query: findAllKeywordDto) {
+  async findAll(@Query() query: FindAllKeywordDto) {
     const keywordData = await this.keywordService.findAll(query);
     return keywordData;
   }
