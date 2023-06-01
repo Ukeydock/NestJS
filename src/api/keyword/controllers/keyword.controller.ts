@@ -18,6 +18,7 @@ import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../auth/jwt/jwt.guard';
 import { KeywordUserService } from '../services/keywordUser.service';
 import axios from 'axios';
+import { FindRecommentKeywordDto } from '../dto/keyword.dto';
 
 @ApiTags('Keyword')
 @Controller('keyword')
@@ -44,28 +45,33 @@ export class KeywordController {
     description: '해당 유저의 키워드 전체 조회',
   })
   @ApiResponse({ type: ResponseKeywordDto })
-  @Get('')
-  async findAllByUserId(@Req() req) {
-    const userId = req.user.userId;
+  @Get('/[@]:userId')
+  async findAllByUserId(@Req() req, @Param() param: { userId: number }) {
+    // 0번 유저아이디가 오면 로그인한 유저의 아이디로 변경
+    const userId = param.userId == 0 ? req.user.userId : param.userId;
     const keywordData = await this.keywordService.findAllByUserId({ userId });
     // console.log(keywordData);
     return keywordData;
   }
 
   @ApiOperation({
-    summary: '키워드 추가(0520완료)',
-    description: '키워드를 추가',
+    summary: '키워드의 count와 다른 알고리즘을 이용해 추천 키워드 ',
+    description: '키워드의 count와 다른 알고리즘을 이용해 추천 키워드',
   })
-  @ApiBody({ type: CreateKeywordDto })
-  @Post('/')
-  async create(@Req() req, @Body() body: CreateKeywordDto) {
+  @ApiResponse({ type: ResponseKeywordDto })
+  @Get('/recommend')
+  async finsAllRecomendedKeyword(
+    @Req() req,
+    @Query() query: FindRecommentKeywordDto,
+  ) {
     const userId = req.user.userId;
-    const newKeywordData = await this.keywordService.create(body);
-    await this.keywordUserService.create({
-      userId,
-      keywordId: newKeywordData.id,
-    });
-    return { message: '성공!' };
+    const recomendKeywordData =
+      await this.keywordService.findAllRecomendedKeyword({
+        userId,
+        recomendType: query.recomendType,
+        limit: query.limit,
+      });
+    return recomendKeywordData;
   }
 
   @ApiOperation({
@@ -73,7 +79,7 @@ export class KeywordController {
     description: '키워드 수정',
   })
   @ApiBody({ type: CreateKeywordDto })
-  @Put('/keyword/:keywordId')
+  @Put('/:keywordId')
   키워드수정() {}
 
   @ApiOperation({
@@ -81,16 +87,8 @@ export class KeywordController {
     description: '키워드 삭제',
   })
   @ApiBody({ type: CreateKeywordDto })
-  @Put('/keyword/:keywordId')
+  @Put('/:keywordId')
   키워드삭제() {}
-
-  @ApiOperation({
-    summary: '키워드의 count와 다른 알고리즘을 이용해 추천 키워드 ',
-    description: '키워드의 count와 다른 알고리즘을 이용해 추천 키워드',
-  })
-  @ApiResponse({ type: ResponseKeywordDto })
-  @Get('/keyword/list/recommend')
-  추천키워드조회() {}
 
   @ApiOperation({
     summary: '인기키워드',

@@ -1,9 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { User } from '@root/database/entities/user.entity';
-import { IsDate, IsDateString } from 'class-validator';
+import { IsDate, IsDateString, IsNumberString } from 'class-validator';
 
 export class UserDto extends User {
   @ApiProperty()
+  @IsNumberString()
   userId?: number;
 
   @ApiProperty({

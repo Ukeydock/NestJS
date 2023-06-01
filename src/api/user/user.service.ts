@@ -10,12 +10,24 @@ import { Injectable } from '@nestjs/common';
 export class UserService {
   constructor(private userRepositoyry: UserRepositoyry) {}
 
-  async findByUserId(findUserByUserIdDto: FindUserByUserIdDto) {
-    return await this.userRepositoyry.findById(findUserByUserIdDto);
+  async findOneByUserId(findUserByUserIdDto: FindUserByUserIdDto) {
+    return await this.userRepositoyry.findOneById(findUserByUserIdDto);
+  }
+
+  async findUserSubscribedKeywordList(
+    findUserListPageDto: FindUserListPageDto,
+    keywordId: number,
+  ) {
+    const userListData =
+      await this.userRepositoyry.findAllUserSubscribedKeywordList(
+        findUserListPageDto,
+        keywordId,
+      );
+    return userListData;
   }
 
   async findUserList(findUserListPageDto: FindUserListPageDto) {
-    const userListData = await this.userRepositoyry.findUserList(
+    const userListData = await this.userRepositoyry.findAll(
       findUserListPageDto,
     );
     return userListData;

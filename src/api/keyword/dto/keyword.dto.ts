@@ -1,5 +1,10 @@
 import { ApiProperty, PickType } from '@nestjs/swagger';
 import { Keyword } from '@root/database/entities/keyword.entity';
+import {
+  IS_NUMBER_STRING,
+  IsNumberString,
+  isNumberString,
+} from 'class-validator';
 
 export class KeywordDto extends Keyword {
   @ApiProperty()
@@ -13,6 +18,14 @@ export class KeywordDto extends Keyword {
 
   @ApiProperty()
   limit?: number = 10;
+
+  recomendType: 'recent' | 'popular' | 'recommend';
 }
 
 export class FindKeywordByUserIdDto extends PickType(KeywordDto, ['userId']) {}
+
+export class FindRecommentKeywordDto extends PickType(KeywordDto, [
+  'recomendType',
+  'limit',
+  `userId`,
+]) {}

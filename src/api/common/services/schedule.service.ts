@@ -176,31 +176,36 @@ export class MovieTrendService extends ScheduleServie {
     let page = 1;
     let movieCount = 0;
     while (1) {
+      if (page > 300) {
+        break;
+      }
       try {
         const movieData = await instance.get(
           requests.fetchNetflixOriginals + `&page=${page}`,
         );
 
         for (const movie of movieData.data.results) {
-          const movieEntity = this.movieRepository.create({
+          const movieEntity = await this.movieRepository.create({
             name: movie.name,
-            description: movie.overview,
+            description:
+              movie.overview.length > 120
+                ? movie.overview.slice(0, 120) + '...'
+                : movie.overview,
             originalLanguage: movie.original_language,
             originalName: movie.original_name,
           });
           movieCount += 1;
-          this.movieRepository.save(movieEntity);
+          await this.movieRepository.save(movieEntity);
         }
         page += 1;
       } catch (err) {
         console.error(err.message);
-        break;
+        continue;
       }
     }
-    console.log(movieCount);
   }
 
-  @Cron(`0 * * * *`)
+  @Cron(`0 0 19 * * *`)
   async findVideoBy() {
     const movieFindAllQuery = this.movieRepository
       .createQueryBuilder()
@@ -212,6 +217,7 @@ export class MovieTrendService extends ScheduleServie {
 
     for (const movie of movieData) {
       try {
+        console.log(movie);
         const keywordId = await this.createNewVideoByKeyword(
           movie.name,
           `넷플릭스 ${movie.name} 몰아보기`,

@@ -10,3 +10,8 @@ export class FindOneByUserIdAndKeywordIdDto extends PickType(KeywordDto, [
   `userId`,
   `keywordId`,
 ]) {}
+
+export class DeleteByUserIdAndKeywordIdDto extends PickType(KeywordDto, [
+  `userId`,
+  `keywordId`,
+]) {}
