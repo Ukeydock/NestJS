@@ -3,10 +3,7 @@ import { KeywordService } from './services/keyword.service';
 import { KeywordController } from './controllers/keyword.controller';
 import { JwtService } from '@nestjs/jwt';
 import { CommonModule } from '../common/common.module';
-import {
-  FindAllKeywordQueryBuilder,
-  KeywordRepository,
-} from './repositories/keyword.repository';
+import { KeywordRepository } from './repositories/keyword.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import {
   Keyword,
@@ -18,6 +15,12 @@ import { KeywordVideoService } from './services/keyword-video.service';
 import { KeywordUserRepository } from './repositories/keywordUser.repository';
 import { KeywordVideoRepository } from './repositories/keyword-video.repository';
 import { KeywordUserController } from './controllers/keyword-user.controller';
+import {
+  FindAllByUserIdQueryBuilder,
+  FindAllKeywordQueryBuilder,
+  FindAllRecomendedKeywordQueryBuilder,
+  SetQuery,
+} from './repositories/queryBuilder/findAll.queryBuilder';
 
 @Module({
   imports: [
@@ -33,7 +36,11 @@ import { KeywordUserController } from './controllers/keyword-user.controller';
     KeywordRepository,
     KeywordUserRepository,
     KeywordVideoRepository,
+
+    SetQuery,
     FindAllKeywordQueryBuilder,
+    FindAllByUserIdQueryBuilder,
+    FindAllRecomendedKeywordQueryBuilder,
   ],
   exports: [KeywordService, KeywordVideoService],
 })

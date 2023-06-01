@@ -17,7 +17,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 @Entity({ name: `video` })
 export class Video extends Common {
-  @Column({ type: 'varchar', length: 64, nullable: false, default: '미정' })
+  @Column({ type: 'varchar', length: 128, nullable: false, default: '미정' })
   title: string;
 
   @Column({ type: 'text' })

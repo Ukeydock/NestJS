@@ -50,7 +50,7 @@ export class AuthSocialLoginService {
     });
 
     if (authData) {
-      const userData = await this.userService.findByUserId({
+      const userData = await this.userService.findOneByUserId({
         userId: authData.user.id,
       });
       const appToken = await this.execLogin(authData);

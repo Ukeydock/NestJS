@@ -4,7 +4,10 @@ import { VideoController } from './controllers/video.controller';
 import { ViewController } from './controllers/view.controller';
 import { MovieController } from './controllers/movie.controller';
 import { CommonModule } from '../common/common.module';
-import { VideoRepository } from './repositories/video.repository';
+import {
+  FindVideoDetailQueryBuilder,
+  VideoRepository,
+} from './repositories/video.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Video } from '@root/database/entities/video.entity';
 import { VideoDetail } from '@root/database/entities/videoDetail.entity';
@@ -20,7 +23,13 @@ import { VideoTagRepository } from './repositories/videoTag.repository';
     TypeOrmModule.forFeature([Video, VideoDetail, VideoTag, VideoTagVideo]),
   ],
   controllers: [VideoController, ViewController, MovieController],
-  providers: [VideoService, VideoRepository, VideoTagRepository],
+  providers: [
+    VideoService,
+    VideoRepository,
+    VideoTagRepository,
+
+    FindVideoDetailQueryBuilder,
+  ],
   exports: [
     VideoService,
     VideoTagRepository,

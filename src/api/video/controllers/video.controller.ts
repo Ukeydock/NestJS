@@ -32,6 +32,14 @@ import { JwtAuthGuard } from '@root/api/auth/jwt/jwt.guard';
 export class VideoController {
   constructor(private readonly videoService: VideoService) {}
 
+  @Get(`/[@]:videoDbId`)
+  async findVideoDetail(@Param() param: { videoDbId: number }) {
+    const videoDetailData = await this.videoService.findOneByVideoDbId(
+      param.videoDbId,
+    );
+    return videoDetailData;
+  }
+
   @ApiOperation({
     summary: '',
     description: '비디오 리스팅 페이지',

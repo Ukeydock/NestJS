@@ -1,16 +1,24 @@
-import { FindKeywordByUserIdDto } from '../dto/keyword.dto';
-import { Injectable } from '@nestjs/common';
 import {
-  FindAllKeywordQueryBuilder,
-  KeywordRepository,
-} from '../repositories/keyword.repository';
+  FindKeywordByUserIdDto,
+  FindRecommentKeywordDto,
+} from '../dto/keyword.dto';
+import { Injectable } from '@nestjs/common';
+import { KeywordRepository } from '../repositories/keyword.repository';
 import { CreateKeywordDto, FindAllKeywordDto } from '../dto/requestKeword.dto';
+import {
+  FindAllByUserIdQueryBuilder,
+  FindAllKeywordQueryBuilder,
+  FindAllRecomendedKeywordQueryBuilder,
+} from '../repositories/queryBuilder/findAll.queryBuilder';
 
 @Injectable()
 export class KeywordService {
   constructor(
     private readonly keywordRepository: KeywordRepository,
+
     private readonly findAllKeywordQueryBuilder: FindAllKeywordQueryBuilder,
+    private readonly findAllByUserIdQueryBuilder: FindAllByUserIdQueryBuilder,
+    private readonly findAllRecomendedKeywordQueryBuilder: FindAllRecomendedKeywordQueryBuilder,
   ) {}
 
   async findAll(findAllKeywordDto: FindAllKeywordDto) {
@@ -27,5 +35,12 @@ export class KeywordService {
 
   async create(createKeywordDto: CreateKeywordDto) {
     return await this.keywordRepository.create(createKeywordDto);
+  }
+  async findAllRecomendedKeyword(
+    findRecommentKeywordDto: FindRecommentKeywordDto,
+  ) {
+    return await this.findAllRecomendedKeywordQueryBuilder.findAllRecomendedKeyword(
+      findRecommentKeywordDto,
+    );
   }
 }

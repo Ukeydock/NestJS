@@ -36,6 +36,51 @@ import { CommonResponseDto } from '@root/api/common/dto/response.dto';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @Get(`/keyword/:keywordId`)
+  async findUserSubscribedKeywordList(
+    @Query() findUserListPageDto: FindUserListPageDto,
+    @Param() param: { keywordId: number },
+  ) {
+    const userListData = await this.userService.findUserSubscribedKeywordList(
+      findUserListPageDto,
+      param.keywordId,
+    );
+
+    return new CommonResponseDto('', { userListData });
+  }
+
+  @ApiOperation({
+    summary: '유저 리스팅페이지',
+    description: '유저 리스팅페이지',
+  })
+  @ApiResponse({
+    status: 200,
+    type: ResponseUserListPageDto,
+    description: '모든 데이터는 배열로 반환됩니다.',
+  })
+  @Get('/')
+  async findUserList(@Query() findUserListPageDto: FindUserListPageDto) {
+    const userListData = await this.userService.findUserList(
+      findUserListPageDto,
+    );
+
+    return new CommonResponseDto('', { userListData });
+  }
+
+  @Get('/[@]:userId')
+  async findOneByUserId(
+    @Req() req,
+    @Param() findUserByUserIdDto: FindUserByUserIdDto,
+  ) {
+    const userId =
+      findUserByUserIdDto.userId == 0
+        ? req.user.userId
+        : findUserByUserIdDto.userId;
+    const userData = await this.userService.findOneByUserId({ userId });
+    console.log(userData);
+    return new CommonResponseDto('', { userData });
+  }
+
   @ApiOperation({
     summary: '유저정보 변경(test)',
     description: `유저의 정보 변경, 변경을 원하는 정보만 객체에 넣어 보내주시면 됩니다. 
@@ -49,25 +94,6 @@ export class UserController {
 
     await this.userService.updateById(userId, updateUserDto);
     return new CommonResponseDto('user status');
-  }
-
-  @ApiOperation({
-    summary: '유저 리스팅페이지',
-    description: '유저 리스팅페이지',
-  })
-  @ApiQuery({ type: FindUserListPageDto })
-  @ApiResponse({
-    status: 200,
-    type: ResponseUserListPageDto,
-    description: '모든 데이터는 배열로 반환됩니다.',
-  })
-  @Get('/')
-  async findUserList(@Query() findUserListPageDto: FindUserListPageDto) {
-    const userListData = await this.userService.findUserList(
-      findUserListPageDto,
-    );
-
-    return new CommonResponseDto('', { userListData });
   }
 }
 

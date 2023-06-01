@@ -5,7 +5,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Keyword, KeywordUser } from '@root/database/entities/keyword.entity';
 import { Repository } from 'typeorm';
 import { User } from '@root/database/entities/user.entity';
-import { CreateUserKeywordDto } from '../dto/keywordUser/requestKeywordUser.dto';
+import {
+  CreateUserKeywordDto,
+  DeleteByUserIdAndKeywordIdDto,
+} from '../dto/keywordUser/requestKeywordUser.dto';
 
 @Injectable()
 export class KeywordUserRepository {
@@ -34,5 +37,14 @@ export class KeywordUserRepository {
       keyword: { id: createUserKeywordDto.keywordId },
     });
     await this.keywordUserRepositoyry.save(keyword);
+  }
+
+  async deleteByUserIdAndKeywordId(
+    deleteByUserIdAndKeywordIdDto: DeleteByUserIdAndKeywordIdDto,
+  ) {
+    await this.keywordUserRepositoyry.delete({
+      keyword: { id: deleteByUserIdAndKeywordIdDto.keywordId },
+      user: { id: deleteByUserIdAndKeywordIdDto.userId },
+    });
   }
 }

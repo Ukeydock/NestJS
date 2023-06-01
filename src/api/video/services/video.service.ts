@@ -4,7 +4,10 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { VideoPageDto } from '../dto/requestVideo.dto';
 import { parseUrl } from 'url-lib';
 
-import { VideoRepository } from '../repositories/video.repository';
+import {
+  FindVideoDetailQueryBuilder,
+  VideoRepository,
+} from '../repositories/video.repository';
 import { VideoListItemDto } from '../dto/responseVideo.dto';
 
 class VideoCommon {
@@ -99,7 +102,7 @@ class YoutubeService {
       part: ['snippet', 'id'],
       q: keyword,
       type: ['video'],
-      maxResults: 10,
+      maxResults: 30,
     });
 
     for (const item of youtubeSearchData.data.items) {
@@ -121,6 +124,7 @@ class YoutubeService {
         videoDetailData: await this.findYoutubeVideoData(item.id.videoId),
       });
     }
+    console.log(this.videoListData[0].videoDetailData);
   }
 
   async findYoutubeData(keyword: string, videoPageDto: VideoPageDto) {
@@ -135,7 +139,10 @@ class YoutubeService {
 
 @Injectable()
 export class VideoService {
-  constructor(private videoRepository: VideoRepository) {}
+  constructor(
+    private videoRepository: VideoRepository,
+    private readonly findVideoDetailQueryBuilder: FindVideoDetailQueryBuilder,
+  ) {}
 
   // 해당 플렛폼에서 비디오 데이터를 가져오기
   async findVideoListByPlatform(keyword: string, videoPageDto: VideoPageDto) {
@@ -149,6 +156,12 @@ export class VideoService {
     }
   }
 
+  // video db 아이디로 가져오기
+  async findOneByVideoDbId(videoDbId: number) {
+    return this.findVideoDetailQueryBuilder.findOneByVideoDbId(videoDbId);
+  }
+
+  // 비디오 오리지널 아이디로 테이블에서 찾아보기
   async findOneByVideoId(findOneByVideoIdDto: { videoId: string }) {
     const dupVideoData = await this.videoRepository.findOneByVideoId(
       findOneByVideoIdDto.videoId,
