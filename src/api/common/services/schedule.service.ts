@@ -8,7 +8,6 @@ import { Cron } from '@nestjs/schedule';
 import { KeywordService } from '@root/api/keyword/services/keyword.service';
 import { KeywordVideoService } from '@root/api/keyword/services/keyword-video.service';
 import { VideoTagRepository } from '@root/api/video/repositories/videoTag.repository';
-import { google } from 'googleapis';
 import { VideoListItemDto } from '@root/api/video/dto/responseVideo.dto';
 import { Movie } from '@root/database/entities/netflixMovie.entity';
 import { Repository } from 'typeorm';
@@ -205,12 +204,12 @@ export class MovieTrendService extends ScheduleServie {
     }
   }
 
-  @Cron(`0 0 19 * * *`)
+  @Cron(`0 47 13 * * *`)
   async findVideoBy() {
     const movieFindAllQuery = this.movieRepository
       .createQueryBuilder()
       .select(`*`)
-      .limit(10)
+      .limit(20)
       .where(`isExistVideo = 0`);
 
     const movieData = await movieFindAllQuery.getRawMany();
@@ -225,7 +224,7 @@ export class MovieTrendService extends ScheduleServie {
         await this.movieRepository.update(movie.id, {
           keyword: { id: keywordId },
           isExistVideo: true,
-        });
+        }); 
       } catch (err) {
         console.error(err.message);
         break;

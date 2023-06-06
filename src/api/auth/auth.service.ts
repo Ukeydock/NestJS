@@ -19,7 +19,7 @@ export class AuthSocialLoginService {
     private jwtService: JwtService,
 
     private commonService: CommonService,
-  ) {}
+  ) { }
 
   private createJwtToken(user: { userId }) {
     const payload = { userId: user.userId };
@@ -57,7 +57,7 @@ export class AuthSocialLoginService {
 
       return {
         appToken,
-        existNickname: userData.nickname ? true : false,
+        existNickname: userData.userNickname ? true : false,
       };
     }
 
@@ -86,7 +86,7 @@ export class AuthSocialLoginService {
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly authRepository: AuthRepository) {}
+  constructor(private readonly authRepository: AuthRepository) { }
 
   async findOneById(findAuthByAuthIdDto: FindAuthByAuthIdDto) {
     return await this.authRepository.findOneById(findAuthByAuthIdDto);

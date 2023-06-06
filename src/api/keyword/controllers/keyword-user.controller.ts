@@ -18,7 +18,7 @@ import { JwtAuthGuard } from '@root/api/auth/jwt/jwt.guard';
 @Controller('keyword-user')
 @UseGuards(JwtAuthGuard)
 export class KeywordUserController {
-  constructor(private readonly keywordUserService: KeywordUserService) {}
+  constructor(private readonly keywordUserService: KeywordUserService) { }
 
   @Get('/[@]:keywordId')
   async findOneByUserIdAndKeywordId(

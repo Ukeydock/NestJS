@@ -16,10 +16,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   async validate(payload: { userId: { userId: number } }) {
     const userData = await this.userRepository.findOneById(payload.userId);
     return {
-      userId: userData.id,
-      nickname: userData.nickname,
-      birthday: userData.birthday,
-      gender: userData.gender,
+      userId: userData.userId,
+      nickname: userData.userNickname,
+      age: userData.userAge,
+      gender: userData.userGender,
     };
   }
 }

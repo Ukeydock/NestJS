@@ -19,7 +19,7 @@ export class KeywordService {
     private readonly findAllKeywordQueryBuilder: FindAllKeywordQueryBuilder,
     private readonly findAllByUserIdQueryBuilder: FindAllByUserIdQueryBuilder,
     private readonly findAllRecomendedKeywordQueryBuilder: FindAllRecomendedKeywordQueryBuilder,
-  ) {}
+  ) { }
 
   async findAll(findAllKeywordDto: FindAllKeywordDto) {
     return await this.findAllKeywordQueryBuilder.findAll(findAllKeywordDto);
@@ -36,6 +36,8 @@ export class KeywordService {
   async create(createKeywordDto: CreateKeywordDto) {
     return await this.keywordRepository.create(createKeywordDto);
   }
+
+  // 추천 키워드 찾기. 쿼리스트링으로 기준 잡기
   async findAllRecomendedKeyword(
     findRecommentKeywordDto: FindRecommentKeywordDto,
   ) {

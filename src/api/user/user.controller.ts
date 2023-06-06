@@ -34,7 +34,7 @@ import { CommonResponseDto } from '@root/api/common/dto/response.dto';
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth('appToken')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) { }
 
   @Get(`/keyword/:keywordId`)
   async findUserSubscribedKeywordList(
@@ -76,8 +76,9 @@ export class UserController {
       findUserByUserIdDto.userId == 0
         ? req.user.userId
         : findUserByUserIdDto.userId;
+
+
     const userData = await this.userService.findOneByUserId({ userId });
-    console.log(userData);
     return new CommonResponseDto('', { userData });
   }
 
@@ -99,12 +100,12 @@ export class UserController {
 
 @Controller('bookmark')
 export class BookmarkController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) { }
 
   @ApiOperation({
     summary: '즐겨찾기 추가/ 삭제',
     description: '즐겨찾기',
   })
   @Post('/user/bookmark/:videoUniqueId')
-  비디오즐겨찾기관리() {}
+  비디오즐겨찾기관리() { }
 }

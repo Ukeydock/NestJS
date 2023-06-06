@@ -10,18 +10,36 @@ import {
   FindUserListQuery,
   FindUserSubscribedKeywordListQuery,
 } from './userListQueryBuilder';
+import { FindOneUserDto } from '../dto/responseUser.dto';
 
 export class UserRepositoyry {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
-  ) {}
+  ) { }
 
   // 유저 아이디로 유저 정보 조회
-  async findOneById(findUserByUserIdDto: FindUserByUserIdDto) {
-    return await this.userRepository.findOneBy({
-      id: findUserByUserIdDto.userId,
-    });
+  async findOneById(findUserByUserIdDto: FindUserByUserIdDto): Promise<FindOneUserDto> {
+    const findOneByIdQuery = this.userRepository.createQueryBuilder(`U01`).select([
+      `U01.id AS userId`,
+      `U01.nickname AS userNickname`,
+      `U01.gender AS userGender`,
+      `U01.job AS userJob`,
+      `U01.createdAt AS userCreatedAt`,
+      `U01.updatedAt AS userUpdatedAt`,
+      `U01.profileImage AS userProfileImage`,
+      ` CASE
+            WHEN TIMESTAMPDIFF(YEAR, birthday, CURDATE()) < 10 THEN '어린이'
+            WHEN TIMESTAMPDIFF(YEAR, birthday, CURDATE()) < 20 THEN '10대'
+            WHEN TIMESTAMPDIFF(YEAR, birthday, CURDATE()) < 30 THEN '20대'
+            WHEN TIMESTAMPDIFF(YEAR, birthday, CURDATE()) < 40 THEN '30대'
+            WHEN TIMESTAMPDIFF(YEAR, birthday, CURDATE()) < 50 THEN '40대'
+            WHEN TIMESTAMPDIFF(YEAR, birthday, CURDATE()) < 60 THEN '50대'
+            ELSE '60대 이상'
+          END AS userAge`,
+
+    ])
+    return await findOneByIdQuery.getRawOne()
   }
 
   // 해당 키워드를 구독한 유저의 목록

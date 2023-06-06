@@ -30,8 +30,12 @@ import { JwtAuthGuard } from '@root/api/auth/jwt/jwt.guard';
 @Controller('video')
 @UseGuards(JwtAuthGuard)
 export class VideoController {
-  constructor(private readonly videoService: VideoService) {}
+  constructor(private readonly videoService: VideoService) { }
 
+  @ApiOperation({
+    summary: '비디오 상세 페이지',
+    description: '비디오 상세 페이지',
+  })
   @Get(`/[@]:videoDbId`)
   async findVideoDetail(@Param() param: { videoDbId: number }) {
     const videoDetailData = await this.videoService.findOneByVideoDbId(
@@ -41,7 +45,7 @@ export class VideoController {
   }
 
   @ApiOperation({
-    summary: '',
+    summary: '비디오 리스팅 페이지',
     description: '비디오 리스팅 페이지',
   })
   @ApiQuery({ type: VideoPageDto })
@@ -55,12 +59,5 @@ export class VideoController {
     return { videoData };
   }
 
-  // @ApiOperation({
-  //   summary: '비디오 상세 페이지',
-  //   description: '비디오 상세 페이지',
-  // })
-  // @ApiBody({ type: RequestVideoDetailPageDto })
-  // @ApiResponse({ type: ResponseVideoDetailPageDto })
-  // @Get('/video/:videoUniqueId')
-  // 비디오상세페이지조회() {}
+
 }

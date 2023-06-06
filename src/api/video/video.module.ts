@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { VideoService } from './services/video.service';
 import { VideoController } from './controllers/video.controller';
-import { ViewController } from './controllers/view.controller';
+import { VideoUserController } from './controllers/videoUserView.controller';
 import { MovieController } from './controllers/movie.controller';
 import { CommonModule } from '../common/common.module';
 import {
@@ -9,24 +9,30 @@ import {
   VideoRepository,
 } from './repositories/video.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Video } from '@root/database/entities/video.entity';
+import { Video, VideoUser } from '@root/database/entities/video.entity';
 import { VideoDetail } from '@root/database/entities/videoDetail.entity';
 import {
   VideoTag,
   VideoTagVideo,
 } from '@root/database/entities/videoTag.entity';
 import { VideoTagRepository } from './repositories/videoTag.repository';
+import { VideoUserRepository } from './repositories/videoUserView.repository';
+import { VideoUserService } from './services/videoUserView.service';
+import { View } from '@root/database/entities/view.entity';
 
 @Module({
   imports: [
     CommonModule,
-    TypeOrmModule.forFeature([Video, VideoDetail, VideoTag, VideoTagVideo]),
+    TypeOrmModule.forFeature([Video, VideoDetail, VideoTag, VideoTagVideo, VideoUser, View]),
   ],
-  controllers: [VideoController, ViewController, MovieController],
+  controllers: [VideoController, VideoUserController, MovieController],
   providers: [
     VideoService,
+    VideoUserService,
+
     VideoRepository,
     VideoTagRepository,
+    VideoUserRepository,
 
     FindVideoDetailQueryBuilder,
   ],
@@ -36,4 +42,4 @@ import { VideoTagRepository } from './repositories/videoTag.repository';
     TypeOrmModule.forFeature([Video, VideoDetail, VideoTag, VideoTagVideo]),
   ],
 })
-export class VideoModule {}
+export class VideoModule { }

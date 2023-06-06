@@ -8,13 +8,15 @@ import {
 import { Video } from './video.entity';
 import { User } from './user.entity';
 
-@Entity({ name: `view` })
+@Entity({ name: `videoUserView` })
 export class View extends CommonSoftDeleteNotUpdated {
   @ManyToOne(() => Video, (video) => video.id, { cascade: true })
-  @JoinColumn()
+  @JoinColumn({ name: 'videoId' })
   video;
 
   @ManyToOne(() => User, (user) => user.id, { cascade: true })
-  @JoinColumn()
+  @JoinColumn({ name: 'userId' })
   user;
+
+
 }

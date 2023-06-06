@@ -16,3 +16,29 @@ export class ResponseUserListPageDto {
   @ApiProperty({ example: 1 })
   userId: number;
 }
+
+export class FindOneUserDto {
+  @ApiProperty()
+  userId: string;
+
+  @ApiProperty()
+  userNickname: string;
+
+  @ApiProperty()
+  userGender: string;
+
+  @ApiProperty()
+  userJob: string;
+
+  @ApiProperty()
+  userCreatedAt: Date;
+
+  @ApiProperty()
+  userUpdatedAt: Date;
+
+  @ApiProperty()
+  userProfileImage: string;
+
+  @ApiProperty()
+  userAge: string;
+}

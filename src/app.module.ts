@@ -95,6 +95,6 @@ export class Config {
 })
 export class AppModule {
   constructor(private movieTrendService: MovieTrendService) {
-    this.movieTrendService.getMovieTrend();
+    // this.movieTrendService.getMovieTrend();
   }
 }
