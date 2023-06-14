@@ -7,6 +7,9 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindRecommentKeywordDto } from '../../dto/keyword.dto';
 import { Injectable } from '@nestjs/common';
+import { UserRepositoyry } from '@root/api/user/repositories/user.repository';
+import { KeywordRepository } from '../keyword.repository';
+import { GetRecommendKeywordIds } from './findRecommend.queryBuilder';
 
 @Injectable()
 export class SetQuery {
@@ -94,8 +97,12 @@ export class FindAllByUserIdQueryBuilder extends SetQuery {
   }
 }
 
+@Injectable()
 export class FindAllRecomendedKeywordQueryBuilder extends SetQuery {
-  constructor() {
+  constructor(
+    private userRepository: UserRepositoyry,
+    private keywordRepositoryClass: KeywordRepository
+  ) {
     super();
   }
   // 추천 키워드 찾기
@@ -122,6 +129,21 @@ export class FindAllRecomendedKeywordQueryBuilder extends SetQuery {
         this.setLimit(1, findRecommentKeywordDto.limit);
         break;
       case 'recommend':
+        const userData = await this.userRepository.findOneById({ userId: findRecommentKeywordDto.userId })
+
+        // 랜덤한 같은 성별,나이의 유저를 10명 가져와서
+        const equelGenderAgeUser = await this.userRepository.findAllByGenderAndAge(
+          { gender: userData.userGender, birthday: userData.userBirthday, limit: 10 }
+        )
+
+        // 가져온 유저들을 이용해 키워드를 가져온다.
+        const userIds = equelGenderAgeUser.map((user) => user.userId)
+        const keywordList = await this.keywordRepositoryClass.findAllByUserId({ userId: userIds })
+
+        const getRecommendKeywordIds = new GetRecommendKeywordIds(keywordList)
+        const keywordIds = getRecommendKeywordIds.build()
+        console.log(keywordIds)
+
         this.query.orderBy(`K01.count`, `DESC`);
         this.setLimit(1, findRecommentKeywordDto.limit);
         break;

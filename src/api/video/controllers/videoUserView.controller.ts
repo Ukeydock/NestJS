@@ -33,8 +33,7 @@ export class VideoUserController {
   create(@Req() req, @Param() param: { videoDbId: number }) {
     const { userId } = req.user;
 
-    console.log('userId', userId)
-    console.log('videoDbId', param.videoDbId)
+
     this.videoUserService.create({ userId, videoDbId: param.videoDbId });
 
   }

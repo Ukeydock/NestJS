@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { View } from "@root/database/entities/view.entity";
 import { Repository } from "typeorm";
-import { CreateVideoUserDto } from "../dto/videoUserView/videoUser.dto";
+import { CreateVideoUserDto, FindAllVideoUserViewDto } from "../dto/videoUserView/videoUser.dto";
 
 @Injectable()
 export class VideoUserRepository {
@@ -10,6 +10,14 @@ export class VideoUserRepository {
         @InjectRepository(View)
         protected videoUserViewRepositoy: Repository<View>
     ) { }
+
+    async findAllByUserId(findAllVideoUserViewDto: FindAllVideoUserViewDto) {
+        const findALlQuery = this.videoUserViewRepositoy.createQueryBuilder("V01")
+            .select(`V01.videoId AS videoId`)
+
+        return await findALlQuery.getRawMany();
+
+    }
 
     async create(createVideoUserDto: CreateVideoUserDto) {
         const view = new View();

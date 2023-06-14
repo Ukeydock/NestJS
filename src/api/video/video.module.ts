@@ -19,6 +19,7 @@ import { VideoTagRepository } from './repositories/videoTag.repository';
 import { VideoUserRepository } from './repositories/videoUserView.repository';
 import { VideoUserService } from './services/videoUserView.service';
 import { View } from '@root/database/entities/view.entity';
+import { VideoListQueryBuilder, VideoListQueryBuilderForView } from './repositories/queryBuilder/videoListQueryBuilder';
 
 @Module({
   imports: [
@@ -34,7 +35,10 @@ import { View } from '@root/database/entities/view.entity';
     VideoTagRepository,
     VideoUserRepository,
 
+    VideoListQueryBuilder,
     FindVideoDetailQueryBuilder,
+    VideoListQueryBuilderForView,
+    
   ],
   exports: [
     VideoService,

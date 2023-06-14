@@ -10,6 +10,8 @@ import {
   Req,
   UseGuards,
   Query,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import {
@@ -28,6 +30,9 @@ import {
 import { ResponseUserListPageDto } from './dto/responseUser.dto';
 import { JwtAuthGuard } from '../auth/jwt/jwt.guard';
 import { CommonResponseDto } from '@root/api/common/dto/response.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+
+
 
 @ApiTags('User')
 @Controller('user')
@@ -92,11 +97,29 @@ export class UserController {
   @Put('/')
   async updateUserById(@Body() updateUserDto: UpdateUserDto, @Req() req) {
     const { userId } = req.user;
-
     await this.userService.updateById(userId, updateUserDto);
     return new CommonResponseDto('user status');
   }
+
+
+  // 0610 현재 프로파일 이미지를 가져오는 중. (s3로 넘기는걸 구현해야함)
+  @ApiOperation({
+    summary: '유저 프로필 이미지 변경',
+    description: `유저의 프로필 이미지를 변경합니다. `,
+  })
+  @UseInterceptors(FileInterceptor('profileImage'))
+  @Post(`/profile`)
+  async updateProfileImage(@Req() req, @UploadedFile() file) {
+    const { userId } = req.user;
+
+    // await this.userService.updateById(userId, { avatar: file.filename });
+    return new CommonResponseDto('user status');
+  }
 }
+
+
+
+
 
 @Controller('bookmark')
 export class BookmarkController {
@@ -109,3 +132,4 @@ export class BookmarkController {
   @Post('/user/bookmark/:videoUniqueId')
   비디오즐겨찾기관리() { }
 }
+

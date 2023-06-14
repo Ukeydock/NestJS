@@ -2,7 +2,8 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Video } from '@root/database/entities/video.entity';
 import { VideoDetail } from '@root/database/entities/videoDetail.entity';
 
-export class VideoDto extends Video {
+
+export class VideoDto {
   duration: string;
 
   @ApiProperty({
@@ -28,6 +29,22 @@ export class VideoDto extends Video {
     required: false,
   })
   platform: string;
+
+  @ApiProperty({
+    example: {
+
+    }
+  })
+  page ?: number = 1;
+
+  @ApiProperty()
+  limit ?: number = 16;
+
+
+
+
+
+
 }
 
 export class VideoDetailDto extends VideoDetail {}

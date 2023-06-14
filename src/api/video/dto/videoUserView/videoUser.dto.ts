@@ -8,7 +8,19 @@ export class VideoUserDto extends VideoUser {
 
     @ApiProperty()
     userId: number;
+
+    @ApiProperty({
+        default: 100
+    })
+    limit?: number = 100;
 }
+
+export class FindAllVideoUserViewDto extends PickType(VideoUserDto, [
+    "userId",
+    "limit",
+] as const) { }
+
+
 
 export class CreateVideoUserDto extends PickType(VideoUserDto, [
     "videoDbId",

@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { CreateVideoUserDto } from "../dto/videoUserView/videoUser.dto";
+import { CreateVideoUserDto, FindAllVideoUserViewDto } from "../dto/videoUserView/videoUser.dto";
 import { VideoUserRepository } from "../repositories/videoUserView.repository";
 
 @Injectable()
@@ -9,6 +9,15 @@ export class VideoUserService {
         private readonly videoUserRepository: VideoUserRepository
     ) { }
 
+    /**
+     * 
+     * @param userId 
+     * @param limit 몇개나 조회할지
+     * @returns 해당 유저의 비디오 조회기록(중복 체크 안함)
+     */
+    async findAllByUserId(findAllVideoUserViewDto: FindAllVideoUserViewDto) {
+        return await this.videoUserRepository.findAllByUserId(findAllVideoUserViewDto);
+    }
 
     async create(createVideoUserDto: CreateVideoUserDto) {
         return await this.videoUserRepository.create(createVideoUserDto);

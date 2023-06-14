@@ -1,7 +1,7 @@
 import { google } from 'googleapis';
 
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { VideoPageDto } from '../dto/requestVideo.dto';
+import { FindAllViewVidoDto, VideoPageDto } from '../dto/requestVideo.dto';
 import { parseUrl } from 'url-lib';
 
 import {
@@ -9,6 +9,7 @@ import {
   VideoRepository,
 } from '../repositories/video.repository';
 import { VideoListItemDto } from '../dto/responseVideo.dto';
+import { VideoListQueryBuilder, VideoListQueryBuilderForView } from '../repositories/queryBuilder/videoListQueryBuilder';
 
 class VideoCommon {
   static youtubeSeperateQuery(query) {
@@ -142,6 +143,8 @@ export class VideoService {
   constructor(
     private videoRepository: VideoRepository,
     private readonly findVideoDetailQueryBuilder: FindVideoDetailQueryBuilder,
+    private readonly videoListQueryBuilder :VideoListQueryBuilder,
+    private readonly videoListQueryBuilderForView : VideoListQueryBuilderForView
   ) {}
 
   // 해당 플렛폼에서 비디오 데이터를 가져오기
@@ -171,6 +174,17 @@ export class VideoService {
 
   async findByKeyword(findByKeywordDto: { keyword: string }) {
     return await this.videoRepository.findBykeyword(findByKeywordDto);
+  }
+
+  async findViewVideoByUserId(
+    userId : number,
+    findAllViewVidoDto: FindAllViewVidoDto,
+  )  {
+   
+    const videoData =  await this.videoListQueryBuilderForView.getViewVideoData(userId, findAllViewVidoDto)
+
+    return videoData;
+   
   }
 
   // 데이터베이스에 새로운 비디오 데이터 만들기

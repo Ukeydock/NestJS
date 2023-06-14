@@ -1,5 +1,6 @@
 import {
   CreateUserDto,
+  FindAllByGenderAndAgeDto,
   FindUserByUserIdDto,
   FindUserListPageDto,
 } from '../dto/requestUser.dto';
@@ -28,6 +29,7 @@ export class UserRepositoyry {
       `U01.createdAt AS userCreatedAt`,
       `U01.updatedAt AS userUpdatedAt`,
       `U01.profileImage AS userProfileImage`,
+      `U01.birthday AS userBirthday`,
       ` CASE
             WHEN TIMESTAMPDIFF(YEAR, birthday, CURDATE()) < 10 THEN '어린이'
             WHEN TIMESTAMPDIFF(YEAR, birthday, CURDATE()) < 20 THEN '10대'
@@ -40,6 +42,30 @@ export class UserRepositoyry {
 
     ])
     return await findOneByIdQuery.getRawOne()
+  }
+
+  /**
+   * 
+   * @param findAllByGenderAndAgeDto 
+   * @returns 랜덤한 유저 목록을 반환한다.
+   * 
+   */
+  async findAllByGenderAndAge(findAllByGenderAndAgeDto: FindAllByGenderAndAgeDto): Promise<{ userId: number }[]> {
+    // 매개변수로 온 Date에서 10년전과 10년 후의 Date 조건을 만들어준다.
+    const startDate = new Date(new Date(findAllByGenderAndAgeDto.birthday).getFullYear() - 10, new Date(findAllByGenderAndAgeDto.birthday).getMonth(), new Date(findAllByGenderAndAgeDto.birthday).getDate());
+    const endDate = new Date(new Date(findAllByGenderAndAgeDto.birthday).getFullYear() + 10, new Date(findAllByGenderAndAgeDto.birthday).getMonth(), new Date(findAllByGenderAndAgeDto.birthday).getDate());
+
+    // 해당 성별의 유저를 조회하고, 나이가 위아래로 10살 이내인 유저를 조회한다.
+    const findOneByGenderAndAgeQuery = this.userRepository.createQueryBuilder(`U01`).select([
+      `U01.id AS userId`,
+    ]).limit(findAllByGenderAndAgeDto.limit)
+      .where(`U01.gender =  :gender`, { gender: findAllByGenderAndAgeDto.gender })
+      .andWhere('U01.birthday >= :startDate', { startDate })
+      .andWhere('U01.birthday <= :endDate', { endDate })
+      .orderBy('RAND()')
+
+    return await findOneByGenderAndAgeQuery.getRawMany()
+
   }
 
   // 해당 키워드를 구독한 유저의 목록
@@ -73,7 +99,8 @@ export class UserRepositoyry {
   }
 
   // 유저 정보 수정
-  async updateById(userId, updateUserObject) {
+  async updateById(userId: number, updateUserObject) {
+    console.log(updateUserObject)
     await this.userRepository.update({ id: userId }, { ...updateUserObject });
   }
 }

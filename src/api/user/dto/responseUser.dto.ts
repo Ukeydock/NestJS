@@ -41,4 +41,7 @@ export class FindOneUserDto {
 
   @ApiProperty()
   userAge: string;
+
+  @ApiProperty()
+  userBirthday: Date;
 }

@@ -8,6 +8,25 @@ export class VideoPageDto extends PickType(VideoDto, [
   'platform',
 ]) {}
 
+export class FindAllViewVidoDto {
+
+  @ApiProperty({})
+  keywordId : number;
+
+  @ApiProperty({})
+  order : 'ASC' | 'DESC';
+
+  @ApiProperty({})
+  sort : `date`|`view`|`comment`;
+
+  @ApiProperty({})
+  page ?: number = 1;
+
+  @ApiProperty({})
+  limit ?: number = 16;
+
+}
+
 export class VideoDetailPageDto {
   @ApiProperty({
     example: 'youtube | twitch | africa | ted',

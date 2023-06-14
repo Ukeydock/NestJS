@@ -21,11 +21,13 @@ import {
   FindAllRecomendedKeywordQueryBuilder,
   SetQuery,
 } from './repositories/queryBuilder/findAll.queryBuilder';
+import { UserModule } from '../user/user.module';
 
 @Module({
   imports: [
     CommonModule,
     TypeOrmModule.forFeature([Keyword, KeywordUser, KeywordVideo]),
+    UserModule,
   ],
   controllers: [KeywordController, KeywordUserController],
   providers: [

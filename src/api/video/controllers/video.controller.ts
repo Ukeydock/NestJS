@@ -9,9 +9,10 @@ import {
   Render,
   Query,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { VideoService } from '../services/video.service';
-import { VideoPageDto } from '../dto/requestVideo.dto';
+import { FindAllViewVidoDto, VideoPageDto } from '../dto/requestVideo.dto';
 import {
   ResponseVideoDetailPageDto,
   ResponseVideoListPageDto,
@@ -58,6 +59,25 @@ export class VideoController {
     const videoData = await this.videoService.findByKeyword(param);
     return { videoData };
   }
+
+  @ApiOperation({
+    summary: '해당 유저가 조회한 비디오 리스팅',
+    description: 'userVideoView 테이블에에 Join',
+  })
+  @ApiQuery({ type: FindAllViewVidoDto })
+  @ApiResponse({ type: ResponseVideoListPageDto })
+  @Get('/view/[@]:userId')
+  async findViewVideoByUserId(
+    @Req() req,
+    @Param() param: { userId: number },
+    @Query() query: FindAllViewVidoDto,
+  ) {
+    const userId = param.userId == 0 ? req.user.userId : param.userId;
+
+    const videoData = await this.videoService.findViewVideoByUserId(userId, query);
+    return { videoData };
+  }
+  
 
 
 }

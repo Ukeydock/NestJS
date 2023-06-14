@@ -1,15 +1,17 @@
 import { ApiProperty, PickType } from '@nestjs/swagger';
 import { UserDto } from './user.dto';
 
-export class FindUserByUserIdDto extends PickType(UserDto, ['userId']) {}
+export class FindUserByUserIdDto extends PickType(UserDto, ['userId']) { }
 
-export class CreateUserDto extends PickType(UserDto, ['nickname']) {}
+export class FindAllByGenderAndAgeDto extends PickType(UserDto, [`gender`, `birthday`, `limit`]) { }
+
+export class CreateUserDto extends PickType(UserDto, ['nickname']) { }
 
 export class UpdateUserDto extends PickType(UserDto, [
   'gender',
   'birthday',
   'nickname',
-]) {}
+]) { }
 
 export class FindUserListPageDto {
   @ApiProperty({
