@@ -27,4 +27,8 @@ export class VideoUserRepository {
         await this.videoUserViewRepositoy.save(view);
 
     }
+
+    async updateIsRecentlyByVideoId(videoId: number) {
+        await this.videoUserViewRepositoy.update({ video: videoId }, { isRecently: false });
+    }
 }

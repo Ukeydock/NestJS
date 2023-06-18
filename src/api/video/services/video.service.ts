@@ -125,7 +125,6 @@ class YoutubeService {
         videoDetailData: await this.findYoutubeVideoData(item.id.videoId),
       });
     }
-    console.log(this.videoListData[0].videoDetailData);
   }
 
   async findYoutubeData(keyword: string, videoPageDto: VideoPageDto) {

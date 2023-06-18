@@ -142,7 +142,6 @@ export class FindAllRecomendedKeywordQueryBuilder extends SetQuery {
 
         const getRecommendKeywordIds = new GetRecommendKeywordIds(keywordList)
         const keywordIds = getRecommendKeywordIds.build()
-        console.log(keywordIds)
 
         this.query.orderBy(`K01.count`, `DESC`);
         this.setLimit(1, findRecommentKeywordDto.limit);

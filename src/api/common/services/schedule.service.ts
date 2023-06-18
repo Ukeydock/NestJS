@@ -12,6 +12,7 @@ import { VideoListItemDto } from '@root/api/video/dto/responseVideo.dto';
 import { Movie } from '@root/database/entities/netflixMovie.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { popularKoreanSingers } from '../source/signer';
 
 @Injectable()
 export class ScheduleServie {
@@ -28,14 +29,16 @@ export class ScheduleServie {
     const dupVideoData = await this.videoService.findOneByVideoId({
       videoId: videoData.videoId,
     });
+    
     if (dupVideoData) {
-      return { videoId: dupVideoData.id };
+      return null;
     }
-
+    
     const { videoId } = await this.videoService.createVideoData(
       videoData,
       `youtube`,
     );
+
     return { videoId };
   }
 
@@ -94,6 +97,12 @@ export class ScheduleServie {
             keyword,
           );
           const { videoId } = await this.createNewVideo(videoData);
+
+          if(!videoId) {
+            continue;
+          }
+
+
           await this.createNewTag(videoId, videoData.videoDetailData.tags);
 
           await this.keywordVideoService.create(videoId, newKeywordData.id);
@@ -132,7 +141,6 @@ export class GoogleTrendService extends ScheduleServie {
     });
     for (const item of items) {
       try {
-        // console.log(item);
         await this.createNewVideoByKeyword(item.title[0]);
       } catch (err) {
         console.error(err);
@@ -153,6 +161,21 @@ export class GoogleTrendService extends ScheduleServie {
 }
 
 export class MovieTrendService extends ScheduleServie {
+
+  async getSinger() {
+    popularKoreanSingers.forEach(async (singer) => {
+      const sigerObject = {
+        name: singer,
+        description: `music`,
+        originalLanguage: 'ko',
+        originalName: singer,
+      }
+      const singerEntity =  this.movieRepository.create(sigerObject);
+       await this.movieRepository.save(singerEntity);
+    })
+
+  }
+
   async getMovieTrend() {
     const instance = axios.create({
       baseURL: 'https://api.themoviedb.org/3',
@@ -186,10 +209,8 @@ export class MovieTrendService extends ScheduleServie {
         for (const movie of movieData.data.results) {
           const movieEntity = await this.movieRepository.create({
             name: movie.name,
-            description:
-              movie.overview.length > 120
-                ? movie.overview.slice(0, 120) + '...'
-                : movie.overview,
+            description:"movie",
+             
             originalLanguage: movie.original_language,
             originalName: movie.original_name,
           });
@@ -204,33 +225,48 @@ export class MovieTrendService extends ScheduleServie {
     }
   }
 
-  @Cron(`0 47 13 * * *`)
+  @Cron(`0 47 20 * * *`)
   async findVideoBy() {
     const movieFindAllQuery = this.movieRepository
       .createQueryBuilder()
       .select(`*`)
-      .limit(20)
-      .where(`isExistVideo = 0`);
+      .limit(30)
+      .where(`isExistVideo = 0`).orderBy(`RAND()`);
 
     const movieData = await movieFindAllQuery.getRawMany();
 
     for (const movie of movieData) {
       try {
         console.log(movie);
-        const keywordId = await this.createNewVideoByKeyword(
-          movie.name,
-          `넷플릭스 ${movie.name} 몰아보기`,
-        );
+        let keywordId;
+
+        if(movie.description == "music"){
+            keywordId = await this.createNewVideoByKeyword(
+            movie.name,
+            `가수 ${movie.name}`,
+          );
+        }
+        else if(movie.description == "movie"){
+          keywordId = await this.createNewVideoByKeyword(
+            movie.name,
+            `넷플릭스 ${movie.name} 몰아보기`,
+          );
+
+        }
         await this.movieRepository.update(movie.id, {
           keyword: { id: keywordId },
           isExistVideo: true,
         }); 
       } catch (err) {
-        console.error(err.message);
+        console.error(err);
         break;
       }
     }
   }
+}
+
+export class SingerService extends ScheduleServie {
+  
 }
 
 export class NaverDataLabKeyword extends ScheduleServie {

@@ -60,6 +60,11 @@ export class Config {
       entities: [__dirname + `/**/*.entity.{js,ts}`],
       subscribers: [KeywordSubscriber, KeywordUserSubscriber],
       synchronize,
+      extra: {
+      
+         sql_mode: "STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION",
+
+  }
     });
   }
 
@@ -95,6 +100,9 @@ export class Config {
 })
 export class AppModule {
   constructor(private movieTrendService: MovieTrendService) {
+
+    // 키워드 등록
     // this.movieTrendService.getMovieTrend();
+    // this.movieTrendService.getSinger()
   }
 }

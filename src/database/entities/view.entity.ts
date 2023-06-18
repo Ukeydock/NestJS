@@ -18,5 +18,7 @@ export class View extends CommonSoftDeleteNotUpdated {
   @JoinColumn({ name: 'userId' })
   user;
 
+  @Column({ name: 'isRecently', default: true })
+  isRecently: boolean;
 
 }

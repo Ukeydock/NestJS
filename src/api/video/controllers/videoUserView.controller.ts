@@ -28,14 +28,13 @@ export class VideoUserController {
     summary: '유저 조회기록 저장',
     description: '비디오 리스팅 페이지',
   })
-
   @Post('/[@]:videoDbId')
   create(@Req() req, @Param() param: { videoDbId: number }) {
     const { userId } = req.user;
 
 
+    this.videoUserService.updateIsRecentlyByVideoId(param.videoDbId)
     this.videoUserService.create({ userId, videoDbId: param.videoDbId });
-
   }
 
   @ApiOperation({

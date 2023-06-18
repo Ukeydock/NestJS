@@ -23,6 +23,11 @@ export class VideoUserService {
         return await this.videoUserRepository.create(createVideoUserDto);
     }
 
+    async updateIsRecentlyByVideoId(videoId: number) {
+        return await this.videoUserRepository.updateIsRecentlyByVideoId(videoId);
+    }
+    
+
 }
 
 

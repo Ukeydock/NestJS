@@ -25,9 +25,14 @@ export class VideoListQueryBuilder {
     }
 
   protected setKeyword(keywordId : FindAllViewVidoDto['keywordId']) {
+      
+    this.query.innerJoin(`keywordVideo`, `VK01`, `VK01.videoId = V01.id`)
+    .innerJoin(`keyword`, `K01`, `K01.id = VK01.keywordId`)
+    .addSelect(`K01.keyword AS keyword`)
+    .groupBy(`K01.keyword , V01.title , V01.id , VU01.id` )
+      
     if(!keywordId) return;
-
-    this.query.innerJoin(`videoKeyword`, `VK01`, `VK01.videoId = V01.id`)
+    this.query
     .where(`VK01.keywordId = ${keywordId}`);
 
   }
@@ -39,13 +44,13 @@ export class VideoListQueryBuilder {
   }
 
   public async getRawMany(){
-    this.query.groupBy(`V01.id`);
+    // this.query.groupBy(`V01.id`);
 
     return await this.query.getRawMany()
   }
 
     public async getRawOne(){
-    this.query.groupBy(`V01.id`);
+    // this.query.groupBy(`V01.id`);
 
     return await this.query.getRawOne()
     }
@@ -78,13 +83,14 @@ export class VideoListQueryBuilderForView extends VideoListQueryBuilder {
         this.setKeyword(FindAllViewVidoDto.keywordId);
         this.setOrderView(FindAllViewVidoDto.order, FindAllViewVidoDto.sort);
         this.setOffset(FindAllViewVidoDto.page, FindAllViewVidoDto.limit);
+        console.log(this.query.getSql())
         return await this.getRawMany();
     }
 
     private setOrderView(order : FindAllViewVidoDto['order'], sort : FindAllViewVidoDto['sort']) {
     switch (sort) {
         case `date`:
-            this.query.orderBy(`V01.createdDate`, order);
+            this.query.orderBy(`VU01.id`, order);
             break;
         case `view`:
             this.query.orderBy(`V01.viewCount`, order);
@@ -96,8 +102,9 @@ export class VideoListQueryBuilderForView extends VideoListQueryBuilder {
     }
 
     private setJoinVideoUser(userId : number) {
-        this.query.innerJoin(`videoUserView`, `VU01`, `VU01.videoId = V01.id`);
-        this.query.where(`VU01.userId = ${userId}`);
+        this.query.innerJoin(`videoUserView`, `VU01`, `VU01.videoId = V01.id`)
+        this.query.where(`VU01.userId = ${userId}`)
+        this.query.where(`VU01.isRecently = true`)
        
     }
 }
