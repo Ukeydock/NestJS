@@ -1,6 +1,7 @@
 import {
   CreateUserKeywordDto,
   DeleteByUserIdAndKeywordIdDto,
+  UpdateMainKeyworDto,
 } from '../dto/keywordUser/requestKeywordUser.dto';
 import { KeywordUserRepository } from '../repositories/keywordUser.repository';
 import { Injectable } from '@nestjs/common';
@@ -18,6 +19,15 @@ export class KeywordUserService {
 
   async create(createUserKeywordDto: CreateUserKeywordDto) {
     return await this.keywordUserRepository.create(createUserKeywordDto);
+  }
+
+  async updateMainKeyword(updateMainKeyworDto: UpdateMainKeyworDto) {
+    await this.keywordUserRepository.updateAllIsMainToFalse(
+      updateMainKeyworDto,
+    );
+    return await this.keywordUserRepository.updateMainKeyword(
+      updateMainKeyworDto,
+    );
   }
 
   async deleteByUserIdAndKeywordId(

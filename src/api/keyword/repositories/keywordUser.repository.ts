@@ -8,6 +8,7 @@ import { User } from '@root/database/entities/user.entity';
 import {
   CreateUserKeywordDto,
   DeleteByUserIdAndKeywordIdDto,
+  UpdateMainKeyworDto,
 } from '../dto/keywordUser/requestKeywordUser.dto';
 
 @Injectable()
@@ -37,6 +38,26 @@ export class KeywordUserRepository {
       keyword: { id: createUserKeywordDto.keywordId },
     });
     await this.keywordUserRepositoyry.save(keyword);
+  }
+
+  async updateMainKeyword(updateMainKeyworDto: UpdateMainKeyworDto) {
+    await this.keywordUserRepositoyry.update(
+      {
+        user: { id: updateMainKeyworDto.userId },
+        keyword: { id: updateMainKeyworDto.keywordId },
+      },
+      { isMain: true },
+    );
+  }
+  
+
+  async updateAllIsMainToFalse(updateMainKeyworDto: UpdateMainKeyworDto) {
+    await this.keywordUserRepositoyry.update(
+      {
+        user: { id: updateMainKeyworDto.userId },
+      },
+      { isMain: false },
+    );
   }
 
   async deleteByUserIdAndKeywordId(

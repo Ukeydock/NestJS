@@ -84,7 +84,7 @@ export class UserController {
 
 
     const userData = await this.userService.findOneByUserId({ userId });
-    return new CommonResponseDto('', { userData });
+    return new CommonResponseDto('유저 정보 하나 출력', { userData });
   }
 
   @ApiOperation({

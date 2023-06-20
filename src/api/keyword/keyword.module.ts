@@ -14,7 +14,7 @@ import { KeywordUserService } from './services/keywordUser.service';
 import { KeywordVideoService } from './services/keyword-video.service';
 import { KeywordUserRepository } from './repositories/keywordUser.repository';
 import { KeywordVideoRepository } from './repositories/keywordVideo.repository';
-import { KeywordUserController } from './controllers/keyword-user.controller';
+import { KeywordUserController } from './controllers/keywordUser.controller';
 import {
   FindAllByUserIdQueryBuilder,
   FindAllKeywordQueryBuilder,

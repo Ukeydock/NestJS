@@ -4,7 +4,9 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
+  Put,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -42,6 +44,19 @@ export class KeywordUserController {
       keywordId: param,
     });
     return { message: '키워드 추가 성공!' };
+  }
+
+  @Patch(`/main/[@]:keywordId`)
+  async updateMainKeyword(
+    @Param() param: { keywordId: number },
+    @Req() req,
+  ) {
+    const { userId } = req.user;
+    // console.log(param, userId)
+    await this.keywordUserService.updateMainKeyword({
+      userId,
+      keywordId: param.keywordId,
+    });
   }
 
   @Delete(`/[@]:keywordId`)

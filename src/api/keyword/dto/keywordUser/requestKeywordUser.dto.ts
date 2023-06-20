@@ -11,6 +11,11 @@ export class FindOneByUserIdAndKeywordIdDto extends PickType(KeywordDto, [
   `keywordId`,
 ]) {}
 
+export class UpdateMainKeyworDto extends PickType(KeywordDto, [
+  `userId`,
+  `keywordId`,
+  ]) {}
+
 export class DeleteByUserIdAndKeywordIdDto extends PickType(KeywordDto, [
   `userId`,
   `keywordId`,
