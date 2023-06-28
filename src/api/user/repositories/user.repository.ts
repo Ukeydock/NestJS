@@ -104,8 +104,7 @@ export class UserRepositoyry {
   }
 
   // 유저 정보 수정
-  async updateById(userId: number, updateUserObject) {
-    console.log(updateUserObject)
-    await this.userRepository.update({ id: userId }, { ...updateUserObject });
+  async updateById(userId: number, updateUserDto) {
+    await this.userRepository.update({ id: userId }, { ...updateUserDto });
   }
 }

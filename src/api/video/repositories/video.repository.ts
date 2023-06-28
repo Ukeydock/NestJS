@@ -71,6 +71,8 @@ export class VideoRepository {
     });
   }
 
+
+
   async findByKeyword(findByKeywordDto: { keyword: string }) {
     const query = this.videoRepository
       .createQueryBuilder(`V01`)
@@ -129,7 +131,7 @@ export class VideoRepository {
     return await this.videoRepository.save(videoEntity);
   }
 
-  async updateCount(videoDbId: number){
-
+  async updateViewCount(videoDbId: number, viewCount : number){
+    await this.videoRepository.update({id : videoDbId}, {viewCount : viewCount})
   }
 }

@@ -21,8 +21,8 @@ export class SetQuery {
   protected keywordUserRepository?: Repository<KeywordUser>;
 
   // 키워드가 유저에게 존재하는지 확인
-  protected setIsExistKeyword() {
-    this.query.leftJoin(`KeywordUser`, `KU01`, `K01.id = KU01.keywordId`);
+  protected setIsExistKeyword(userId: number) {
+    this.query.leftJoin(`KeywordUser`, `KU01`, `K01.id = KU01.keywordId AND KU01.userId = ${userId}`);
 
     this.query.addSelect(
       `CASE WHEN KU01.keywordId IS NULL THEN false ELSE true END AS isExistKeyword`,
@@ -59,7 +59,7 @@ export class FindAllKeywordQueryBuilder extends SetQuery {
     super();
   }
   // 모든 키워드를 찾기
-  public async findAll(findAllKeywordDto: FindAllKeywordDto) {
+  public async findAll(userId : number ,findAllKeywordDto: FindAllKeywordDto) {
     this.query = this.keywordRepository
       .createQueryBuilder(`K01`)
       .select([
@@ -72,7 +72,7 @@ export class FindAllKeywordQueryBuilder extends SetQuery {
 
     this.setSearchByKeyword(findAllKeywordDto.keyword);
     this.setLimit(findAllKeywordDto.page, findAllKeywordDto.limit);
-    this.setIsExistKeyword();
+    this.setIsExistKeyword(userId);
 
     return await this.query.getRawMany();
   }
@@ -84,14 +84,14 @@ export class FindAllByUserIdQueryBuilder extends SetQuery {
   }
 
   // 해당 유저가 가진 키워드만 조회
-  public async findAllByUserId(findKeywordByUserIdDto: FindKeywordByUserIdDto) {
+  public async findAllByUserId(userId : number ,findKeywordByUserIdDto: FindKeywordByUserIdDto) {
     this.query = this.keywordRepository
       .createQueryBuilder(`K01`)
       .select([`K01.*`]);
 
-    this.setWhereByUserId(findKeywordByUserIdDto.userId);
+    this.setWhereByUserId(userId);
     this.setLimit(findKeywordByUserIdDto.page, findKeywordByUserIdDto.limit);
-    this.setIsExistKeyword();
+    this.setIsExistKeyword(userId);
 
     return await this.query.getRawMany();
   }

@@ -37,7 +37,7 @@ export class UserService {
     return await this.userRepositoyry.create(createUserDto);
   }
 
-  async updateById(userId, updateUserObject) {
-    await this.userRepositoyry.updateById(userId, updateUserObject);
+  async updateById(userId, updateUserDto) {
+    await this.userRepositoyry.updateById(userId, updateUserDto);
   }
 }

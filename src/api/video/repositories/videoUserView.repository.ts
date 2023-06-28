@@ -19,11 +19,11 @@ export class VideoUserRepository {
 
     }
 
-    async findCountByVideoId(videoId: number) {
+    async findCountByVideoId(videoId: number) : Promise<{viewCount : number}>  {
         const findALlQuery = this.videoUserViewRepositoy.createQueryBuilder("V01")
-            .select(`COUNT(V01.videoId) AS count`)
+            .select(`COUNT(V01.videoId) AS viewCount`)
         findALlQuery.where(`V01.videoId = ${videoId}`)
-        return await findALlQuery.getRawOne();
+        return  await findALlQuery.getRawOne();
     }
 
     async findAllByVideoId(videoId: number) {

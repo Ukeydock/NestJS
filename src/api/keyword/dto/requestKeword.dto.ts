@@ -10,7 +10,6 @@ export class FindAllKeywordDto extends PickType(KeywordDto, [
 ]) {}
 
 export class FindKeywordByUserIdDto extends PickType(KeywordDto, [
-  `userId`,
   `page`,
   `limit`,
 ]) {}

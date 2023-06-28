@@ -31,7 +31,8 @@ export class AuthSocialLoginService {
   private async createNewAuthUser(createAuthDto: CreateAuthDto) {
     const newAuthData = await this.authRepository.create(createAuthDto);
     const newAuthId = newAuthData.raw.insertId;
-    const authData = await this.authRepository.findOneById(newAuthId);
+   
+    const authData = await this.authRepository.findOneById({authId: newAuthId});
     return this.createJwtToken({ userId: authData.user.id });
   }
 
@@ -48,7 +49,6 @@ export class AuthSocialLoginService {
     const authData = await this.authRepository.findOneByEmail({
       email: userAuthData.email,
     });
-
     if (authData) {
       const userData = await this.userService.findOneByUserId({
         userId: authData.user.id,

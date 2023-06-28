@@ -35,8 +35,9 @@ export class KeywordController {
   })
   @ApiResponse({ type: ResponseKeywordDto })
   @Get('/search')
-  async findAll(@Query() query: FindAllKeywordDto) {
-    const keywordData = await this.keywordService.findAll(query);
+  async findAll(@Query() query: FindAllKeywordDto, @Req() req) {
+    const {userId} = req.user
+    const keywordData = await this.keywordService.findAll(userId,query);
     return keywordData;
   }
 

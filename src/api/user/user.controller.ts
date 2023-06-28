@@ -97,6 +97,7 @@ export class UserController {
   @Put('/')
   async updateUserById(@Body() updateUserDto: UpdateUserDto, @Req() req) {
     const { userId } = req.user;
+    console.log(userId)
     await this.userService.updateById(userId, updateUserDto);
     return new CommonResponseDto('user status');
   }

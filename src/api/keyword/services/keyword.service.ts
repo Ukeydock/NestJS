@@ -21,8 +21,8 @@ export class KeywordService {
     private readonly findAllRecomendedKeywordQueryBuilder: FindAllRecomendedKeywordQueryBuilder,
   ) { }
 
-  async findAll(findAllKeywordDto: FindAllKeywordDto) {
-    return await this.findAllKeywordQueryBuilder.findAll(findAllKeywordDto);
+  async findAll(userId : number ,findAllKeywordDto: FindAllKeywordDto) {
+    return await this.findAllKeywordQueryBuilder.findAll(userId, findAllKeywordDto);
   }
 
   async findAllByUserId(findKeywordByUserIdDto: FindKeywordByUserIdDto) {

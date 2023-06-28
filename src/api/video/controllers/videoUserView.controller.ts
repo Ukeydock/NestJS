@@ -3,6 +3,7 @@ import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ResponseVideoListPageDto } from '../dto/responseVideo.dto';
 import { VideoUserService } from '../services/videoUserView.service';
 import { JwtAuthGuard } from '@root/api/auth/jwt/jwt.guard';
+import { VideoService } from '../services/video.service';
 
 @ApiTags('View')
 @Controller('view')
@@ -10,7 +11,8 @@ import { JwtAuthGuard } from '@root/api/auth/jwt/jwt.guard';
 export class VideoUserController {
   constructor(
 
-    private readonly videoUserService: VideoUserService
+    private readonly videoUserService: VideoUserService,
+    private readonly videoService : VideoService,
   ) { }
 
 
@@ -29,12 +31,15 @@ export class VideoUserController {
     description: '비디오 리스팅 페이지',
   })
   @Post('/[@]:videoDbId')
-  create(@Req() req, @Param() param: { videoDbId: number }) {
+  async create(@Req() req, @Param() param: { videoDbId: number }) {
     const { userId } = req.user;
 
-
-    this.videoUserService.updateIsRecentlyByVideoId(param.videoDbId)
-    this.videoUserService.create({ userId, videoDbId: param.videoDbId });
+    // isRecently를 false로 변경
+    await this.videoUserService.updateIsRecentlyByVideoId(param.videoDbId)
+    // 유저 조회기록 저장 isRecently : default true
+    await this.videoUserService.create({ userId, videoDbId: param.videoDbId });
+    const {viewCount} = await this.videoUserService.findCountByVideoId(param.videoDbId);
+    await this.videoService.updateViewCount(param.videoDbId, viewCount);
   }
 
   @ApiOperation({

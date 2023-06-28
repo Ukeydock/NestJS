@@ -30,7 +30,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     const { emails, photos, id } = profile;
     const email = emails[0].value;
     const profileImage = photos[0].value;
-
+    console.log(email, profileImage, id)
     const { appToken, existNickname } =
       await this.authSocialLoginService.execSocialLogin({
         email,

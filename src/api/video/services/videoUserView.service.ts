@@ -19,6 +19,10 @@ export class VideoUserService {
         return await this.videoUserRepository.findAllByUserId(findAllVideoUserViewDto);
     }
 
+    async findCountByVideoId(videoId: number): Promise<{viewCount : number}> {
+        return await this.videoUserRepository.findCountByVideoId(videoId);
+    }
+
     async create(createVideoUserDto: CreateVideoUserDto) {
         return await this.videoUserRepository.create(createVideoUserDto);
     }

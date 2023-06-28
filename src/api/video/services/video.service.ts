@@ -11,6 +11,7 @@ import {
 import { VideoListItemDto } from '../dto/responseVideo.dto';
 import { VideoListQueryBuilder, VideoListQueryBuilderForView } from '../repositories/queryBuilder/videoListQueryBuilder';
 import { KeywordRepository } from '@root/api/keyword/repositories/keyword.repository';
+import { VideoUserRepository } from '../repositories/videoUserView.repository';
 
 class VideoCommon {
   static youtubeSeperateQuery(query) {
@@ -218,5 +219,10 @@ export class VideoService {
       videoDetailId,
     );
     return { videoId: newVideoData.id };
+  }
+
+  async updateViewCount(videoDbId: number, viewCount: number) {
+   
+    await this.videoRepository.updateViewCount(videoDbId, viewCount);
   }
 }
