@@ -12,7 +12,7 @@ export class VideoListQueryBuilder {
   protected videoRepository: Repository<Video>;
 
  
-
+  
     
 
   get getQuery() {
@@ -24,16 +24,16 @@ export class VideoListQueryBuilder {
 
     }
 
-  protected setKeyword(keywordId : FindAllViewVidoDto['keywordId']) {
-      
+  protected setKeyword(keywordId : number) {
     this.query.innerJoin(`keywordVideo`, `VK01`, `VK01.videoId = V01.id`)
-    .innerJoin(`keyword`, `K01`, `K01.id = VK01.keywordId`)
-    .addSelect(`K01.keyword AS keyword`)
+    .innerJoin(`keyword`, `K01`, `K01.id = VK01.keywordId `)
+    .addSelect(`K01.keyword AS videoKeyword`)
     .groupBy(`K01.keyword , V01.title , V01.id , VU01.id` )
       
     if(!keywordId) return;
     this.query
-    .where(`VK01.keywordId = ${keywordId}`);
+    .andWhere(`VK01.keywordId = ${keywordId}`)
+
 
   }
 
@@ -73,18 +73,18 @@ export class VideoListQueryBuilderForView extends VideoListQueryBuilder {
         `V01.thumbnail AS videoThumbnail`,
         `V01.description AS videoDescription`,
         `V01.videoId AS videoId`,
+        `V01.viewCount AS videoViewCount`,
       ])
     
     }
 
-    public async getViewVideoData(userId : number , FindAllViewVidoDto : FindAllViewVidoDto){
-        this.setQuery()
-        this.setJoinVideoUser(userId);
-        this.setKeyword(FindAllViewVidoDto.keywordId);
-        this.setOrderView(FindAllViewVidoDto.order, FindAllViewVidoDto.sort);
-        this.setOffset(FindAllViewVidoDto.page, FindAllViewVidoDto.limit);
-        console.log(this.query.getSql())
-        return await this.getRawMany();
+    private setCountQuery(){
+      this.query = this.videoRepository
+      .createQueryBuilder(`V01`)
+      .select([
+        `COUNT(VU01.id) AS videoCount`
+      ])
+
     }
 
     private setOrderView(order : FindAllViewVidoDto['order'], sort : FindAllViewVidoDto['sort']) {
@@ -103,9 +103,33 @@ export class VideoListQueryBuilderForView extends VideoListQueryBuilder {
 
     private setJoinVideoUser(userId : number) {
         this.query.innerJoin(`videoUserView`, `VU01`, `VU01.videoId = V01.id`)
-        this.query.where(`VU01.userId = ${userId}`)
-        this.query.where(`VU01.isRecently = true`)
+        .andWhere(`VU01.userId = :userId`, {userId})
+        .andWhere(`VU01.isRecently = true`)
+        .addSelect([
+            `VU01.createdAt AS videoCreatedAt`,
+
+        ])
        
     }
+
+    public async getViewVideoData(userId : number ,keywordId : number, FindAllViewVidoDto : FindAllViewVidoDto){
+        this.setQuery()
+        this.setJoinVideoUser(userId);
+        this.setKeyword(keywordId);
+        this.setOrderView(FindAllViewVidoDto.order, FindAllViewVidoDto.sort);
+        this.setOffset(FindAllViewVidoDto.page, FindAllViewVidoDto.limit);
+        return await this.getRawMany();
+    }
+
+    public async getMaxPageNumber(userId : number,keywordId : number, FindAllViewVidoDto : FindAllViewVidoDto){
+        this.setCountQuery()
+        this.setJoinVideoUser(userId);
+        this.setKeyword(keywordId);
+        const videoCount = await this.query.getCount()
+        return Math.ceil(videoCount / FindAllViewVidoDto.limit) === 0 
+        ? 1 
+        : Math.ceil(videoCount / FindAllViewVidoDto.limit);
+    }
+
 }
 

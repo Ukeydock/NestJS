@@ -10,6 +10,7 @@ import {
 } from '../repositories/video.repository';
 import { VideoListItemDto } from '../dto/responseVideo.dto';
 import { VideoListQueryBuilder, VideoListQueryBuilderForView } from '../repositories/queryBuilder/videoListQueryBuilder';
+import { KeywordRepository } from '@root/api/keyword/repositories/keyword.repository';
 
 class VideoCommon {
   static youtubeSeperateQuery(query) {
@@ -141,6 +142,7 @@ class YoutubeService {
 export class VideoService {
   constructor(
     private videoRepository: VideoRepository,
+    private keywordRepository: KeywordRepository,
     private readonly findVideoDetailQueryBuilder: FindVideoDetailQueryBuilder,
     private readonly videoListQueryBuilder :VideoListQueryBuilder,
     private readonly videoListQueryBuilderForView : VideoListQueryBuilderForView
@@ -172,17 +174,21 @@ export class VideoService {
   }
 
   async findByKeyword(findByKeywordDto: { keyword: string }) {
-    return await this.videoRepository.findBykeyword(findByKeywordDto);
+    return await this.videoRepository.findByKeyword(findByKeywordDto);
   }
 
   async findViewVideoByUserId(
     userId : number,
     findAllViewVidoDto: FindAllViewVidoDto,
   )  {
-   
-    const videoData =  await this.videoListQueryBuilderForView.getViewVideoData(userId, findAllViewVidoDto)
-
-    return videoData;
+    let keywordId = null
+    if(findAllViewVidoDto.keyword){
+      const keywordData = await this.keywordRepository.findByKeyword({keyword : findAllViewVidoDto.keyword})
+      keywordId = keywordData.id
+    }
+    const videoData =  await this.videoListQueryBuilderForView.getViewVideoData(userId,keywordId, findAllViewVidoDto)
+    const maxPageNumber = await this.videoListQueryBuilderForView.getMaxPageNumber(userId,keywordId, findAllViewVidoDto)
+    return {videoData, maxPageNumber};
    
   }
 

@@ -19,6 +19,21 @@ export class VideoUserRepository {
 
     }
 
+    async findCountByVideoId(videoId: number) {
+        const findALlQuery = this.videoUserViewRepositoy.createQueryBuilder("V01")
+            .select(`COUNT(V01.videoId) AS count`)
+        findALlQuery.where(`V01.videoId = ${videoId}`)
+        return await findALlQuery.getRawOne();
+    }
+
+    async findAllByVideoId(videoId: number) {
+        const findALlQuery = this.videoUserViewRepositoy.createQueryBuilder("V01")
+            .select(`V01.videoId AS videoId`)
+        findALlQuery.where(`V01.videoId = ${videoId}`)
+
+        return await findALlQuery.getRawMany();
+    }
+
     async create(createVideoUserDto: CreateVideoUserDto) {
         const view = new View();
         view.video = createVideoUserDto.videoDbId;

@@ -11,7 +11,7 @@ export class VideoPageDto extends PickType(VideoDto, [
 export class FindAllViewVidoDto {
 
   @ApiProperty({})
-  keywordId : number;
+  keyword : string;
 
   @ApiProperty({})
   order : 'ASC' | 'DESC';

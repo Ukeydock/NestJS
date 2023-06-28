@@ -20,17 +20,21 @@ import { VideoUserRepository } from './repositories/videoUserView.repository';
 import { VideoUserService } from './services/videoUserView.service';
 import { View } from '@root/database/entities/view.entity';
 import { VideoListQueryBuilder, VideoListQueryBuilderForView } from './repositories/queryBuilder/videoListQueryBuilder';
+import { KeywordRepository } from '../keyword/repositories/keyword.repository';
+import { Keyword } from '@root/database/entities/keyword.entity';
 
 @Module({
   imports: [
     CommonModule,
-    TypeOrmModule.forFeature([Video, VideoDetail, VideoTag, VideoTagVideo, VideoUser, View]),
+    TypeOrmModule.forFeature([Video, VideoDetail, VideoTag, VideoTagVideo, VideoUser, View, Keyword]),
   ],
   controllers: [VideoController, VideoUserController, MovieController],
   providers: [
     VideoService,
     VideoUserService,
 
+
+    KeywordRepository,
     VideoRepository,
     VideoTagRepository,
     VideoUserRepository,

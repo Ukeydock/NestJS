@@ -52,6 +52,7 @@ export class VideoRepository {
     private videoRepository: Repository<Video>,
     @InjectRepository(VideoDetail)
     private videoDetailRepository: Repository<VideoDetail>,
+    
   ) {}
 
   async findOneByVideoId(videoId: string) {
@@ -70,7 +71,7 @@ export class VideoRepository {
     });
   }
 
-  async findBykeyword(findByKeywordDto: { keyword: string }) {
+  async findByKeyword(findByKeywordDto: { keyword: string }) {
     const query = this.videoRepository
       .createQueryBuilder(`V01`)
       .select([
@@ -126,5 +127,9 @@ export class VideoRepository {
  ${videoListItemDto.videoDetailData.videoDuration.seconds}S`,
     });
     return await this.videoRepository.save(videoEntity);
+  }
+
+  async updateCount(videoDbId: number){
+
   }
 }

@@ -74,8 +74,8 @@ export class VideoController {
   ) {
     const userId = param.userId == 0 ? req.user.userId : param.userId;
 
-    const videoData = await this.videoService.findViewVideoByUserId(userId, query);
-    return { videoData };
+    const {videoData, maxPageNumber} = await this.videoService.findViewVideoByUserId(userId, query);
+    return { videoData, maxPageNumber };
   }
   
 
