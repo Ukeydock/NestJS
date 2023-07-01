@@ -11,6 +11,7 @@ export class UserService {
   constructor(private userRepositoyry: UserRepositoyry) { }
 
   async findOneByUserId(findUserByUserIdDto: FindUserByUserIdDto) {
+    
     return await this.userRepositoyry.findOneById(findUserByUserIdDto);
   }
 

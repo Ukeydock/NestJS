@@ -67,39 +67,18 @@ export class KeywordController {
   ) {
     const userId = req.user.userId;
     const recomendKeywordData =
-      await this.keywordService.findAllRecomendedKeyword({
-        userId,
+      await this.keywordService.findAllRecomendedKeyword(
+         userId,
+        {
+       
         recomendType: query.recomendType,
         limit: query.limit,
       });
     return recomendKeywordData;
   }
 
-  @ApiOperation({
-    summary: '키워드 수정',
-    description: '키워드 수정',
-  })
-  @ApiBody({ type: CreateKeywordDto })
-  @Put('/:keywordId')
-  키워드수정() {}
 
-  @ApiOperation({
-    summary: '키워드 삭제',
-    description: '키워드 삭제',
-  })
-  @ApiBody({ type: CreateKeywordDto })
-  @Put('/:keywordId')
-  키워드삭제() {}
 
-  @ApiOperation({
-    summary: '인기키워드',
-    description: '인기키워드',
-  })
-  @ApiBody({})
-  @ApiResponse({ type: ResponseKeywordDto })
-  @Get('/keyword/list/popular')
-  인기키워드조회() {}
 
-  @Get('/test')
-  async test() {}
+
 }

@@ -39,9 +39,11 @@ export class KeywordService {
 
   // 추천 키워드 찾기. 쿼리스트링으로 기준 잡기
   async findAllRecomendedKeyword(
+    userId : number,
     findRecommentKeywordDto: FindRecommentKeywordDto,
   ) {
     return await this.findAllRecomendedKeywordQueryBuilder.findAllRecomendedKeyword(
+      userId,
       findRecommentKeywordDto,
     );
   }

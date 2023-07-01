@@ -27,8 +27,8 @@ export class VideoListQueryBuilder {
   protected setKeyword(keywordId : number) {
     this.query.innerJoin(`keywordVideo`, `VK01`, `VK01.videoId = V01.id`)
     .innerJoin(`keyword`, `K01`, `K01.id = VK01.keywordId `)
-    .addSelect(`K01.keyword AS videoKeyword`)
-    .groupBy(`K01.keyword , V01.title , V01.id , VU01.id` )
+    .addSelect([`K01.id AS videoKeywordId`,`K01.keyword AS videoKeyword`])
+    .groupBy(`K01.id, K01.keyword , V01.title , V01.id , VU01.id` )
       
     if(!keywordId) return;
     this.query

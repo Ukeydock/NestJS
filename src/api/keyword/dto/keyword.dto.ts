@@ -27,5 +27,4 @@ export class FindKeywordByUserIdDto extends PickType(KeywordDto, ['userId']) {}
 export class FindRecommentKeywordDto extends PickType(KeywordDto, [
   'recomendType',
   'limit',
-  `userId`,
 ]) {}

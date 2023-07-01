@@ -107,6 +107,7 @@ export class FindAllRecomendedKeywordQueryBuilder extends SetQuery {
   }
   // 추천 키워드 찾기
   public async findAllRecomendedKeyword(
+    userId : number,
     findRecommentKeywordDto: FindRecommentKeywordDto,
   ) {
     this.query = this.keywordRepository
@@ -125,11 +126,12 @@ export class FindAllRecomendedKeywordQueryBuilder extends SetQuery {
         this.setLimit(1, findRecommentKeywordDto.limit);
         break;
       case 'popular':
+        // 사람들이 많이 등록한 키워드
         this.query.orderBy(`K01.count`, `DESC`);
         this.setLimit(1, findRecommentKeywordDto.limit);
         break;
       case 'recommend':
-        const userData = await this.userRepository.findOneById({ userId: findRecommentKeywordDto.userId })
+        const userData = await this.userRepository.findOneById({ userId })
 
         // 랜덤한 같은 성별,나이의 유저를 10명 가져와서
         const equelGenderAgeUser = await this.userRepository.findAllByGenderAndAge(
@@ -142,9 +144,10 @@ export class FindAllRecomendedKeywordQueryBuilder extends SetQuery {
 
         const getRecommendKeywordIds = new GetRecommendKeywordIds(keywordList)
         const keywordIds = getRecommendKeywordIds.build()
-
         this.query.orderBy(`K01.count`, `DESC`);
         this.setLimit(1, findRecommentKeywordDto.limit);
+        this.query.where(`K01.id IN (:...keywordIds)`, { keywordIds });
+          
         break;
     }
     return await this.query.getRawMany();
