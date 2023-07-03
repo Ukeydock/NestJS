@@ -1,4 +1,4 @@
-name: Deploy to Amazon ECS
+name: COPY DIST TO EC2
 
 on:
   push:
@@ -8,14 +8,13 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
-
-
       - name: create env
         run: |
           npm install
           npm run build
-          echo "${{secrets.DEV_ENV}}" >> .dev.env
+          echo "${{ secrets.DEV_ENV }}" >> .dev.env
 
       - name: Get Github Actions IP
         id: ip
@@ -25,14 +24,13 @@ jobs:
         run: |
           aws ec2 authorize-security-group-ingress --group-id ${{ secrets.AWS_SG_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32
 
-       - name: Configure SSH
+      - name: Configure SSH
         uses: webfactory/ssh-agent@v0.5.0
         with:
           ssh-private-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-
       - name: Copy dist folder to EC2
-        run: scp -r dist/ ec2-user@${{secrets.REMOTE_IP}}:/path/to/destination
+        run: scp -r dist/ ec2-user@${{ secrets.REMOTE_IP }}:/path/to/destination
 
       - name: Remove Github Actions IP From Security Group
         run: |
