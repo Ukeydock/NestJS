@@ -47,8 +47,8 @@ jobs:
           npm install @nestjs/common
           npm run build
 
-          docker build -f prod.dockerfile -t ${{env.ECR_REGISTRY}}/ukeydock:prod .
-          docker push ${{env.ECR_REGISTRY}}/ukeydock:prod
+          docker build -f prod.dockerfile -t ${{secrets.ECR_REGISTRY}}/ukeydock:prod .
+          docker push ${{secrets.ECR_REGISTRY}}/ukeydock:prod
 
       - name: Get Github Actions IP
         id: ip
@@ -81,10 +81,10 @@ jobs:
             then
               sudo docker rmi -f $IMAGE_ID
             fi
-            sudo docker pull ${{env.ECR_REGISTRY}}/ukeydock:prod
+            sudo docker pull ${{secrets.ECR_REGISTRY}}/ukeydock:prod
 
 
-            sudo docker run -d -it --restart unless-stopped -p 3000:3000 ${{env.ECR_REGISTRY}}/ukeydock:prod
+            sudo docker run -d -it --restart unless-stopped -p 3000:3000 ${{secrets.ECR_REGISTRY}}/ukeydock:prod
 
       - name: Remove Github Actions IP From Security Group
         run: |
