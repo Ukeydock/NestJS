@@ -23,7 +23,7 @@ jobs:
       - name: create env
         run: |
 
-          npm install
+
           npm run build
           echo "${{ secrets.DEV_ENV }}" >> .dev.env
           mkdir -p ~/.ssh
@@ -46,8 +46,6 @@ jobs:
         run: |
           scp -r dist/ ec2-user@${{ secrets.REMOTE_IP }}:/home/ec2-user/dev/nestjs/dist
           scp -r package.json ec2-user@${{ secrets.REMOTE_IP }}:/home/ec2-user/dev/nestjs
-          scp -r node_modules ec2-user@${{ secrets.REMOTE_IP }}:/home/ec2-user/dev/nestjs
-          scp -r package-lock.json ec2-user@${{ secrets.REMOTE_IP }}:/home/ec2-user/dev/nestjs
 
       - name: Remove Github Actions IP From Security Group
         run: |
