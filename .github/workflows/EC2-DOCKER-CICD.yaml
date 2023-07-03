@@ -25,8 +25,8 @@ jobs:
           npm install
           npm run build
           echo "${{ secrets.DEV_ENV }}" >> .dev.env
-          mkdir .ssh
-          echo "${{ secrets.KNOWN_HOSTS }}" >> .ssh/known_hosts
+          mkdir -p ~/.ssh
+          echo "${{ secrets.KNOWN_HOSTS }}" >> ~/.ssh/known_hosts
 
       - name: Get Github Actions IP
         id: ip
