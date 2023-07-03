@@ -22,7 +22,6 @@ jobs:
 
       - name: create env
         run: |
-          ls
           npm install
           npm run build
           echo "${{ secrets.DEV_ENV }}" >> .dev.env
@@ -38,7 +37,7 @@ jobs:
       - name: Configure SSH
         uses: webfactory/ssh-agent@v0.5.0
         with:
-          ssh-private-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          ssh-private-key: ${{ secrets.SSH_KEY }}
 
       - name: Copy dist folder to EC2
         run: scp -r dist/ ec2-user@${{ secrets.REMOTE_IP }}:/path/to/destination
