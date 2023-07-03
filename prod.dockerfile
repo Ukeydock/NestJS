@@ -1,4 +1,4 @@
-FROM node:latest AS development
+FROM node:18.16.1
 
 WORKDIR /app
 
@@ -10,7 +10,6 @@ RUN mkdir dist
 
 COPY dist dist
 
-COPY .dev.env .
+COPY .prod.env .
 
-
-CMD [ "node", "dist/main" ]
+CMD [ "npm", "run", "start:prod" ]

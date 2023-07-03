@@ -1,10 +1,9 @@
-name: COPY DIST TO EC2
+name: Deploy to Amazon ECS
 
 on:
   push:
     branches:
       - main
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -20,14 +19,36 @@ jobs:
           aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
           aws-region: ap-northeast-2
 
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
       - name: create env
         run: |
 
+          echo "${{secrets.PROD_ENV}}" >> .prod.env
+
+      - name: Delete ECR images
+        run: |
+          for repo in $(aws ecr describe-repositories --query 'repositories[].repositoryName' --output text); do
+            for tag in $(aws ecr list-images --repository-name $repo --query 'imageIds[].imageTag' --output text); do
+              aws ecr batch-delete-image --repository-name $repo --image-ids imageTag=$tag;
+            done;
+          done;
+
+      - name: Build, tag, and push the image(node.js) to Amazon ECR
+        id: build-image-node
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+          IMAGE_TAG_NODE: ukeydock
+
+        run: |
           npm install @nestjs/common
           npm run build
-          echo "${{ secrets.DEV_ENV }}" >> .dev.env
-          mkdir -p ~/.ssh
-          echo "${{ secrets.KNOWN_HOSTS }}" >> ~/.ssh/known_hosts
+          ${{secrets.AWS_DOCKER_LOGIN_CONSOLE}}
+          docker build -f prod.dockerfile -t ${{env.ECR_REGISTRY}}/ukeydock-prod .
+          docker push
 
       - name: Get Github Actions IP
         id: ip
@@ -37,15 +58,33 @@ jobs:
         run: |
           aws ec2 authorize-security-group-ingress --group-id ${{ secrets.AWS_SG_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32
 
-      - name: Configure SSH
-        uses: webfactory/ssh-agent@v0.5.0
-        with:
-          ssh-private-key: ${{ secrets.SSH_KEY }}
+      - name: Deploy
+        uses: appleboy/ssh-action@master
 
-      - name: Copy dist folder to EC2
-        run: |
-          scp -r dist/ ec2-user@${{ secrets.REMOTE_IP }}:/home/ec2-user/dev/nestjs/dist
-          scp -r package.json ec2-user@${{ secrets.REMOTE_IP }}:/home/ec2-user/dev/nestjs
+        with:
+          host: ${{ secrets.REMOTE_IP }}
+          username: ${{ secrets.SSH_ID }}
+          key: ${{ secrets.SSH_KEY }}
+          port: 22
+
+          script: |
+            ${{secrets.AWS_DOCKER_LOGIN_CONSOLE}}
+
+            CONTAINER_ID=$(sudo docker ps -q -f "expose=3000")
+            if [ ! -z "$CONTAINER_ID" ]
+            then
+              sudo docker rm -f $CONTAINER_ID
+            fi
+
+            IMAGE_ID=$(docker images -q)
+            if [ ! -z "$IMAGE_ID" ]
+            then
+              sudo docker rmi -f $IMAGE_ID
+            fi
+            sudo docker pull ${{env.ECR_REGISTRY}}/ukeydock-prod
+
+
+            sudo docker run -d -it --restart unless-stopped -p 3000:3000 ${{ secrets.ECR_REGISTRY }}/ukeydock-prod
 
       - name: Remove Github Actions IP From Security Group
         run: |
