@@ -48,7 +48,7 @@ jobs:
           npm run build
 
           docker build -f prod.dockerfile -t ${{env.ECR_REGISTRY}}/ukeydock-prod .
-          docker push
+          docker push ${{env.ECR_REGISTRY}}/ukeydock-prod
 
       - name: Get Github Actions IP
         id: ip
