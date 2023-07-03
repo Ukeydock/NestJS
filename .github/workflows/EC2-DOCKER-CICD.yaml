@@ -44,6 +44,7 @@ jobs:
           IMAGE_TAG_NODE: ukeydock
 
         run: |
+          ${{secrets.AWS_DOCKER_LOGIN_CONSOLE}}
           npm install @nestjs/common
           npm run build
 
