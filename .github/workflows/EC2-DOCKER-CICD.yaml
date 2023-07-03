@@ -12,6 +12,7 @@ jobs:
     steps:
       - name: create env
         run: |
+          ls
           npm install
           npm run build
           echo "${{ secrets.DEV_ENV }}" >> .dev.env
