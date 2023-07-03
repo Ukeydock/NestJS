@@ -152,9 +152,7 @@ export class GoogleTrendService extends ScheduleServie {
   @Cron(`0 0 * * *`)
   public async initEachDay() {
     console.log('작업', Date.now());
-    this.findGoogleTrendKeyword().catch((err) => {
-      console.error(err);
-    });
+    await this.findGoogleTrendKeyword()
 
     // this.findGoogleTrendKeyword();
   }
@@ -207,7 +205,7 @@ export class MovieTrendService extends ScheduleServie {
         );
 
         for (const movie of movieData.data.results) {
-          const movieEntity = await this.movieRepository.create({
+          const movieEntity = this.movieRepository.create({
             name: movie.name,
             description:"movie",
              

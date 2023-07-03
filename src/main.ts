@@ -16,6 +16,8 @@ import {
 } from './api/common/middlewares/error/error.middleware';
 import { join } from 'path';
 
+import {heapdump} from 'heapdump'
+
 class App {
   private logger = new Logger(App.name);
   private PORT: string;
