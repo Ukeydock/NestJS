@@ -44,7 +44,7 @@ jobs:
 
       - name: Copy dist folder to EC2
         run: |
-          scp -r dist/ ec2-user@${{ secrets.REMOTE_IP }}:/home/ec2-user/dev/nestjs
+          scp -r dist/ ec2-user@${{ secrets.REMOTE_IP }}:/home/ec2-user/dev/nestjs/dist
           scp -r package.json ec2-user@${{ secrets.REMOTE_IP }}:/home/ec2-user/dev/nestjs
           scp -r node_modules ec2-user@${{ secrets.REMOTE_IP }}:/home/ec2-user/dev/nestjs
           scp -r package-lock.json ec2-user@${{ secrets.REMOTE_IP }}:/home/ec2-user/dev/nestjs
