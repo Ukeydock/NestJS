@@ -23,7 +23,7 @@ jobs:
       - name: create env
         run: |
 
-
+          npm install @nestjs/common
           npm run build
           echo "${{ secrets.DEV_ENV }}" >> .dev.env
           mkdir -p ~/.ssh
