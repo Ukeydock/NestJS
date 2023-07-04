@@ -41,7 +41,7 @@ export class AuthController {
   execGoogleSocialLoginCallback(@Req() req, @Res() res: Response) {
     res.cookie(`existNickname`, req.user.existNickname);
     res.cookie('accessToken', req.user.appToken);
-    res.redirect(`http://${process.env.FRONT_URI}/auth/google/callback`);
+    res.redirect(`${process.env.FRONT_URI}/auth/google/callback`);
   }
 
   // @ApiOperation({
