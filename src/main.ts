@@ -88,6 +88,8 @@ class App {
     );
   }
 
+
+
   private async setUpGlobalMiddleware() {
     this.server.enableCors({
       origin: true,

@@ -28,18 +28,13 @@ import { AuthSocialLoginService } from './auth.service';
 export class AuthController {
   constructor(private readonly authService: AuthService, private readonly authSocialLoginService : AuthSocialLoginService) {}
 
-  // @UseGuards(GoogleAuthGuard)
-  // @ApiOperation({
-  //   summary: '소셜로그인 구글(완)',
-  //   description: 'redirect frontDomain + auth/google/callback?appToken=token',
-  // })
-  // @Header('Access-Control-Allow-Origin', '*') // CORS 허용
-  // @Get('/google/login')
-  // execGoogleSocialLogin() {
-  //   return;
-  // }
 
-  // @Header('Access-Control-Allow-Origin', '*') // CORS 허용
+  @Get('ssl')
+  ssl(@Res() res: Response) {
+    res.status(200).send('ok');
+  }
+
+
   @Post('/google/callback')
   async execGoogleSocialLoginCallback(@Req() req,@Body() body, @Res() res: Response) {
     const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
@@ -63,7 +58,7 @@ export class AuthController {
   const {appToken , existNickname} = await this.authSocialLoginService.execSocialLogin({email : email ,snsId : snsId, profileImage : profileImage, platform : 'google' })
 
     
-    res.status(200).json(new CommonResponseDto("google social login", {appToken,existNickname}))
+  res.status(200).json(new CommonResponseDto("google social login", {appToken,existNickname}))
   }
 
   // @ApiOperation({
