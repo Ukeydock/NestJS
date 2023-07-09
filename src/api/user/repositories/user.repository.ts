@@ -30,7 +30,7 @@ export class UserRepositoyry {
   /**
    * 
    * @param findAllByGenderAndAgeDto 
-   * @returns 랜덤한 유저 목록을 반환한다.
+   * @returns 
    * 
    */
   async findAllByGenderAndAge(findAllByGenderAndAgeDto: FindAllByGenderAndAgeDto): Promise<{ userId: number }[]> {

@@ -31,6 +31,9 @@ import { ResponseUserListPageDto } from './dto/responseUser.dto';
 import { JwtAuthGuard } from '../auth/jwt/jwt.guard';
 import { CommonResponseDto } from '@root/api/common/dto/response.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { MulterS3Service } from '../common/services/multer.service';
+
+
 
 
 
@@ -39,7 +42,10 @@ import { FileInterceptor } from '@nestjs/platform-express';
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth('appToken')
 export class UserController {
-  constructor(private readonly userService: UserService) { }
+  constructor(private readonly userService: UserService,     
+          private readonly multerS3Service: MulterS3Service
+
+    ) { }
 
   @Get(`/keyword/:keywordId`)
   async findUserSubscribedKeywordList(
@@ -110,10 +116,18 @@ export class UserController {
   })
   @UseInterceptors(FileInterceptor('profileImage'))
   @Post(`/profile`)
-  async updateProfileImage(@Req() req, @UploadedFile() file) {
+  async updateProfileImage(
+  @Req() req, @UploadedFile() file,     
+  @UploadedFile() avatar: Express.Multer.File,
+) {
     const { userId } = req.user;
 
-    // await this.userService.updateById(userId, { avatar: file.filename });
+    const { fileSavePath } = await this.multerS3Service.uploadImageToS3(
+      avatar,
+      process.env.S3_AVATAR_PATH,
+    );
+
+    await this.userService.updateById(userId, { profileImage: fileSavePath });
     return new CommonResponseDto('user status');
   }
 }

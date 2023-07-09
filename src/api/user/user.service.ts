@@ -38,7 +38,8 @@ export class UserService {
     return await this.userRepositoyry.create(createUserDto);
   }
 
-  async updateById(userId, updateUserDto) {
+  async updateById(userId : number, updateUserDto) {
+    console.log(userId, updateUserDto)
     await this.userRepositoyry.updateById(userId, updateUserDto);
   }
 }

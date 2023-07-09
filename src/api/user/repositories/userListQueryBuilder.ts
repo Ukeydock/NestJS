@@ -20,7 +20,12 @@ class UserListQueryBuilder {
       `U01.job AS userJob`,
       `U01.createdAt AS userCreatedAt`,
       `U01.updatedAt AS userUpdatedAt`,
-      `U01.profileImage AS userProfileImage`,
+      `CASE 
+          WHEN LEFT(U01.profileImage, 4) = "http" 
+          THEN U01.profileImage 
+          ELSE CONCAT('${process.env.AWS_CLOUDFRONT_S3_PATH}', U01.profileImage) 
+        END AS userProfileImage 
+      `,
       `U01.birthday AS userBirthday`,
       ` CASE
             WHEN TIMESTAMPDIFF(YEAR, birthday, CURDATE()) < 10 THEN '어린이'
