@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import { S3Client, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 
 @Injectable()
 export class MulterS3Service {
@@ -23,6 +23,16 @@ export class MulterS3Service {
     }
     return result;
   };
+
+  async deleteImageFromS3(path: string): Promise<any> {
+    const deleteParams = {
+      Bucket: process.env.AWS_S3_BUCKET,
+      Key: path.replace(process.env.AWS_CLOUDFRONT_S3_PATH, ''),
+    };
+    const command = new DeleteObjectCommand(deleteParams);
+    console.log(command)
+    await this.s3.send(command);
+  }
 
   async uploadImageToS3(file: Express.Multer.File, path: string): Promise<any> {
     const fileSavePath = `${Date.now()}_${this.generateRandomString(10)}`;

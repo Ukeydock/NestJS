@@ -120,7 +120,11 @@ export class UserController {
   @Req() req, @UploadedFile() file,     
   @UploadedFile() avatar: Express.Multer.File,
 ) {
-    const { userId } = req.user;
+    const { userId, profileImage } = req.user;
+    
+    if (profileImage) {
+      await this.multerS3Service.deleteImageFromS3(profileImage);
+    }
 
     const { fileSavePath } = await this.multerS3Service.uploadImageToS3(
       avatar,
@@ -128,7 +132,7 @@ export class UserController {
     );
 
     await this.userService.updateById(userId, { profileImage: fileSavePath });
-    return new CommonResponseDto('user status');
+    return new CommonResponseDto('user status', { fileSavePath : process.env.AWS_CLOUDFRONT_S3_PATH  + fileSavePath });
   }
 }
 

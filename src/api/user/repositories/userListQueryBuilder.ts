@@ -23,7 +23,7 @@ class UserListQueryBuilder {
       `CASE 
           WHEN LEFT(U01.profileImage, 4) = "http" 
           THEN U01.profileImage 
-          ELSE CONCAT('${process.env.AWS_CLOUDFRONT_S3_PATH}', U01.profileImage) 
+          ELSE CONCAT('${process.env.AWS_CLOUDFRONT_S3_PATH}', '${process.env.S3_AVATAR_PATH}', U01.profileImage) 
         END AS userProfileImage 
       `,
       `U01.birthday AS userBirthday`,
