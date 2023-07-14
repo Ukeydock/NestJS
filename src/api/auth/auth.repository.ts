@@ -3,8 +3,7 @@ import { Auth } from '@root/database/entities/auth.entity';
 import { Repository } from 'typeorm';
 import {
   CreateAuthDto,
-  DeleteAuthByAuthIdDto,
-  FindAuthByAuthIdDto,
+
   FindAuthByEmailDto,
 } from './dto/requestAuth.dto';
 
@@ -14,14 +13,14 @@ export class AuthRepository {
     private authRepository: Repository<Auth>,
   ) {}
 
-  async findOneById(findAuthByAuthIdDTO: FindAuthByAuthIdDto) {
+  async findOneById(authId: number): Promise<Auth> {
     return await this.authRepository.findOne({
-      where: { id: findAuthByAuthIdDTO.authId },
+      where: { id: authId },
       relations: ['user'],
     });
   }
 
-  async findOneByEmail(findAuthByEmailDto: FindAuthByEmailDto) {
+  async findOneByEmail(findAuthByEmailDto: FindAuthByEmailDto): Promise<Auth> {
     return await this.authRepository.findOne({
       where: { email: findAuthByEmailDto.email },
       relations: ['user'],
@@ -35,7 +34,7 @@ export class AuthRepository {
     });
   }
 
-  async deleteAuthByAuthId(deleteAuthByAuthIdDto: DeleteAuthByAuthIdDto) {
-    await this.authRepository.delete(deleteAuthByAuthIdDto.authId);
+  async deleteByAuthId(authId: number) {
+    await this.authRepository.delete(authId);
   }
 }

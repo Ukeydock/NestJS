@@ -1,8 +1,6 @@
 import {
-  FindAuthByAuthIdDto,
   CreateAuthDto,
   FindAuthByEmailDto,
-  DeleteAuthByAuthIdDto,
 } from './dto/requestAuth.dto';
 import { Injectable } from '@nestjs/common';
 import { AuthRepository } from './auth.repository';
@@ -21,18 +19,19 @@ export class AuthSocialLoginService {
     private commonService: CommonService,
   ) { }
 
-  private createJwtToken(user: { userId }) {
+  private createJwtToken(user: { userId : number }) {
     const payload = { userId: user.userId };
     return this.jwtService.sign(payload, {
       secret: process.env.JWT_SECRET_KEY,
     });
   }
 
+
   private async createNewAuthUser(createAuthDto: CreateAuthDto) {
     const newAuthData = await this.authRepository.create(createAuthDto);
     const newAuthId = newAuthData.raw.insertId;
    
-    const authData = await this.authRepository.findOneById({authId: newAuthId});
+    const authData = await this.authRepository.findOneById(newAuthId);
     return this.createJwtToken({ userId: authData.user.id });
   }
 
@@ -40,7 +39,7 @@ export class AuthSocialLoginService {
     return this.createJwtToken({ userId: authData.user.id });
   }
 
-  async execSocialLogin(userAuthData: {
+  public async execSocialLogin(userAuthData: {
     email: string;
     snsId: string;
     profileImage: string;
@@ -88,11 +87,11 @@ export class AuthSocialLoginService {
 export class AuthService {
   constructor(private readonly authRepository: AuthRepository) { }
 
-  async findOneById(findAuthByAuthIdDto: FindAuthByAuthIdDto) {
-    return await this.authRepository.findOneById(findAuthByAuthIdDto);
+  async findOneById(authId: number): Promise<Auth> {
+    return await this.authRepository.findOneById(authId);
   }
 
-  async findByEmail(findAuthByEmailDto: FindAuthByEmailDto) {
+  async findByEmail(findAuthByEmailDto: FindAuthByEmailDto): Promise<Auth> {
     return await this.authRepository.findOneByEmail(findAuthByEmailDto);
   }
 
@@ -100,7 +99,7 @@ export class AuthService {
     return await this.authRepository.create(createAuthDto);
   }
 
-  async deleteAuthByAuthId(deleteAuthByAuthIdDto: DeleteAuthByAuthIdDto) {
-    await this.authRepository.deleteAuthByAuthId(deleteAuthByAuthIdDto);
+  async deleteByAuthId(authId : number): Promise<void> {
+    await this.authRepository.deleteByAuthId(authId);
   }
 }

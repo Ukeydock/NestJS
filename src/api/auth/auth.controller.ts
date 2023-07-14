@@ -17,7 +17,6 @@ import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { authApiOperationDescription } from '@root/admin.api/document/auth.document';
 import { Response } from 'express';
 import { GoogleAuthGuard } from './google/google.guard';
-import { DeleteAuthByAuthIdDto } from './dto/requestAuth.dto';
 import {OAuth2Client} from "google-auth-library"
 import { CommonResponseDto } from '../common/dto/response.dto';
 import { AuthSocialLoginService } from './auth.service';
@@ -29,6 +28,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService, private readonly authSocialLoginService : AuthSocialLoginService) {}
 
 
+  // ssl 인증을 위한 라우터 
   @Get('ssl')
   ssl(@Res() res: Response) {
     res.status(200).send('ok');
@@ -36,7 +36,7 @@ export class AuthController {
 
 
   @Post('/google/callback')
-  async execGoogleSocialLoginCallback(@Req() req,@Body() body, @Res() res: Response) {
+  async execGoogleSocialLogin(@Body() body : {token : string}, @Res() res: Response) {
     const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
   const {token} = body
@@ -76,9 +76,9 @@ export class AuthController {
   })
   @Delete('/user/:userId')
   async deleteAuthByAuthIdDto(
-    @Param() deleteAuthByAuthIdDto: DeleteAuthByAuthIdDto,
+    @Param() authId : number,
   ) {
-    await this.authService.deleteAuthByAuthId(deleteAuthByAuthIdDto);
+    await this.authService.deleteByAuthId(authId);
     return {
       message: '탈퇴 되었습니다.',
       isAlert: true,

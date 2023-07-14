@@ -1,0 +1,87 @@
+
+
+   
+    <style>
+        .slider {
+        overflow: hidden;
+        width: 100%;
+        /* height: 100%; */
+    }
+    
+    .slide-track {
+        display: flex;
+        animation: scroll 10s linear infinite;
+
+               height: 100%;
+
+       
+       
+    }
+    
+    .slide {
+        /* height: 100%; */
+        transition: 0.6s;
+    }
+    
+    .slide img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    </style>
+    <body style="margin : auto auto">
+        <div class="slider">
+            <div class="slide-track">
+                <div class="slide">
+                    <img class="slide__img"src="https://image.bugsm.co.kr/artist/images/1000/802269/80226913.jpg" alt="Image 1" />
+                </div>
+                
+            
+                <!-- 추가하고자 하는 이미지들을 계속 넣어주세요 -->
+            </div>
+        </div>
+    
+        <button id="prev">
+            &lt; </button>
+                <button id="next"> &gt; </button>
+        </body>
+
+    <script>
+        const imageArray = [
+            "https://image.bugsm.co.kr/artist/images/1000/802269/80226913.jpg",
+            "https://talkimg.imbc.com/TVianUpload/tvian/TViews/image/2023/04/22/c0c8b5e3-eee0-4338-b602-37b07e22f5db.jpg",
+        ]
+        let index = 0;
+
+        const fetchImage = (idx) => {
+            const slide = document.getElementsByClassName('slide__img');
+            slide[0].src = imageArray[idx];
+        }
+       
+
+
+            const totalSlides = imageArray.length;
+    
+            document.getElementById('next').addEventListener('click', function () {
+                index++;
+                if (index === totalSlides) index = 0;
+                fetchImage(index);
+            });
+    
+            document.getElementById('prev').addEventListener('click', function () {
+                index--;
+                if (index < 0) index = totalSlides - 1;
+                 fetchImage(index);
+            });
+    
+            function updateSlidePosition() {
+                for (let slide of document.getElementsByClassName('slide')) {
+                    slide.style.transform = 'translateX(' + (-index * 100) + '%)';
+                }
+            }
+    
+    </script>
+   
+
+    

@@ -30,7 +30,7 @@ export class KeywordController {
   ) {}
 
   @ApiOperation({
-    summary: '키워드 조회. (검색, 필터 허용)',
+    summary: '키워드 조회. (검색, 필터 허용)(완)',
     description: '유저가 검색창에 키워드를 입력하면 ',
   })
   @ApiResponse({ type: ResponseKeywordDto })
@@ -42,8 +42,8 @@ export class KeywordController {
   }
 
   @ApiOperation({
-    summary: '해당 유저의 키워드 전체 조회',
-    description: '해당 유저의 키워드 전체 조회',
+    summary: '해당 유저의 키워드 전체 조회(완)',
+    description: '해당 유저의 키워드 전체 조회, 0번이 유저아이디로 오면 로그인한 유저의 아이디로 변경',
   })
   @ApiResponse({ type: ResponseKeywordDto })
   @Get('/[@]:userId')
@@ -56,7 +56,7 @@ export class KeywordController {
   }
 
   @ApiOperation({
-    summary: '키워드의 count와 다른 알고리즘을 이용해 추천 키워드 ',
+    summary: '키워드의 count와 다른 알고리즘을 이용해 추천 키워드(완) ',
     description: '키워드의 count와 다른 알고리즘을 이용해 추천 키워드',
   })
   @ApiResponse({ type: ResponseKeywordDto })
