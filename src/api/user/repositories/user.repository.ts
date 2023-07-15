@@ -67,7 +67,7 @@ export class UserRepositoyry {
   }
 
   // 유저의 목록
-  async findAll(findUserListPageDto: FindUserListPageDto) {
+  async findAll(findUserListPageDto: FindUserListPageDto): Promise<FindOneUserDto[]> {
     const findUserQuery = new FindUserListQuery(
       findUserListPageDto,
       this.userRepository,

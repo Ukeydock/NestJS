@@ -43,7 +43,7 @@ export class VideoListQueryBuilder {
     this.query.limit(limit);
   }
 
-  public async getRawMany(){
+  public async getRawMany() {
     // this.query.groupBy(`V01.id`);
 
     return await this.query.getRawMany()

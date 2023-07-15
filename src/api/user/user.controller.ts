@@ -27,7 +27,7 @@ import {
   FindUserListPageDto,
   UpdateUserDto,
 } from './dto/requestUser.dto';
-import { ResponseUserListPageDto } from './dto/responseUser.dto';
+import { FindOneUserDto, ResponseUserListPageDto } from './dto/responseUser.dto';
 import { JwtAuthGuard } from '../auth/jwt/jwt.guard';
 import { CommonResponseDto } from '@root/api/common/dto/response.dto';
 import { FileInterceptor } from '@nestjs/platform-express';

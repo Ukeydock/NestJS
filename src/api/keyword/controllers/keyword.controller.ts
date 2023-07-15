@@ -35,7 +35,7 @@ export class KeywordController {
   })
   @ApiResponse({ type: ResponseKeywordDto })
   @Get('/search')
-  async findAll(@Query() query: FindAllKeywordDto, @Req() req) {
+  async findAll(@Query() query: FindAllKeywordDto, @Req() req) : Promise<ResponseKeywordDto[]> {
     const {userId} = req.user
     const keywordData = await this.keywordService.findAll(userId,query);
     return keywordData;
@@ -47,7 +47,9 @@ export class KeywordController {
   })
   @ApiResponse({ type: ResponseKeywordDto })
   @Get('/[@]:userId')
-  async findAllByUserId(@Req() req, @Param() param: { userId: number }) {
+  async findAllByUserId(@Req() req, @Param() param: { userId: number })
+  : Promise<{keyword: string, keywordId : number}[]> 
+  {
     // 0번 유저아이디가 오면 로그인한 유저의 아이디로 변경
     const userId = param.userId == 0 ? req.user.userId : param.userId;
     const keywordData = await this.keywordService.findAllByUserId({ userId });
@@ -66,7 +68,7 @@ export class KeywordController {
     @Query() query: FindRecommentKeywordDto,
   ) {
     const userId = req.user.userId;
-    const recomendKeywordData =
+    const recomendKeywordData: ResponseKeywordDto[] =
       await this.keywordService.findAllRecomendedKeyword(
          userId,
         {

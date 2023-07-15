@@ -5,15 +5,17 @@ import { FindAllViewVidoDto, VideoPageDto } from '../dto/requestVideo.dto';
 import { parseUrl } from 'url-lib';
 
 import {
-  FindVideoDetailQueryBuilder,
   VideoRepository,
 } from '../repositories/video.repository';
-import { VideoListItemDto } from '../dto/responseVideo.dto';
+import { ResponseVideoListPageDto, VideoListItemDto } from '../dto/responseVideo.dto';
 import { VideoListQueryBuilder, VideoListQueryBuilderForView } from '../repositories/queryBuilder/videoListQueryBuilder';
 import { KeywordRepository } from '@root/api/keyword/repositories/keyword.repository';
 import { VideoUserRepository } from '../repositories/videoUserView.repository';
+import { FindVideoDetailQueryBuilder } from '../repositories/queryBuilder/videoDetailQueryBuilder';
+import { Video } from '@root/database/entities/video.entity';
 
 class VideoCommon {
+  // 유튜브에서 쿼리값을 객체로 변환
   static youtubeSeperateQuery(query) {
     type queryType = {
       v;
@@ -26,6 +28,7 @@ class VideoCommon {
     return { v: result.v };
   }
 
+  // 유튜브에서 받아온 시간을 시간, 분, 초로 변환
   static convertDuration(timeTypePt: string) {
     if (!timeTypePt) {
       return;
@@ -40,6 +43,7 @@ class VideoCommon {
     return { hours, minutes, seconds };
   }
 
+  // 유튜브 링크에서 도메인, 쿼리 등을 추출
   static findDomain(uri: string) {
     const uriObj = parseUrl(uri);
     const query = this.youtubeSeperateQuery(uriObj.query);
@@ -63,7 +67,14 @@ class YoutubeService {
     return this.videoListData;
   }
 
-  private async findYoutubeChannelData(channelId: string) {
+  private async findYoutubeChannelData(channelId: string):
+    Promise<{
+        videoChannelTitle: string;
+        videoChannelDescription: string;
+        videoChannelThumbnail: string;
+        videoChannelCountry: string;
+      }>
+    { 
     const youtubeChannelData = await this.youtube.channels.list({
       part: ['snippet', 'contentDetails'],
       id: [channelId],
@@ -78,7 +89,13 @@ class YoutubeService {
     };
   }
 
-  private async findYoutubeVideoData(videoId: string) {
+  private async findYoutubeVideoData(videoId: string): Promise<{
+    videoCategoryId: string;
+    tags: string[];
+    videoDeaultLanguage: string;
+    videoDuration: { hours?: number; minutes?: number; seconds: number };
+  }>
+   {
     const youtubeVideoData = await this.youtube.videos.list({
       part: ['snippet', 'contentDetails'],
       id: [videoId],
@@ -129,7 +146,7 @@ class YoutubeService {
     }
   }
 
-  async findYoutubeData(keyword: string, videoPageDto: VideoPageDto) {
+  async findYoutubeData(keyword: string, videoPageDto: VideoPageDto): Promise<void> {
     const uri = `https://www.youtube.com/results?search_query=${keyword}`;
     const { youtubeUri, host, query } = VideoCommon.findDomain(uri);
     if (host !== 'www.youtube.com') {
@@ -150,7 +167,7 @@ export class VideoService {
   ) {}
 
   // 해당 플렛폼에서 비디오 데이터를 가져오기
-  async findVideoListByPlatform(keyword: string, videoPageDto: VideoPageDto) {
+  async findVideoListByPlatform(keyword: string, videoPageDto: VideoPageDto): Promise<VideoListItemDto[]> {
     switch (videoPageDto.platform) {
       case 'youtube': {
         const youtubeService = new YoutubeService();
@@ -162,29 +179,30 @@ export class VideoService {
   }
 
   // video db 아이디로 가져오기
-  async findOneByVideoDbId(videoDbId: number) {
+  async findOneByVideoDbId(videoDbId: number): Promise<Video> {
     return this.findVideoDetailQueryBuilder.findOneByVideoDbId(videoDbId);
   }
 
   // 비디오 오리지널 아이디로 테이블에서 찾아보기
-  async findOneByVideoId(findOneByVideoIdDto: { videoId: string }) {
+  async findOneByVideoId(videoId: string ) {
     const dupVideoData = await this.videoRepository.findOneByVideoId(
-      findOneByVideoIdDto.videoId,
+      videoId,
     );
     return dupVideoData;
   }
 
-  async findByKeyword(findByKeywordDto: { keyword: string }) {
-    return await this.videoRepository.findByKeyword(findByKeywordDto);
+  async findByKeyword(keyword: string ): Promise<ResponseVideoListPageDto[]> {
+    return await this.videoRepository.findByKeyword(keyword);
   }
 
   async findViewVideoByUserId(
     userId : number,
     findAllViewVidoDto: FindAllViewVidoDto,
-  )  {
+  )
+  : Promise<{videoData: Video[], maxPageNumber: number}>  {
     let keywordId = null
     if(findAllViewVidoDto.keyword){
-      const keywordData = await this.keywordRepository.findByKeyword({keyword : findAllViewVidoDto.keyword})
+      const keywordData = await this.keywordRepository.findByKeyword(findAllViewVidoDto.keyword)
       keywordId = keywordData.id
     }
     const videoData =  await this.videoListQueryBuilderForView.getViewVideoData(userId,keywordId, findAllViewVidoDto)

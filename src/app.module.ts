@@ -25,7 +25,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import {
   GoogleTrendService,
   MovieTrendService,
-  NaverDataLabKeyword,
+  // NaverDataLabKeyword,
   ScheduleServie,
 } from './api/common/services/schedule.service';
 import { VideoService } from './api/video/services/video.service';
@@ -93,7 +93,7 @@ export class Config {
     KeywordSubscriber,
     ScheduleServie,
     GoogleTrendService,
-    NaverDataLabKeyword,
+    // NaverDataLabKeyword,
     MovieTrendService,
   ],
   exports: [],

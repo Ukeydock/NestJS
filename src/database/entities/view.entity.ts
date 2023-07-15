@@ -12,11 +12,11 @@ import { User } from './user.entity';
 export class View extends CommonSoftDeleteNotUpdated {
   @ManyToOne(() => Video, (video) => video.id, { cascade: true })
   @JoinColumn({ name: 'videoId' })
-  video;
+  video : Video;
 
   @ManyToOne(() => User, (user) => user.id, { cascade: true })
   @JoinColumn({ name: 'userId' })
-  user;
+  user: User;
 
   @Column({ name: 'isRecently', default: true })
   isRecently: boolean;

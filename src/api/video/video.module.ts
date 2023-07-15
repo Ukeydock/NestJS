@@ -5,7 +5,6 @@ import { VideoUserController } from './controllers/videoUserView.controller';
 import { MovieController } from './controllers/movie.controller';
 import { CommonModule } from '../common/common.module';
 import {
-  FindVideoDetailQueryBuilder,
   VideoRepository,
 } from './repositories/video.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -22,6 +21,7 @@ import { View } from '@root/database/entities/view.entity';
 import { VideoListQueryBuilder, VideoListQueryBuilderForView } from './repositories/queryBuilder/videoListQueryBuilder';
 import { KeywordRepository } from '../keyword/repositories/keyword.repository';
 import { Keyword } from '@root/database/entities/keyword.entity';
+import { FindVideoDetailQueryBuilder } from './repositories/queryBuilder/videoDetailQueryBuilder';
 
 @Module({
   imports: [

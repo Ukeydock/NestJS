@@ -17,14 +17,14 @@ export class VideoUserController {
 
 
 
-  @ApiOperation({
-    summary: '유저가 조회한 비디오 기록 조회',
-    description: '페이지네이션',
-  })
-  @ApiQuery({})
-  @ApiResponse({ type: ResponseVideoListPageDto })
-  @Get('/:videoUniqueId')
-  조회기록조회() { }
+  // @ApiOperation({
+  //   summary: '유저가 조회한 비디오 기록 조회',
+  //   description: '페이지네이션',
+  // })
+  // @ApiQuery({})
+  // @ApiResponse({ type: ResponseVideoListPageDto })
+  // @Get('/:videoUniqueId')
+  // 조회기록조회() { }
 
   @ApiOperation({
     summary: '유저 조회기록 저장',
@@ -38,15 +38,15 @@ export class VideoUserController {
     await this.videoUserService.updateIsRecentlyByVideoId(param.videoDbId)
     // 유저 조회기록 저장 isRecently : default true
     await this.videoUserService.create({ userId, videoDbId: param.videoDbId });
-    const {viewCount} = await this.videoUserService.findCountByVideoId(param.videoDbId);
+    const {viewCount} : {viewCount : number} = await this.videoUserService.findCountByVideoId(param.videoDbId);
     await this.videoService.updateViewCount(param.videoDbId, viewCount);
   }
 
-  @ApiOperation({
-    summary: '유저 조회기록 전체 삭제',
-    description:
-      '해당 유저의 조회기록을 모두 삭제합니다. 조회기록은 키워드 추천 알고리즘 등에 사용될 수 있으므로 주의사항을 알려주고 삭제시키기!',
-  })
-  @Delete('/all')
-  조회기록전체삭제() { }
+  // @ApiOperation({
+  //   summary: '유저 조회기록 전체 삭제',
+  //   description:
+  //     '해당 유저의 조회기록을 모두 삭제합니다. 조회기록은 키워드 추천 알고리즘 등에 사용될 수 있으므로 주의사항을 알려주고 삭제시키기!',
+  // })
+  // @Delete('/all')
+  // 조회기록전체삭제() { }
 }

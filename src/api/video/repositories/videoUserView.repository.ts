@@ -11,7 +11,7 @@ export class VideoUserRepository {
         protected videoUserViewRepositoy: Repository<View>
     ) { }
 
-    async findAllByUserId(findAllVideoUserViewDto: FindAllVideoUserViewDto) {
+    async findAllByUserId(findAllVideoUserViewDto: FindAllVideoUserViewDto): Promise<View[]> {
         const findALlQuery = this.videoUserViewRepositoy.createQueryBuilder("V01")
             .select(`V01.videoId AS videoId`)
 
@@ -26,7 +26,7 @@ export class VideoUserRepository {
         return  await findALlQuery.getRawOne();
     }
 
-    async findAllByVideoId(videoId: number) {
+    async findAllByVideoId(videoId: number): Promise<View[]> {
         const findALlQuery = this.videoUserViewRepositoy.createQueryBuilder("V01")
             .select(`V01.videoId AS videoId`)
         findALlQuery.where(`V01.videoId = ${videoId}`)
@@ -35,15 +35,21 @@ export class VideoUserRepository {
     }
 
     async create(createVideoUserDto: CreateVideoUserDto) {
-        const view = new View();
-        view.video = createVideoUserDto.videoDbId;
-        view.user = createVideoUserDto.userId;
+        // const view = new View();
+        // view.video = createVideoUserDto.videoDbId;
+        // view.user = createVideoUserDto.userId;
 
-        await this.videoUserViewRepositoy.save(view);
+        // await this.videoUserViewRepositoy.save(view);
 
+
+        this.videoUserViewRepositoy.insert({
+            video: {id : createVideoUserDto.videoDbId},
+            user: {id : createVideoUserDto.userId}
+
+        })
     }
 
-    async updateIsRecentlyByVideoId(videoId: number) {
-        await this.videoUserViewRepositoy.update({ video: videoId }, { isRecently: false });
+    async updateIsRecentlyByVideoId(videoId: number): Promise<void> {
+        await this.videoUserViewRepositoy.update({ video: {id : videoId} }, { isRecently: false });
     }
 }

@@ -26,9 +26,9 @@ export class ScheduleServie {
   ) {}
 
   private async createNewVideo(videoData: VideoListItemDto) {
-    const dupVideoData = await this.videoService.findOneByVideoId({
-      videoId: videoData.videoId,
-    });
+    const dupVideoData = await this.videoService.findOneByVideoId(
+      videoData.videoId,
+    );
     
     if (dupVideoData) {
       return null;
@@ -67,7 +67,7 @@ export class ScheduleServie {
     searchKeyword?: string,
   ) {
     console.log('키워드', keyword);
-    const dupKeywordData = await this.keywordService.findByKeyword({ keyword });
+    const dupKeywordData = await this.keywordService.findByKeyword( keyword );
     if (dupKeywordData) {
       //키워드의 최근 업데이트 날짜에 따라 영상을 새로 가져올지 결정하기
     }
@@ -263,49 +263,46 @@ export class MovieTrendService extends ScheduleServie {
   }
 }
 
-export class SingerService extends ScheduleServie {
-  
-}
 
-export class NaverDataLabKeyword extends ScheduleServie {
-  private async findNaverDataLabKeyword() {
-    const clientId = process.env.NAVER_CLIENT_ID;
-    const clientSecret = process.env.NAVER_CLIENT_SECRET_KEY;
-    const api_url = 'https://openapi.naver.com/v1/datalab/search';
+// export class NaverDataLabKeyword extends ScheduleServie {
+//   private async findNaverDataLabKeyword() {
+//     const clientId = process.env.NAVER_CLIENT_ID;
+//     const clientSecret = process.env.NAVER_CLIENT_SECRET_KEY;
+//     const api_url = 'https://openapi.naver.com/v1/datalab/search';
 
-    const request_body = {
-      startDate: '2023-05-01',
-      endDate: '2023-05-20',
-      timeUnit: 'date',
-      keywordGroups: [
-        {
-          groupName: '에스파',
-          keywords: ['카리나', '윈터', '닝닝', '지젤'],
-        },
-      ],
-      device: '',
-      ages: ['2', '3'],
-      gender: 'f',
-    };
+//     const request_body = {
+//       startDate: '2023-05-01',
+//       endDate: '2023-05-20',
+//       timeUnit: 'date',
+//       keywordGroups: [
+//         {
+//           groupName: '에스파',
+//           keywords: ['카리나', '윈터', '닝닝', '지젤'],
+//         },
+//       ],
+//       device: '',
+//       ages: ['2', '3'],
+//       gender: 'f',
+//     };
 
-    const naverDataLabKeywordData = await axios({
-      method: 'post',
-      url: api_url,
-      headers: {
-        'X-Naver-Client-Id': clientId,
-        'X-Naver-Client-Secret': clientSecret,
-        'Content-Type': 'application/json',
-      },
-      data: {
-        ...request_body,
-      },
-    });
+//     const naverDataLabKeywordData = await axios({
+//       method: 'post',
+//       url: api_url,
+//       headers: {
+//         'X-Naver-Client-Id': clientId,
+//         'X-Naver-Client-Secret': clientSecret,
+//         'Content-Type': 'application/json',
+//       },
+//       data: {
+//         ...request_body,
+//       },
+//     });
 
-    console.log(naverDataLabKeywordData.data.results[0]);
-    console.log(naverDataLabKeywordData.data.results[1]);
-  }
+//     console.log(naverDataLabKeywordData.data.results[0]);
+//     console.log(naverDataLabKeywordData.data.results[1]);
+//   }
 
-  async init() {
-    // this.findNaverDataLabKeyword().catch((err) => console.error(err.message));
-  }
-}
+//   async init() {
+//     // this.findNaverDataLabKeyword().catch((err) => console.error(err.message));
+//   }
+// }

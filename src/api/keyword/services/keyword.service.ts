@@ -10,6 +10,8 @@ import {
   FindAllKeywordQueryBuilder,
   FindAllRecomendedKeywordQueryBuilder,
 } from '../repositories/queryBuilder/findAll.queryBuilder';
+import { ResponseKeywordDto } from '../dto/responseKeword.dto';
+import { Keyword } from '@root/database/entities/keyword.entity';
 
 @Injectable()
 export class KeywordService {
@@ -21,16 +23,19 @@ export class KeywordService {
     private readonly findAllRecomendedKeywordQueryBuilder: FindAllRecomendedKeywordQueryBuilder,
   ) { }
 
-  async findAll(userId : number ,findAllKeywordDto: FindAllKeywordDto) {
+  async findAll(userId : number ,findAllKeywordDto: FindAllKeywordDto): Promise<ResponseKeywordDto[]> {
     return await this.findAllKeywordQueryBuilder.findAll(userId, findAllKeywordDto);
   }
 
-  async findAllByUserId(findKeywordByUserIdDto: FindKeywordByUserIdDto) {
+  async findAllByUserId(findKeywordByUserIdDto: FindKeywordByUserIdDto): Promise<{
+    keyword: string;
+    keywordId : number
+  }[]> {
     return await this.keywordRepository.findAllByUserId(findKeywordByUserIdDto);
   }
 
-  async findByKeyword(findKeywordByKeywordDto: { keyword: string }) {
-    return await this.keywordRepository.findByKeyword(findKeywordByKeywordDto);
+  async findByKeyword(keyword: string ): Promise<Keyword> {
+    return await this.keywordRepository.findByKeyword(keyword);
   }
 
   async create(createKeywordDto: CreateKeywordDto) {
@@ -41,7 +46,7 @@ export class KeywordService {
   async findAllRecomendedKeyword(
     userId : number,
     findRecommentKeywordDto: FindRecommentKeywordDto,
-  ) {
+  ): Promise<ResponseKeywordDto[]> {
     return await this.findAllRecomendedKeywordQueryBuilder.findAllRecomendedKeyword(
       userId,
       findRecommentKeywordDto,

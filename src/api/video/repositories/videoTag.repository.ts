@@ -13,11 +13,11 @@ export class VideoTagRepository {
     private videoTagVideoRepository: Repository<VideoTagVideo>,
   ) {}
 
-  async findByTag(tag: string) {
+  async findByTag(tag: string): Promise<VideoTag> {
     return await this.videoTagRepositoy.findOne({ where: { tag: tag } });
   }
 
-  async create(tag: string) {
+  async create(tag: string): Promise<VideoTag> {
     const videoTagEntity = this.videoTagRepositoy.create({ tag });
     return await this.videoTagRepositoy.save(videoTagEntity);
   }

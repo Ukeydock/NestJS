@@ -34,7 +34,7 @@ export class AuthRepository {
     });
   }
 
-  async deleteByAuthId(authId: number) {
+  async deleteByAuthId(authId: number): Promise<void> {
     await this.authRepository.delete(authId);
   }
 }

@@ -34,13 +34,13 @@ export class KeywordRepository {
     return await query.getRawMany();
   }
 
-  async findByKeyword(findKeywordByKeywordDto: { keyword: string }) {
+  async findByKeyword( keyword: string ): Promise<Keyword> {
     return await this.keywordRepository.findOne({
-      where: { keyword: findKeywordByKeywordDto.keyword },
+      where: { keyword },
     });
   }
 
-  async create(createKeywordDto: CreateKeywordDto) {
+  async create(createKeywordDto: CreateKeywordDto): Promise<Keyword> {
     const keyword = this.keywordRepository.create(createKeywordDto);
     return await this.keywordRepository.save(keyword);
   }

@@ -3,48 +3,10 @@ import { Video } from '@root/database/entities/video.entity';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 
 import { VideoDetail } from '@root/database/entities/videoDetail.entity';
-import { VideoListItemDto } from '../dto/responseVideo.dto';
+import { ResponseVideoListPageDto, VideoListItemDto } from '../dto/responseVideo.dto';
 import { FindAllViewVidoDto } from '../dto/requestVideo.dto';
 
-export class FindVideoDetailQueryBuilder {
-  private query: SelectQueryBuilder<Video>;
 
-  constructor(
-    @InjectRepository(Video)
-    private videoRepository: Repository<Video>,
-    @InjectRepository(VideoDetail)
-    private videoDetailRepository: Repository<VideoDetail>,
-  ) {}
-
-  private setJoinVideoDetail() {
-    this.query.leftJoin(`videoDetail`, `VD01`, `VD01.id = V01.videoDetailId`);
-
-    this.query.addSelect([
-      `VD01.platform AS videoPlatform`,
-      `VD01.defaultLanguage AS videoDefaultLanguage`,
-    ]);
-  }
-
-  public async findOneByVideoDbId(videoDbId: number) {
-    this.query = this.videoRepository
-      .createQueryBuilder(`V01`)
-      .select([
-        `V01.id AS videoDbId`,
-        `V01.videoId AS videoId`,
-        `V01.createdDate AS videoCreatedDate`,
-        `V01.title AS videoTitle`,
-        `V01.description AS videoDescription`,
-        `V01.viewCount AS videoViewCount`,
-        `V01.commentCount AS videoCommentCount`,
-        `V01.libraryCount AS videoLibraryCount`,
-      ])
-      .where(`V01.id = ${videoDbId}`);
-
-    this.setJoinVideoDetail();
-
-    return await this.query.getRawOne();
-  }
-}
 
 export class VideoRepository {
   constructor(
@@ -55,14 +17,15 @@ export class VideoRepository {
     
   ) {}
 
-  async findOneByVideoId(videoId: string) {
+  async findOneByVideoId(videoId: string): Promise<Video> {
     return await this.videoRepository.findOne({ where: { videoId } });
   }
 
+  // 유튜브 외 영상 플랫폼이 추가되면 플랫폼별로 분기처리
   async findVideoDetailByPlatformAndDefaultLanguage(findVideoDetailDto: {
     platform: string;
     defaultLanguage: string;
-  }) {
+  }): Promise<VideoDetail> {
     return await this.videoDetailRepository.findOne({
       where: {
         platform: findVideoDetailDto.platform,
@@ -73,7 +36,7 @@ export class VideoRepository {
 
 
 
-  async findByKeyword(findByKeywordDto: { keyword: string }) {
+  async findByKeyword( keyword: string ): Promise<ResponseVideoListPageDto[]> {
     const query = this.videoRepository
       .createQueryBuilder(`V01`)
       .select([
@@ -85,12 +48,12 @@ export class VideoRepository {
       ])
       .innerJoin(`keywordVideo`, `VK01`, `VK01.videoId = V01.id`)
       .innerJoin(`keyword`, `K01`, `K01.id = VK01.keywordId`)
-      .where(`K01.keyword = :keyword`, { keyword: findByKeywordDto.keyword });
+      .where(`K01.keyword = :keyword`, {keyword });
 
     return await query.getRawMany();
   }
 
-  async findViewVideoByUserId(userId: number, findAllViewVidoDto: FindAllViewVidoDto) {
+  async findViewVideoByUserId(userId: number, findAllViewVidoDto: FindAllViewVidoDto): Promise<VideoListItemDto[]> {
     const query = this.videoRepository
       .createQueryBuilder(`V01`)
       .select([
@@ -131,7 +94,7 @@ export class VideoRepository {
     return await this.videoRepository.save(videoEntity);
   }
 
-  async updateViewCount(videoDbId: number, viewCount : number){
+  async updateViewCount(videoDbId: number, viewCount : number) : Promise<void> {
     await this.videoRepository.update({id : videoDbId}, {viewCount : viewCount})
   }
 }

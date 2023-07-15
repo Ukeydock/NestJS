@@ -16,6 +16,7 @@ import {
   FindOneByUserIdAndKeywordIdDto,
 } from '../dto/keywordUser/requestKeywordUser.dto';
 import { JwtAuthGuard } from '@root/api/auth/jwt/jwt.guard';
+import { User } from '@root/database/entities/user.entity';
 
 @Controller('keyword-user')
 @UseGuards(JwtAuthGuard)
@@ -26,7 +27,7 @@ export class KeywordUserController {
   async findOneByUserIdAndKeywordId(
     @Param() params: FindOneByUserIdAndKeywordIdDto,
     @Req() req,
-  ) {
+  ): Promise<User> {
     const { userId } = req.user;
     const { keywordId } = params;
     const keywordUserData =

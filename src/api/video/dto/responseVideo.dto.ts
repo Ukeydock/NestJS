@@ -17,16 +17,22 @@ interface videoDetailData {
 
 export class ResponseVideoListPageDto {
   @ApiProperty({
+    example: '1',
+    description: '해당 비디오의 데이터베이스 아이디',
+  })
+  videoDbId: number;
+
+  @ApiProperty({
     example: 'dvnhes23',
     description: '해당 비디오의 아이디',
   })
-  videoUniqueId: string;
+  videoId: string;
 
   @ApiProperty({
     example: '이미지 사진 경로',
     description: '비디오 썸네일',
   })
-  videoThubnail: string;
+  videoThumbnail: string;
 
   @ApiProperty({
     example: 'Video Title',
@@ -35,28 +41,16 @@ export class ResponseVideoListPageDto {
   videoTitle: string;
 
   @ApiProperty({
-    example: 'n일전',
-    description: '해당 영상의 생성 일자',
+    example: 'Description',
+    description: '해당 비디오에 대한 설명',
   })
-  videoCreatedDate;
+  videoDescription: string;
 
-  @ApiProperty({
-    example: '비디오 제작자 이름',
-    description: '비디오 제작자 이름',
-  })
-  videoAuthorName: string;
 
-  @ApiProperty({
-    example: '비디오 제작자 프로필 사진',
-    description: '비디오 제작자 프로필 사진',
-  })
-  videoAuthorThumbnail: string;
 
-  @ApiProperty({
-    example: '30:00',
-    description: '비디오의 길이',
-  })
-  videoDuration: string;
+
+
+
 }
 
 export class RespoeVideoListPageDto {

@@ -10,6 +10,7 @@ import { Injectable } from '@nestjs/common';
 import { UserRepositoyry } from '@root/api/user/repositories/user.repository';
 import { KeywordRepository } from '../keyword.repository';
 import { GetRecommendKeywordIds } from './findRecommend.queryBuilder';
+import { ResponseKeywordDto } from '../../dto/responseKeword.dto';
 
 @Injectable()
 export class SetQuery {
@@ -59,7 +60,7 @@ export class FindAllKeywordQueryBuilder extends SetQuery {
     super();
   }
   // 모든 키워드를 찾기
-  public async findAll(userId : number ,findAllKeywordDto: FindAllKeywordDto) {
+  public async findAll(userId : number ,findAllKeywordDto: FindAllKeywordDto): Promise<ResponseKeywordDto[]> {
     this.query = this.keywordRepository
       .createQueryBuilder(`K01`)
       .select([
@@ -109,7 +110,7 @@ export class FindAllRecomendedKeywordQueryBuilder extends SetQuery {
   public async findAllRecomendedKeyword(
     userId : number,
     findRecommentKeywordDto: FindRecommentKeywordDto,
-  ) {
+  ): Promise<ResponseKeywordDto[]> {
     this.query = this.keywordRepository
       .createQueryBuilder(`K01`)
       .select([

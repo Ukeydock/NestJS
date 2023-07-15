@@ -26,6 +26,7 @@ import {
 } from '@nestjs/swagger';
 import { JwtStrategy } from '@root/api/auth/jwt/jwt.strategy';
 import { JwtAuthGuard } from '@root/api/auth/jwt/jwt.guard';
+import { Video } from '@root/database/entities/video.entity';
 
 @ApiTags('Video')
 @Controller('video')
@@ -38,8 +39,8 @@ export class VideoController {
     description: '비디오 상세 페이지',
   })
   @Get(`/[@]:videoDbId`)
-  async findVideoDetail(@Param() param: { videoDbId: number }) {
-    const videoDetailData = await this.videoService.findOneByVideoDbId(
+  async findVideoDetail(@Param() param: { videoDbId: number }): Promise<Video> {
+    const videoDetailData: Video = await this.videoService.findOneByVideoDbId(
       param.videoDbId,
     );
     return videoDetailData;
@@ -56,7 +57,7 @@ export class VideoController {
     @Param() param: { keyword: string },
     @Query() videoPageDto: VideoPageDto,
   ) {
-    const videoData = await this.videoService.findByKeyword(param);
+    const videoData : ResponseVideoListPageDto[] = await this.videoService.findByKeyword(param.keyword);
     return { videoData };
   }
 
@@ -74,7 +75,7 @@ export class VideoController {
   ) {
     const userId = param.userId == 0 ? req.user.userId : param.userId;
 
-    const {videoData, maxPageNumber} = await this.videoService.findViewVideoByUserId(userId, query);
+    const {videoData, maxPageNumber} : {videoData : Video[] , maxPageNumber : number} = await this.videoService.findViewVideoByUserId(userId, query);
     return { videoData, maxPageNumber };
   }
   
