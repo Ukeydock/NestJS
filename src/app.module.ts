@@ -49,7 +49,8 @@ export class Config {
     return ConfigModule.forRoot({ envFilePath });
   };
 
-  static setMySQL(synchronize: boolean) {
+  static setMySQL(isTest: boolean) {
+    console.log("??")
     return TypeOrmModule.forRoot({
       type: 'mysql',
       host: process.env.MYSQL_HOST,
@@ -59,13 +60,23 @@ export class Config {
       database: process.env.MYSQL_DATABASE,
       entities: [__dirname + `/**/*.entity.{js,ts}`],
       subscribers: [KeywordSubscriber, KeywordUserSubscriber],
-      synchronize,
+      synchronize: isTest,
       extra: {
       
          sql_mode: "STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION",
 
   }
     });
+  }
+
+  static setSqlite() {
+    return TypeOrmModule.forRoot({
+       type: 'sqlite',
+      database: ':memory:',
+      entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      synchronize: true,
+      dropSchema: true,
+    })
   }
 
   static setModule() {
@@ -83,7 +94,7 @@ export class Config {
 @Module({
   imports: [
     Config.setENV(),
-    Config.setMySQL(process.env.NODE_ENV == 'prod' ? false : true),
+    process.env.NODE_ENV === 'test' ? Config.setSqlite():Config.setMySQL(false),
     ...Config.setModule(),
     ScheduleModule.forRoot(),
     TypeOrmModule.forFeature([Movie]),

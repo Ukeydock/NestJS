@@ -5,7 +5,7 @@ import { AuthRepository } from './auth.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Auth } from '@root/database/entities/auth.entity';
 import { PassportModule } from '@nestjs/passport';
-import { GoogleStrategy } from './google/google.strategy';
+// import { GoogleStrategy } from './google/google.strategy';
 
 import { UserModule } from '../user/user.module';
 import { AppModule } from '@root/app.module';
@@ -29,7 +29,7 @@ import { JwtModule, JwtService } from '@nestjs/jwt';
     CommonService,
 
     AuthRepository,
-    GoogleStrategy,
+    // GoogleStrategy,
   ],
 })
 export class AuthModule {}
