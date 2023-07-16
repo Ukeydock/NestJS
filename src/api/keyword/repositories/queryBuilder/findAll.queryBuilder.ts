@@ -132,7 +132,7 @@ export class FindAllRecomendedKeywordQueryBuilder extends SetQuery {
         this.setLimit(1, findRecommentKeywordDto.limit);
         break;
       case 'recommend':
-        const userData = await this.userRepository.findOneById({ userId })
+        const userData = await this.userRepository.findOneById( userId )
 
         // 랜덤한 같은 성별,나이의 유저를 10명 가져와서
         const equelGenderAgeUser = await this.userRepository.findAllByGenderAndAge(

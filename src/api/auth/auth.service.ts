@@ -32,7 +32,6 @@ export class AuthSocialLoginService {
     const newAuthId = newAuthData.raw.insertId;
    
     const authData = await this.authRepository.findOneById(newAuthId);
-    console.log(authData);
     return this.createJwtToken({ userId: authData.user.id });
   }
 
@@ -50,9 +49,10 @@ export class AuthSocialLoginService {
       email: userAuthData.email,
     });
     if (authData) {
-      const userData = await this.userService.findOneByUserId({
-        userId: authData.user.id,
-      });
+      const userData = await this.userService.findOneByUserId(
+        authData.user.id,
+      );
+      console.log(userData)
       const appToken = await this.execLogin(authData);
 
       return {
@@ -65,8 +65,8 @@ export class AuthSocialLoginService {
       const newUserData = await this.userService.create({
         nickname: this.commonService.createRandomNickname(),
       });
-      console.log(newUserData);
-      const newUserId = newUserData.raw.insertId;
+      const newUserId = newUserData.raw.insertId ?? newUserData.raw;
+
       await this.userService.updateById(newUserId, {
         profileImage: userAuthData.profileImage,
       });

@@ -21,9 +21,9 @@ export class UserRepositoyry {
   ) { }
 
   // 유저 아이디로 유저 정보 조회
-  async findOneById(findUserByUserIdDto: FindUserByUserIdDto): Promise<FindOneUserDto> {
+  async findOneById(userId: number): Promise<FindOneUserDto> {
     // console.log(findUserByUserIdDto)
-    const findOneByIdQuery = new FindOneUser( this.userRepository,findUserByUserIdDto.userId);
+    const findOneByIdQuery = new FindOneUser( this.userRepository,userId);
     return await findOneByIdQuery.getRawOne()
   }
 

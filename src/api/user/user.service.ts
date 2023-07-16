@@ -10,9 +10,9 @@ import { Injectable } from '@nestjs/common';
 export class UserService {
   constructor(private userRepositoyry: UserRepositoyry) { }
 
-  async findOneByUserId(findUserByUserIdDto: FindUserByUserIdDto) {
+  async findOneByUserId(userId: number) {
     
-    return await this.userRepositoyry.findOneById(findUserByUserIdDto);
+    return await this.userRepositoyry.findOneById(userId);
   }
 
   async findUserSubscribedKeywordList(
@@ -39,7 +39,6 @@ export class UserService {
   }
 
   async updateById(userId : number, updateUserDto) {
-    console.log(userId, updateUserDto)
     await this.userRepositoyry.updateById(userId, updateUserDto);
   }
 }

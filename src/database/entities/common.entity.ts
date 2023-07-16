@@ -30,7 +30,7 @@ export class CommonSoftDelete {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @UpdateDateColumn({  nullable: true })
+  @DeleteDateColumn({ type: 'timestamp', nullable: true })
   deletedAt: Date;
 }
 
@@ -41,7 +41,7 @@ export class CommonSoftDeleteNotUpdated {
   @CreateDateColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({  nullable: true })
+  @DeleteDateColumn({ type: 'timestamp', nullable: true })
   deletedAt: Date;
 }
 

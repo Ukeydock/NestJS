@@ -89,7 +89,7 @@ export class UserController {
         : findUserByUserIdDto.userId;
 
 
-    const userData = await this.userService.findOneByUserId({ userId });
+    const userData = await this.userService.findOneByUserId( userId );
     return new CommonResponseDto('유저 정보 하나 출력', { userData });
   }
 
