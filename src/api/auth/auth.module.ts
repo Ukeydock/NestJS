@@ -31,5 +31,6 @@ import { JwtModule, JwtService } from '@nestjs/jwt';
     AuthRepository,
     // GoogleStrategy,
   ],
+  
 })
 export class AuthModule {}

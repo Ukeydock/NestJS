@@ -52,7 +52,6 @@ export class AuthSocialLoginService {
       const userData = await this.userService.findOneByUserId(
         authData.user.id,
       );
-      console.log(userData)
       const appToken = await this.execLogin(authData);
 
       return {

@@ -11,7 +11,7 @@ import {
   KeywordVideo,
 } from '@root/database/entities/keyword.entity';
 import { KeywordUserService } from './services/keywordUser.service';
-import { KeywordVideoService } from './services/keyword-video.service';
+import { KeywordVideoService } from './services/keywordVideo.service';
 import { KeywordUserRepository } from './repositories/keywordUser.repository';
 import { KeywordVideoRepository } from './repositories/keywordVideo.repository';
 import { KeywordUserController } from './controllers/keywordUser.controller';

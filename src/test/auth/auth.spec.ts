@@ -1,25 +1,60 @@
 import { describe } from "node:test";
-import { setTestModule } from "../test.module";
 import { AuthService, AuthSocialLoginService } from "@root/api/auth/auth.service";
 import { AppModule, Config } from "@root/app.module";
 import { Test, TestingModule } from "@nestjs/testing";
 import { AuthModule } from "@root/api/auth/auth.module";
-import { getConnection } from "typeorm";
+import { DataSource } from "typeorm";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { CreateTestData, entites } from "../test.module";
+import { User } from "@root/database/entities/user.entity";
+import { Type } from "class-transformer";
+import { Auth } from "@root/database/entities/auth.entity";
+import { Keyword, KeywordUser } from "@root/database/entities/keyword.entity";
+
 
 let authService : AuthService;
 let authSocialLoginService : AuthSocialLoginService;
 
+
+
 beforeAll(async () => {
-   
-    const testModule = await setTestModule()
-    authService = testModule.get<AuthService>(AuthService);
-    authSocialLoginService = testModule.get<AuthSocialLoginService>(AuthSocialLoginService);
+    
+    const authTestModule: TestingModule = await Test.createTestingModule({
+        imports: [ 
+            Config.setENV(),
+            
+            
+            TypeOrmModule.forRoot({
+                dropSchema: true,
+                type: 'mysql',
+                host: process.env.MYSQL_HOST,
+                port: 3306,
+                username: process.env.MYSQL_USERNAME,
+                password: process.env.MYSQL_PASSWORD,
+                database: process.env.MYSQL_DATABASE,
+                entities: [`src/**/*.entity.{js,ts}`],
+                synchronize: true,
+                // dropSchema 옵션은 어플리케이션 구동시 스키마들을 모두 삭제함.
+            }),
+            AuthModule, 
+            // 모든 entity 등록
+            // TypeOrmModule.forFeature([Auth, User]),
+            TypeOrmModule.forFeature([...entites]),
+
+        ],
+        providers: [CreateTestData],
+    }).compile()
+    authService = authTestModule.get<AuthService>(AuthService);
+    authSocialLoginService = authTestModule.get<AuthSocialLoginService>(AuthSocialLoginService);
+
+    let createTestData = authTestModule.get<CreateTestData>(CreateTestData);
+    await createTestData.createTestData();
 }
 )
 
 describe('소셜로그인', () => {
     //
-    it('정상적인 로그인 => 토큰을 발급받을 수 있어야함.', async () => {
+    it('처음 가입하는 유저 => 토큰을 발급받을 수 있어야함.', async () => {
         const result = await authSocialLoginService.execSocialLogin({
             email: "test@example.com",
             snsId: "123456789",
@@ -52,11 +87,7 @@ describe('소셜로그인', () => {
 })
 
 afterAll(async () => {
-  const connection = getConnection();
-  const entities = connection.entityMetadatas;
-    console.log(entities)
-  for (const entity of entities) {
-    const repository = connection.getRepository(entity.name);
-    await repository.clear(); // CLEAR is like TRUNCATE, but for TypeORM
-  }
+
 });
+
+

@@ -6,7 +6,7 @@ import axios from 'axios';
 import { CronJob } from 'node-schedule';
 import { Cron } from '@nestjs/schedule';
 import { KeywordService } from '@root/api/keyword/services/keyword.service';
-import { KeywordVideoService } from '@root/api/keyword/services/keyword-video.service';
+import { KeywordVideoService } from '@root/api/keyword/services/keywordVideo.service';
 import { VideoTagRepository } from '@root/api/video/repositories/videoTag.repository';
 import { VideoListItemDto } from '@root/api/video/dto/responseVideo.dto';
 import { Movie } from '@root/database/entities/netflixMovie.entity';

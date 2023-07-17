@@ -4,7 +4,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 
 
-import { CommentModule } from './api/comment/comment.module';
 import { KeywordModule } from './api/keyword/keyword.module';
 import { VideoModule } from './api/video/video.module';
 import { UserModule } from './api/user/user.module';
@@ -75,7 +74,7 @@ export class Config {
       AuthModule,
       UserModule,
       VideoModule,
-      CommentModule,
+      // CommentModule,
       KeywordModule,
       CommonModule,
     ];
