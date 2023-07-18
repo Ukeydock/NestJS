@@ -32,7 +32,7 @@ export class KeywordUser extends NotUpdateCommon {
     cascade: true,
   })
   @JoinColumn()
-keyword: Keyword;
+  keyword: Keyword;
 
   @Column({ type: 'tinyint', nullable: false, default: 0 })
   isMain: boolean;

@@ -52,7 +52,7 @@ export class KeywordController {
   {
     // 0번 유저아이디가 오면 로그인한 유저의 아이디로 변경
     const userId = param.userId == 0 ? req.user.userId : param.userId;
-    const keywordData = await this.keywordService.findAllByUserId({ userId });
+    const keywordData = await this.keywordService.findAllByUserId( userId );
     // console.log(keywordData);
     return keywordData;
   }

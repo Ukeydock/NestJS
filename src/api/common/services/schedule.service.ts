@@ -67,7 +67,7 @@ export class ScheduleServie {
     searchKeyword?: string,
   ) {
     console.log('키워드', keyword);
-    const dupKeywordData = await this.keywordService.findByKeyword( keyword );
+    const dupKeywordData = await this.keywordService.findOneByKeyword( keyword );
     if (dupKeywordData) {
       //키워드의 최근 업데이트 날짜에 따라 영상을 새로 가져올지 결정하기
     }
@@ -84,9 +84,9 @@ export class ScheduleServie {
         return;
       }
 
-      const newKeywordData = await this.keywordService.create({
+      const newKeywordData = await this.keywordService.create(
         keyword,
-      });
+      );
 
       for (const videoData of youtubeVideoData) {
         try {

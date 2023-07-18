@@ -41,6 +41,18 @@ export class CreateTestData{
     const keyword3 = await this.keywordRepository.insert({
       keyword: 'test-keyword3',
     })
+
+  }
+
+  private async createTestKeywordUser(){
+    const keywordUser1 = await this.keywordUserRepository.insert({
+      keyword: {id : 1},
+      user: {id :1},
+    })
+    const keywordUser2 = await this.keywordUserRepository.insert({
+      keyword: {id :2},
+      user: {id : 1},
+    })
   }
 
   private async createTestUser(){
@@ -79,6 +91,7 @@ export class CreateTestData{
   public async createTestData(){
     await this.createTestUser() 
     await this.createTestKeyword()
+    await this.createTestKeywordUser()
   }
 }
 

@@ -1,8 +1,3 @@
-import {
-  CreateKeywordDto,
-  FindAllKeywordDto,
-} from '@root/api/keyword/dto/requestKeword.dto';
-import { FindUserByUserIdDto } from '@root/api/user/dto/requestUser.dto';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Keyword, KeywordUser } from '@root/database/entities/keyword.entity';
@@ -19,17 +14,17 @@ export class KeywordRepository {
   ) { }
 
   // 해당 유저가 구독한 키워드 리스트를 가져온다.
-  async findAllByUserId(findKeywordByUserIdDto: { userId: number | number[] }): Promise<{ keyword: string, keywordId: number }[]> {
+  async findAllByUserId(userId: number | number[] ): Promise<{ keyword: string, keywordId: number }[]> {
     const query = this.userRepositoyry
       .createQueryBuilder('U01')
       .select([`K01.keyword AS keyword`, `K01.id AS keywordId`])
       .innerJoin(`KeywordUser`, `KU01`, `U01.id = KU01.userId`)
       .innerJoin(`keyword`, `K01`, `KU01.keywordId = K01.id`)
 
-    if (Array.isArray(findKeywordByUserIdDto.userId)) {
-      query.where(`U01.id IN (:...userId)`, { userId: findKeywordByUserIdDto.userId });
+    if (Array.isArray(userId)) {
+      query.where(`U01.id IN (:...userId)`, { userId });
     } else {
-      query.where(`U01.id = :userId`, { userId: findKeywordByUserIdDto.userId });
+      query.where(`U01.id = :userId`, { userId });
     }
     return await query.getRawMany();
   }
@@ -40,8 +35,9 @@ export class KeywordRepository {
     });
   }
 
-  async create(createKeywordDto: CreateKeywordDto): Promise<Keyword> {
-    const keyword = this.keywordRepository.create(createKeywordDto);
-    return await this.keywordRepository.save(keyword);
+  async create(keyword: string): Promise<Keyword> {
+    const keywordEntity = this.keywordRepository.create({keyword});
+    return await this.keywordRepository.save(keywordEntity);
+    
   }
 }

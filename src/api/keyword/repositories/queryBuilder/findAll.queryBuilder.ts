@@ -141,7 +141,7 @@ export class FindAllRecomendedKeywordQueryBuilder extends SetQuery {
 
         // 가져온 유저들을 이용해 키워드를 가져온다.
         const userIds = equelGenderAgeUser.map((user) => user.userId)
-        const keywordList = await this.keywordRepositoryClass.findAllByUserId({ userId: userIds })
+        const keywordList = await this.keywordRepositoryClass.findAllByUserId(userIds )
 
         const getRecommendKeywordIds = new GetRecommendKeywordIds(keywordList)
         const keywordIds = getRecommendKeywordIds.build()
