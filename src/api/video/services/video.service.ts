@@ -7,18 +7,18 @@ import { parseUrl } from 'url-lib';
 import {
   VideoRepository,
 } from '../repositories/video.repository';
-import { ResponseVideoListPageDto, VideoListItemDto } from '../dto/responseVideo.dto';
+import { ResponseVideoListPageDto, VideoDataDto, VideoListItemDto } from '../dto/responseVideo.dto';
 import { VideoListQueryBuilder, VideoListQueryBuilderForView } from '../repositories/queryBuilder/videoListQueryBuilder';
 import { KeywordRepository } from '@root/api/keyword/repositories/keyword.repository';
 import { VideoUserRepository } from '../repositories/videoUserView.repository';
 import { FindVideoDetailQueryBuilder } from '../repositories/queryBuilder/videoDetailQueryBuilder';
 import { Video } from '@root/database/entities/video.entity';
 
-class VideoCommon {
+export class VideoCommon {
   // 유튜브에서 쿼리값을 객체로 변환
-  static youtubeSeperateQuery(query) {
+  static youtubeSeperateQuery(query: string) {
     type queryType = {
-      v;
+      v : string;
     };
     const result: queryType = { v: null };
     query.split('&').forEach((element) => {
@@ -199,13 +199,14 @@ export class VideoService {
     userId : number,
     findAllViewVidoDto: FindAllViewVidoDto,
   )
-  : Promise<{videoData: Video[], maxPageNumber: number}>  {
+  : Promise<{videoData: VideoDataDto[], maxPageNumber: number}>  {
     let keywordId = null
+    // 필터로 키워드가 들어왔을 경우
     if(findAllViewVidoDto.keyword){
       const keywordData = await this.keywordRepository.findByKeyword(findAllViewVidoDto.keyword)
       keywordId = keywordData.id
     }
-    const videoData =  await this.videoListQueryBuilderForView.getViewVideoData(userId,keywordId, findAllViewVidoDto)
+    const videoData : VideoDataDto[] =  await this.videoListQueryBuilderForView.getViewVideoData(userId,keywordId, findAllViewVidoDto)
     const maxPageNumber = await this.videoListQueryBuilderForView.getMaxPageNumber(userId,keywordId, findAllViewVidoDto)
     return {videoData, maxPageNumber};
    

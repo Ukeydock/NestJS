@@ -1,6 +1,6 @@
 import {
   FindKeywordByUserIdDto,
-  FindRecommentKeywordDto,
+  FindRecommendKeywordDto,
 } from '../dto/keyword.dto';
 import { Injectable } from '@nestjs/common';
 import { KeywordRepository } from '../repositories/keyword.repository';
@@ -19,7 +19,6 @@ export class KeywordService {
     private readonly keywordRepository: KeywordRepository,
 
     private readonly findAllKeywordQueryBuilder: FindAllKeywordQueryBuilder,
-    private readonly findAllByUserIdQueryBuilder: FindAllByUserIdQueryBuilder,
     private readonly findAllRecomendedKeywordQueryBuilder: FindAllRecomendedKeywordQueryBuilder,
   ) { }
 
@@ -51,7 +50,7 @@ export class KeywordService {
   // 추천 키워드 찾기. 쿼리스트링으로 기준 잡기
   async findAllRecomendedKeyword(
     userId : number,
-    findRecommentKeywordDto: FindRecommentKeywordDto,
+    findRecommentKeywordDto: FindRecommendKeywordDto,
   ): Promise<ResponseKeywordDto[]> {
     return await this.findAllRecomendedKeywordQueryBuilder.findAllRecomendedKeyword(
       userId,

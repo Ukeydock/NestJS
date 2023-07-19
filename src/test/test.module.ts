@@ -73,7 +73,7 @@ export class CreateTestData{
       gender: 'man',
       profileImage: 'test-image',
     })
-    await createTestAuth(user1.identifiers[0].userId)
+    await createTestAuth(user1.identifiers[0].id)
     const user2 =await this.userRepository.insert({
       nickname: 'test2',
       birthday: new Date('2005-01-01'),
@@ -81,7 +81,7 @@ export class CreateTestData{
       gender: 'women',
       profileImage: 'test-image2',
     })
-    await createTestAuth(user2.identifiers[0].userId)
+    await createTestAuth(user2.identifiers[0].id)
  
 }
 

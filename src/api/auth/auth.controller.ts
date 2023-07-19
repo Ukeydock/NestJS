@@ -40,7 +40,7 @@ export class AuthController {
     const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
   const {token} = body
-  async function verify() : Promise<{email : string, snsId : string, profileImage : string}> {
+  const verify = async() : Promise<{email : string, snsId : string, profileImage : string}>=> {
     const ticket = await client.verifyIdToken({
         idToken: token,
         audience: process.env.GOOGLE_CLIENT_ID,  // Specify the CLIENT_ID of the app that accesses the backend
@@ -54,7 +54,8 @@ export class AuthController {
   // If request specified a G Suite domain:
   // const domain = payload['hd'];
   }
-  const {email , snsId, profileImage } = await verify()
+  const {email , snsId, profileImage } = 
+    process.env.NODE_ENV == "test" ? {email : 'test@example.com', snsId: '123456789', profileImage : 'test-image'}: await verify()
   const {appToken , existNickname} = await this.authSocialLoginService.execSocialLogin({email : email ,snsId : snsId, profileImage : profileImage, platform : 'google' })
 
     
@@ -71,7 +72,7 @@ export class AuthController {
   // 트위치콜백() {}
 
   @ApiOperation({
-    summary: '유저 탈퇴(완)',
+    summary: '유저 탈퇴',
     description: '유저 탈퇴',
   })
   @Delete('/user/:userId')

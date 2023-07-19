@@ -19,7 +19,7 @@ let keywordQueryBuilder : FindAllKeywordQueryBuilder;
 
 beforeAll(async () => {
     
-    const keywordTestModule: TestingModule = await Test.createTestingModule({
+    const keywordRepositoryTestModule: TestingModule = await Test.createTestingModule({
         imports: [ 
             Config.setENV(),
             
@@ -42,12 +42,12 @@ beforeAll(async () => {
         ],
         providers: [CreateTestData],
     }).compile()
-    keywordRepository = keywordTestModule.get<KeywordRepository>(KeywordRepository);
-    keywordQueryBuilder = keywordTestModule.get<FindAllKeywordQueryBuilder>(FindAllKeywordQueryBuilder);
+    keywordRepository = keywordRepositoryTestModule.get<KeywordRepository>(KeywordRepository);
+    keywordQueryBuilder = keywordRepositoryTestModule.get<FindAllKeywordQueryBuilder>(FindAllKeywordQueryBuilder);
     // keywordUserService = keywordTestModule.get<KeywordUserService>(KeywordUserService);
     // keywordVideoService = keywordTestModule.get<KeywordVideoService>(KeywordVideoService);
 
-     let createTestData = keywordTestModule.get<CreateTestData>(CreateTestData);
+     let createTestData = keywordRepositoryTestModule.get<CreateTestData>(CreateTestData);
     await createTestData.createTestData();
 
    

@@ -136,3 +136,15 @@ export class VideoListItemDto {
   videoPublishedAt: string;
   // videoChannelThumbnail: string;
 }
+
+export class VideoDataDto {
+  videoId: string;
+  videoThumbnail: string;
+  videoDbId: number;
+  videoVideoCount : number
+  videoTitle: string;
+  videoDescription: string;
+  videoCount : number;
+  videoCreatedAt : Date
+
+}

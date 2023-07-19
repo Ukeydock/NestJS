@@ -24,7 +24,7 @@ export class KeywordDto extends Keyword {
 
 export class FindKeywordByUserIdDto extends PickType(KeywordDto, ['userId']) {}
 
-export class FindRecommentKeywordDto extends PickType(KeywordDto, [
+export class FindRecommendKeywordDto extends PickType(KeywordDto, [
   'recomendType',
   'limit',
 ]) {}

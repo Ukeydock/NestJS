@@ -3,6 +3,7 @@ import { FindAllViewVidoDto } from "../../dto/requestVideo.dto";
 import { Video } from "@root/database/entities/video.entity";
 import { Inject, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { VideoDataDto } from "../../dto/responseVideo.dto";
 
 @Injectable()
 export class VideoListQueryBuilder {
@@ -112,7 +113,9 @@ export class VideoListQueryBuilderForView extends VideoListQueryBuilder {
        
     }
 
-    public async getViewVideoData(userId : number ,keywordId : number, FindAllViewVidoDto : FindAllViewVidoDto){
+    public async getViewVideoData(userId : number ,keywordId : number, FindAllViewVidoDto : FindAllViewVidoDto)
+    : Promise<VideoDataDto[]>
+    {
         this.setQuery()
         this.setJoinVideoUser(userId);
         this.setKeyword(keywordId);
@@ -121,7 +124,10 @@ export class VideoListQueryBuilderForView extends VideoListQueryBuilder {
         return await this.getRawMany();
     }
 
-    public async getMaxPageNumber(userId : number,keywordId : number, FindAllViewVidoDto : FindAllViewVidoDto){
+    public async getMaxPageNumber(userId : number,keywordId : number, FindAllViewVidoDto : FindAllViewVidoDto)
+    : Promise<number>
+    {
+
         this.setCountQuery()
         this.setJoinVideoUser(userId);
         this.setKeyword(keywordId);

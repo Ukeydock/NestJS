@@ -14,8 +14,7 @@ import {
 import { VideoService } from '../services/video.service';
 import { FindAllViewVidoDto, VideoPageDto } from '../dto/requestVideo.dto';
 import {
-  ResponseVideoDetailPageDto,
-  ResponseVideoListPageDto,
+  ResponseVideoListPageDto, VideoDataDto,
 } from '../dto/responseVideo.dto';
 import {
   ApiBody,
@@ -75,7 +74,7 @@ export class VideoController {
   ) {
     const userId = param.userId == 0 ? req.user.userId : param.userId;
 
-    const {videoData, maxPageNumber} : {videoData : Video[] , maxPageNumber : number} = await this.videoService.findViewVideoByUserId(userId, query);
+    const {videoData, maxPageNumber} : {videoData : VideoDataDto[] , maxPageNumber : number} = await this.videoService.findViewVideoByUserId(userId, query);
     return { videoData, maxPageNumber };
   }
   

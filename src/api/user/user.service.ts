@@ -3,6 +3,7 @@ import {
   CreateUserDto,
   FindUserListPageDto,
 } from './dto/requestUser.dto';
+import { FindOneUserDto } from './dto/responseUser.dto';
 import { UserRepositoyry } from './repositories/user.repository';
 import { Injectable } from '@nestjs/common';
 
@@ -10,7 +11,7 @@ import { Injectable } from '@nestjs/common';
 export class UserService {
   constructor(private userRepositoyry: UserRepositoyry) { }
 
-  async findOneByUserId(userId: number) {
+  async findOneByUserId(userId: number): Promise<FindOneUserDto> {
     
     return await this.userRepositoyry.findOneById(userId);
   }

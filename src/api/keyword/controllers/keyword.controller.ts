@@ -18,7 +18,7 @@ import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../auth/jwt/jwt.guard';
 import { KeywordUserService } from '../services/keywordUser.service';
 import axios from 'axios';
-import { FindRecommentKeywordDto } from '../dto/keyword.dto';
+import { FindRecommendKeywordDto } from '../dto/keyword.dto';
 
 @ApiTags('Keyword')
 @Controller('keyword')
@@ -65,7 +65,7 @@ export class KeywordController {
   @Get('/recommend')
   async finsAllRecomendedKeyword(
     @Req() req,
-    @Query() query: FindRecommentKeywordDto,
+    @Query() query: FindRecommendKeywordDto,
   ) {
     const userId = req.user.userId;
     const recomendKeywordData: ResponseKeywordDto[] =
