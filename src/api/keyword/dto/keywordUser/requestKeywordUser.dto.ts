@@ -7,7 +7,6 @@ export class CreateUserKeywordDto extends PickType(KeywordDto, [
 ]) {}
 
 export class FindOneByUserIdAndKeywordIdDto extends PickType(KeywordDto, [
-  `userId`,
   `keywordId`,
 ]) {}
 

@@ -6,47 +6,21 @@ import { INestApplication } from "@nestjs/common";
 import { AuthController } from "@root/api/auth/auth.controller";
 import * as request from 'supertest';
 import { KeywordController } from "@root/api/keyword/controllers/keyword.controller";
+import { createTestingModule } from "./e2e-testModule";
 
 let authController : AuthController;
 let keywordController : KeywordController;
+
+// 유저가 회원가입을 하고, 닉네임, 성별, 생일을 변경하고, 변경된 정보를 조회하는 테스트
+// 메인페이지에 처음 들어오면 추천키워드를 받을 수 있어야함.
+// 이 테스트에서는 userController와 authController를 테스트함.
 
 describe(`signup`, () => {
     let app : INestApplication
     let appToken : string
     beforeAll(async () => {
-        const TestingModule: TestingModule = await Test.createTestingModule({
-            imports: [
-                Config.setENV(),
-    
-                TypeOrmModule.forRoot({
-                    dropSchema: true,
-                    type: 'mysql',
-                    host: process.env.MYSQL_HOST,
-                    port: 3306,
-                    username: process.env.MYSQL_USERNAME,
-                    password: process.env.MYSQL_PASSWORD,
-                    database: process.env.MYSQL_DATABASE,
-                    entities: [`src/**/*.entity.{js,ts}`],
-                    synchronize: true,
-                    // dropSchema 옵션은 어플리케이션 구동시 스키마들을 모두 삭제함.
-                }),
-                AppModule,
-                TypeOrmModule.forFeature([...entites ]),
-            
-    
-            ],
-            providers: [CreateTestData],
+        app = await createTestingModule()
 
-        }).compile()
-
-        authController = TestingModule.get<AuthController>(AuthController);
-        keywordController = TestingModule.get<KeywordController>(KeywordController);
-
-        let createTestData = TestingModule.get<CreateTestData>(CreateTestData);
-        await createTestData.createTestData();
-
-        app = TestingModule.createNestApplication();
-        await app.init();
     }
     );
 
