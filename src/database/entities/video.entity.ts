@@ -41,7 +41,7 @@ export class Video extends Common {
   @Column({ type: 'varchar', length: 32, nullable: false, default: '미정' })
   videoId: string;
 
-  @Column({ type: 'bigint', default: 0 })
+  @Column({ type: 'int', default: 0 })
   viewCount: number;
 
   @Column({ type: 'int', default: 0 })

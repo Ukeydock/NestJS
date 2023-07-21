@@ -42,7 +42,7 @@ export class VideoUserRepository {
         // await this.videoUserViewRepositoy.save(view);
 
 
-        this.videoUserViewRepositoy.insert({
+        await this.videoUserViewRepositoy.insert({
             video: {id : createVideoUserDto.videoDbId},
             user: {id : createVideoUserDto.userId}
 

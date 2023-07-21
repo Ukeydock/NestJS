@@ -95,6 +95,6 @@ export class VideoRepository {
   }
 
   async updateViewCount(videoDbId: number, viewCount : number) : Promise<void> {
-    await this.videoRepository.update({id : videoDbId}, {viewCount : viewCount})
+    await this.videoRepository.update({id : videoDbId}, {viewCount})
   }
 }
