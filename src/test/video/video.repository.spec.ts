@@ -1,4 +1,4 @@
-import { TestingModule } from "@nestjs/testing";
+import { Test, TestingModule } from "@nestjs/testing";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { Config } from "@root/app.module";
 import { CreateTestData, entites } from "../test.module";
@@ -38,3 +38,5 @@ beforeAll(async () => {
 
 }
 )
+
+describe(`findByKeyword`, () => {})
