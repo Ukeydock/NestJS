@@ -3,10 +3,13 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { Config } from "@root/app.module";
 import { CreateTestData, entites } from "../test.module";
 import { VideoModule } from "@root/api/video/video.module";
+import { KeywordRepository } from "@root/api/keyword/repositories/keyword.repository";
+import { VideoRepository } from "@root/api/video/repositories/video.repository";
 
+let videoRepository : VideoRepository;
 beforeAll(async () => {
     
-    const keywordRepositoryTestModule: TestingModule = await Test.createTestingModule({
+    const videoRepositoryTestModule: TestingModule = await Test.createTestingModule({
         imports: [ 
             Config.setENV(),
             
@@ -29,9 +32,9 @@ beforeAll(async () => {
         ],
         providers: [CreateTestData],
     }).compile()
-    
 
-     let createTestData = keywordRepositoryTestModule.get<CreateTestData>(CreateTestData);
+    videoRepository = videoRepositoryTestModule.get<VideoRepository>(VideoRepository);
+     let createTestData = videoRepositoryTestModule.get<CreateTestData>(CreateTestData);
     await createTestData.createTestData();
 
    
@@ -39,4 +42,14 @@ beforeAll(async () => {
 }
 )
 
-describe(`findByKeyword`, () => {})
+describe(`findByKeyword`, () => {
+    it(`findByKeyword : 키워드로 비디오를 검색할 수 있어야함.`, async () => {
+        videoRepository.findByKeyword = jest.fn().mockResolvedValue([
+            {
+                id: 1,
+                keyword: "test",
+                count : 1,
+            }
+        ])
+    })
+})
