@@ -22,7 +22,7 @@
 ---
 
 ## <a name="DB"> 2. DB구조</a> 
-![스크린샷 2023-07-11 오후 3 46 32](https://github.com/Ukeydock/NestJS/assets/71562311/c016bcbf-ab85-4498-8f78-678de157fc70)
+![스크린샷 2023-08-02 오후 3 48 48](https://github.com/Ukeydock/NestJS/assets/71562311/c4b9edf5-1a64-42b8-92e1-14c6f9a34e4c)
 
 주요 테이블의 역할은 다음과 같습니다.
 - movie : 넷플릭스 영화의 키워드를 저장해두고 필요한 경우 사용
